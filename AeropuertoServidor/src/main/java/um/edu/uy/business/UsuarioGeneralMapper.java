@@ -20,21 +20,23 @@ public class UsuarioGeneralMapper {
 
 
     public UsuarioGeneral toUsuarioGeneral(UsuarioGeneralDTO usuarioGeneralDTO){
-        UsuarioGeneral usuarioGeneral = new UsuarioGeneral(usuarioGeneralDTO.getPasaporte(), usuarioGeneralDTO.getNombre(), usuarioGeneralDTO.getApellido(), usuarioGeneralDTO.getContrasena(), usuarioGeneralDTO.getEmail(),"CLIENTE" );
+        Aerolinea aerolinea;
+        Aeropuerto aeropuerto;
+        if (usuarioGeneralDTO.getCodigoAerolinea()==null){
+            aerolinea=null;
+        }else{
+            aerolinea=aerolineaRepository.findAerolineaByCodigoIATAAerolinea(usuarioGeneralDTO.getCodigoAerolinea());
+        }
+        if (usuarioGeneralDTO.getCodigoAeropuerto()==null){
+            aeropuerto=null;
+        }else{
+            aeropuerto=aeropuertoRepository.findAeropuertoByCodigoIATAAeropuerto(usuarioGeneralDTO.getCodigoAeropuerto());
+        }
+
+        UsuarioGeneral usuarioGeneral = new UsuarioGeneral(usuarioGeneralDTO.getPasaporte(), usuarioGeneralDTO.getNombre(), usuarioGeneralDTO.getApellido(), usuarioGeneralDTO.getContrasena(), usuarioGeneralDTO.getEmail(),usuarioGeneralDTO.getTipo(),aerolinea,aeropuerto);
         return usuarioGeneral;
     }
 
-    public UsuarioGeneral toUsuarioGeneralAdminAeropuerto(UsuarioGeneralDTO usuarioGeneralDTO){
-        Aeropuerto aeropuerto = aeropuertoRepository.findAeropuertoByCodigoIATAAeropuerto(usuarioGeneralDTO.getCodigoAeropuerto());
-        UsuarioGeneral usuarioGeneral = new UsuarioGeneral(usuarioGeneralDTO.getPasaporte(), usuarioGeneralDTO.getNombre(), usuarioGeneralDTO.getApellido(), usuarioGeneralDTO.getContrasena(), usuarioGeneralDTO.getEmail(),aeropuerto,"ADMINAEROPUERTO" );
-        return usuarioGeneral;
-    }
-
-    public UsuarioGeneral toUsuarioGeneralAerolinea(UsuarioGeneralDTO usuarioGeneralDTO){
-        Aerolinea aerolinea =  aerolineaRepository.findAerolineaByCodigoIATAAerolinea(usuarioGeneralDTO.getCodigoAerolinea());
-        UsuarioGeneral usuarioGeneral = new UsuarioGeneral(usuarioGeneralDTO.getPasaporte(), usuarioGeneralDTO.getNombre(), usuarioGeneralDTO.getApellido(), usuarioGeneralDTO.getContrasena(), usuarioGeneralDTO.getEmail(),aerolinea,"ADMINAEROLINEA" );
-        return usuarioGeneral;
-    }
 
     public UsuarioGeneralDTO toUsuarioGeneralDTO(UsuarioGeneral usuarioGeneral){
         UsuarioGeneralDTO usuarioGeneralDTO = new UsuarioGeneralDTO();

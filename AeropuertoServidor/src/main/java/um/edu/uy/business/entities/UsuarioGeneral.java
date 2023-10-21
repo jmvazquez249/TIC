@@ -35,19 +35,7 @@ public class UsuarioGeneral {
         return tipo;
     }
 
-    public UsuarioGeneral(long pasaporte, String nombre, String apellido, String contrasena, String email,  String tipo) {
-        this.pasaporte = pasaporte;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.contrasena = contrasena;
-        this.email = email;
-        this.tipo = tipo;
-    }
-
-    public UsuarioGeneral() {
-    }
-
-    public UsuarioGeneral(long pasaporte, String nombre, String apellido, String contrasena, String email, Aerolinea aerolinea, String tipo) {
+    public UsuarioGeneral(long pasaporte, String nombre, String apellido, String contrasena, String email, String tipo, Aerolinea aerolinea, Aeropuerto aeropuerto) {
         this.pasaporte = pasaporte;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -55,17 +43,13 @@ public class UsuarioGeneral {
         this.email = email;
         this.tipo = tipo;
         this.aerolinea = aerolinea;
-    }
-
-    public UsuarioGeneral(long pasaporte, String nombre, String apellido, String contrasena, String email, Aeropuerto aeropuerto, String tipo) {
-        this.pasaporte = pasaporte;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.contrasena = contrasena;
-        this.email = email;
-        this.tipo = tipo;
         this.aeropuerto = aeropuerto;
     }
+
+    public UsuarioGeneral() {
+    }
+
+
 
     public long getNumeroUsuario() {
         return numeroUsuario;

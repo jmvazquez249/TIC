@@ -159,6 +159,8 @@ public class IniciarSesionController  {
             usuarioGeneralDTO.setApellido(apellidoAdAero);
             usuarioGeneralDTO.setContrasena(contrasenaAdAero);
             usuarioGeneralDTO.setCodigoAeropuerto(codigoAeropuertoAdAero);
+            usuarioGeneralDTO.setTipo("ADMINAEROPUERTO");
+            usuarioGeneralDTO.setCodigoAerolinea(null);
 
             ResponseEntity response = usuarioGeneralRestService.agregarUsuarioGeneral(usuarioGeneralDTO);
 
@@ -205,6 +207,9 @@ public class IniciarSesionController  {
                 usuarioGeneralDTO.setNombre(nombreUsu);
                 usuarioGeneralDTO.setApellido(apellidoUsu);
                 usuarioGeneralDTO.setContrasena(contrasenaUsu);
+                usuarioGeneralDTO.setTipo("CLIENTE");
+                usuarioGeneralDTO.setCodigoAerolinea(null);
+                usuarioGeneralDTO.setCodigoAeropuerto(null);
                 try {
 
                     ResponseEntity response = usuarioGeneralRestService.agregarUsuarioGeneral(usuarioGeneralDTO);
@@ -339,6 +344,8 @@ public class IniciarSesionController  {
             usuarioGeneralDTO.setApellido(apellidoUsu);
             usuarioGeneralDTO.setEmail(emailUsu);
             usuarioGeneralDTO.setContrasena(contrasenaUsu);
+            usuarioGeneralDTO.setTipo("ADMINAEROLINEA");
+            usuarioGeneralDTO.setCodigoAeropuerto(null);
 
 
             //hacer que sea atomica la transaccion

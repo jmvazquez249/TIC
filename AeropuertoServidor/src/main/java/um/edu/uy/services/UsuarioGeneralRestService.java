@@ -23,14 +23,7 @@ public class UsuarioGeneralRestService {
 
     @PostMapping("/agregar")
     public void crearUsuarioGeneral(@RequestBody UsuarioGeneralDTO usuarioGeneralDTO){
-        UsuarioGeneral usuarioGeneral=null;
-        if(usuarioGeneralDTO.getCodigoAeropuerto()!=null){
-            usuarioGeneral= usuarioGeneralMapper.toUsuarioGeneralAdminAeropuerto(usuarioGeneralDTO);
-        } else if (usuarioGeneralDTO.getCodigoAerolinea()!=null) {
-            usuarioGeneral = usuarioGeneralMapper.toUsuarioGeneralAerolinea(usuarioGeneralDTO);
-        } else if (usuarioGeneralDTO.getCodigoAeropuerto()==null & usuarioGeneralDTO.getCodigoAerolinea()==null) {
-            usuarioGeneral = usuarioGeneralMapper.toUsuarioGeneral(usuarioGeneralDTO);
-        }
+        UsuarioGeneral usuarioGeneral=usuarioGeneralMapper.toUsuarioGeneral(usuarioGeneralDTO);
         usuarioGeneralRepository.save(usuarioGeneral);
     }
 
