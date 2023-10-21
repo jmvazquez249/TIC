@@ -1,0 +1,128 @@
+package um.edu.uy.ui;
+
+import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import um.edu.uy.AerolineaDTO;
+import um.edu.uy.Main;
+
+
+import javax.transaction.Transactional;
+import java.io.IOException;
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
+
+
+
+
+@Component
+public class AgregarUsuarioAerolineaController implements Initializable {
+
+    @FXML
+    private TextField contrasena;
+    @FXML
+    private TextField pasaporte;
+    @FXML
+    private TextField apellido;
+    @FXML
+    private TextField email;
+    @FXML
+    private TextField nombre;
+
+
+    @FXML
+    private ComboBox<String> registroUsuarioBox;
+
+    /*
+    @Transactional
+    @FXML
+    void registrarUsuarioAerolinea(ActionEvent event) {
+        long pasaporteUsuAero = Long.parseLong(pasaporte.getText());
+        String nombreUsuAero = nombre.getText();
+        String apellidoUsuAero = apellido.getText();
+        String emailUsuAero = email.getText();
+        String contrasenaUsuAero = contrasena.getText();
+        String tipoUsuAero = registroUsuarioBox.getValue().toUpperCase();
+
+        //Hacer control de que no se puedan poner otros tipos
+
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        Aerolinea aero = (Aerolinea) stage.getUserData();
+
+        if (pasaporte.getText() == null ||pasaporte.getText().equals("") ||
+                nombreUsuAero == null || nombreUsuAero.equals("") ||
+                apellidoUsuAero == null || apellidoUsuAero.equals("")||
+                contrasenaUsuAero == null || contrasenaUsuAero.equals("")||
+                emailUsuAero == null || emailUsuAero.equals("")) {
+
+            showAlert(
+                    "Datos faltantes!",
+                    "No se ingresaron los datos necesarios para completar el ingreso.");
+
+        } else if (usuarioGeneralRepository.findOneByPasaporte(pasaporteUsuAero)!=null) {
+            showAlert("Usuario Ya Existe","El usuario ya esta resgistrado");
+        } else {
+
+            UsuarioGeneral usuarioGeneral = new UsuarioGeneral(pasaporteUsuAero,nombreUsuAero,apellidoUsuAero,contrasenaUsuAero,emailUsuAero,aero,tipoUsuAero);
+            usuarioGeneralRepository.save(usuarioGeneral);
+
+            showAlert("Usuario agregado", "Se agrego con exito el usuario!");
+        }
+
+    }
+    */
+    @FXML
+    void backToAdminAerolinea(ActionEvent event) throws IOException {
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        AerolineaDTO aero = (AerolineaDTO) stage.getUserData();
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setControllerFactory(Main.getContext()::getBean);
+
+        Parent root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream("AdminAerolinea.fxml"));
+        Scene scene = new Scene(root);
+        Stage stage2 = (Stage)((Node) event.getSource()).getScene().getWindow();
+        stage2.setUserData(aero);
+        stage2.setScene(scene);
+        stage2.show();
+    }
+    private void showAlert(String title, String contextText) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(contextText);
+        alert.showAndWait();
+    }
+
+    @FXML
+    void logOut(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setControllerFactory(Main.getContext()::getBean);
+
+        Parent root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream("IniciarSesion.fxml"));
+        Scene scene = new Scene(root);
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+        registroUsuarioBox.setItems(FXCollections.observableArrayList("Check In","Oficina"));
+
+    }
+
+
+}

@@ -1,0 +1,6 @@
+rootProject.name = 'TIC'
+
+include 'AeropuertoServidor'
+include 'AeropuertoUI'
+include 'Common'
+
