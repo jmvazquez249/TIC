@@ -575,9 +575,9 @@ public class IniciarSesionController  {
             vuelosLle.add(vueloDTO);
         }
 
-        for (int i=0;i<vueloDTOS2.size();i++){
+        for (int j=0;j<vueloDTOS2.size();j++){
             VueloDTO vueloDTO2 = new VueloDTO();
-            LinkedHashMap hashMap = (LinkedHashMap) vueloDTOS2.get(i);
+            LinkedHashMap hashMap = (LinkedHashMap) vueloDTOS2.get(j);
             vueloDTO2.setCodigoVuelo((String) hashMap.get("codigoVuelo"));
             vueloDTO2.setCodigoAeropuertoOrigen((String) hashMap.get("codigoAeropuertoOrigen"));
             vueloDTO2.setCodigoAeropuertoDestino((String) hashMap.get("codigoAeropuertoDestino"));
