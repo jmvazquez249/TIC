@@ -25,7 +25,7 @@ import um.edu.uy.service.UsuarioGeneralRestService;
 import javax.transaction.Transactional;
 import javax.xml.crypto.Data;
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
 
 
 @Component
@@ -97,7 +97,7 @@ public class IniciarSesionController  {
                 if (tipoUsuario.equals("DIOS")){
                     redireccion(event,"InicioAdministradorDios.fxml",null);
                 } else if (tipoUsuario.equals("ADMINAEROPUERTO")) {
-                    //cargarAdministradorAeropuerto(event,  usu.getAeropuerto());
+                    cargarAdministradorAeropuerto(event,  usu.getCodigoAeropuerto());
                 }
                 else if (tipoUsuario.equals("CLIENTE")) {
                     redireccion(event,"Cliente.fxml",null);
@@ -366,23 +366,20 @@ public class IniciarSesionController  {
 
 
     }
-    /*
+
     @Transactional
     @FXML
     void agregarAdministradorAerolineaExistente(ActionEvent event) {
         String codigoIATAAerol = codigoIATAAerolinea.getText();
+
         String nombreUsu = nombre.getText();
         String emailUsu = email.getText();
         Long pasaporteUsu = Long.parseLong(pasaporte.getText());
         String contrasenaUsu = contrasena.getText();
         String apellidoUsu = apellido.getText();
-        String codigoIATAAero = codigoIATAAeropuerto.getText();
 
-        Aerolinea aerolinea = aerolineaRepository.findAerolineaByCodigoIATAAerolinea(codigoIATAAerol);
 
-        if (codigoIATAAero == null || codigoIATAAero.equals("") ||
-                codigoIATAAerol == null || codigoIATAAerol.equals("") ||
-
+        if (codigoIATAAerol == null || codigoIATAAerol.equals("") ||
                 nombreUsu == null || nombreUsu.equals("")||
                 apellidoUsu == null || apellidoUsu.equals("")||
                 pasaporte.getText() == null || pasaporte.getText().equals("")||
@@ -394,16 +391,33 @@ public class IniciarSesionController  {
                     "No se ingresaron los datos necesarios para completar el ingreso.");
 
         } else {
-            UsuarioGeneral usu = new UsuarioGeneral(pasaporteUsu,nombreUsu,apellidoUsu,contrasenaUsu,emailUsu,aerolinea,"ADMINAEROLINEA");
-            usuarioGeneralRepository.save(usu);
 
-            showAlert("Administrador agregado", "Se agrego con exito el administrador de la aerolinea!");
+            //asegurar que exista aerolinea
+            //asegurar que no se repita email
+            //asegurar que no se repita pasaporte
+            UsuarioGeneralDTO usuarioGeneralDTO =  new UsuarioGeneralDTO();
+            usuarioGeneralDTO.setPasaporte(pasaporteUsu);
+            usuarioGeneralDTO.setNombre(nombreUsu);
+            usuarioGeneralDTO.setApellido(apellidoUsu);
+            usuarioGeneralDTO.setEmail(emailUsu);
+            usuarioGeneralDTO.setContrasena(contrasenaUsu);
+            usuarioGeneralDTO.setCodigoAeropuerto(null);
+            usuarioGeneralDTO.setTipo("ADMINAEROLINEA");
+            usuarioGeneralDTO.setCodigoAerolinea(codigoIATAAerol);
+
+
+
+            ResponseEntity response = usuarioGeneralRestService.agregarUsuarioGeneral(usuarioGeneralDTO);
+
+            if (response.getStatusCode() == HttpStatus.OK) {
+                showAlert("Administrador agregado", "Se agrego con exito el administrador de la aerolinea!");
+            }
 
         }
 
 
     }
-    */
+
 
     @FXML
     void cargarRegistrarAdministradorAerolinaExistente(ActionEvent event) throws IOException {
@@ -498,7 +512,7 @@ public class IniciarSesionController  {
         stage.show();
     }
 
-    /*
+
     @FXML
     public TableView<VueloDTO> tablaVuelosAceptadosLlegada;
 
@@ -530,38 +544,55 @@ public class IniciarSesionController  {
     public TableColumn<VueloDTO, String> matriculaAvionAceptadoSalida;
 
     @FXML
-    void cargarAdministradorAeropuerto(ActionEvent event, AeropuertoDTO aeropuerto) throws IOException {
+    void cargarAdministradorAeropuerto(ActionEvent event, String codigoAeropuerto) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setControllerFactory(Main.getContext()::getBean);
 
         Parent root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream("AdministradorAeropuerto.fxml"));
         Scene scene = new Scene(root);
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-        if(aeropuerto != null){
-            stage.setUserData(aeropuerto);
+        if(codigoAeropuerto != null){
+            stage.setUserData(codigoAeropuerto);
         }
         stage.setScene(scene);
 
-        ObservableList<VueloDTO> vuelosLlegada = FXCollections.observableArrayList(vueloRepository.findAllByAeropuertoDestinoAndAceptadoOrigenAndAceptadoDestinoAndRechadado(aeropuerto,true,true, false));
-        ObservableList<VueloDTO> vuelosSalida = FXCollections.observableArrayList(vueloRepository.findAllByAeropuertoOrigenAndAceptadoOrigenAndAceptadoDestinoAndRechadado(aeropuerto,true,true, false));
+        //ObservableList<VueloDTO> vuelosLlegada = FXCollections.observableArrayList(vueloRepository.findAllByAeropuertoDestinoAndAceptadoOrigenAndAceptadoDestinoAndRechadado(aeropuerto,true,true, false));
+        //ObservableList<VueloDTO> vuelosSalida = FXCollections.observableArrayList(vueloRepository.findAllByAeropuertoOrigenAndAceptadoOrigenAndAceptadoDestinoAndRechadado(aeropuerto,true,true, false));
 
+        ResponseEntity response1 = aeropuertoRestService.getListaAeropuertos(codigoAeropuerto);
+
+        List vueloDTOS = (List) response1.getBody();
+        List<VueloDTO> vuelosLle = new ArrayList<>();
+        for (int i=0;i<vueloDTOS.size();i++){
+            VueloDTO vueloDTO = new VueloDTO();
+            LinkedHashMap hashMap = (LinkedHashMap) vueloDTOS.get(i);
+            vueloDTO.setCodigoVuelo((String) hashMap.get("codigoVuelo"));
+            vueloDTO.setCodigoAeropuertoOrigen((String) hashMap.get("codigoAeropuertoOrigen"));
+            vueloDTO.setCodigoAeropuertoDestino((String) hashMap.get("codigoAeropuertoDestino"));
+            vueloDTO.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
+            vuelosLle.add(vueloDTO);
+        }
+
+
+
+        ObservableList<VueloDTO> vuelosLlegada = FXCollections.observableArrayList(vuelosLle);
 
         codigoVueloAceptadoLlegada.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
-        aeropuertoOrigenAceptadoLlegada.setCellValueFactory(new PropertyValueFactory<>("aeropuertoOrigen"));
-        aeropuertoDestinoAceptadoLlegada.setCellValueFactory(new PropertyValueFactory<>("aeropuertoDestino"));
-        matriculaAvionAceptadoLlegada.setCellValueFactory(new PropertyValueFactory<>("avion"));
+        aeropuertoOrigenAceptadoLlegada.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoOrigen"));
+        aeropuertoDestinoAceptadoLlegada.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoDestino"));
+        matriculaAvionAceptadoLlegada.setCellValueFactory(new PropertyValueFactory<>("matriculaAvion"));
         tablaVuelosAceptadosLlegada.setItems(vuelosLlegada);
-
+            /*
         codigoVueloAceptadoSalida.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
         aeropuertoOrigenAceptadoSalida.setCellValueFactory(new PropertyValueFactory<>("aeropuertoOrigen"));
         aeropuertoDestinoAceptadoSalida.setCellValueFactory(new PropertyValueFactory<>("aeropuertoDestino"));
         matriculaAvionAceptadoSalida.setCellValueFactory(new PropertyValueFactory<>("avion"));
-        tablaVuelosAceptadosSalida.setItems(vuelosSalida);
+        tablaVuelosAceptadosSalida.setItems(vuelosSalida);*/
 
         stage.show();
     }
 
-
+    /*
 
     @Autowired
     private VueloRepository vueloRepository;
@@ -743,7 +774,7 @@ public class IniciarSesionController  {
 
     }
 
-     */
+    */
 
 
     @FXML

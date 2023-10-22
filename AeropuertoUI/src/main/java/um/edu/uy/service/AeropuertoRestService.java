@@ -5,6 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import um.edu.uy.AeropuertoDTO;
+import um.edu.uy.VueloDTO;
+
+import java.util.List;
 
 @Component
 public class AeropuertoRestService {
@@ -16,5 +19,9 @@ public class AeropuertoRestService {
 
     public ResponseEntity agregarAeropuerto(AeropuertoDTO aeropuertoDTO){
         return restTemplate.postForEntity("http://localhost:8080/aeropuerto/agregar",aeropuertoDTO,AeropuertoDTO.class);
+    }
+
+    public ResponseEntity getListaAeropuertos(String codigoAeropuerto){
+        return restTemplate.postForEntity("http://localhost:8080/vuelo/getListaVuelos",codigoAeropuerto, List.class);
     }
 }

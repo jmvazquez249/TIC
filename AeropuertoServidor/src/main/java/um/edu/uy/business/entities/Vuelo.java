@@ -45,6 +45,10 @@ public class Vuelo {
     @Column(nullable = false)
     private boolean rechadado;
 
+    public String getAerolinea() {
+        return aerolinea.getCodigoIATAAerolinea();
+    }
+
     public void setRechadado(boolean rechadado) {
         this.rechadado = rechadado;
     }
@@ -64,12 +68,12 @@ public class Vuelo {
         return codigoVuelo;
     }
 
-    public Aeropuerto getAeropuertoDestino() {
-        return aeropuertoDestino;
+    public String getAeropuertoDestino() {
+        return aeropuertoDestino.getCodigoIATAAeropuerto();
     }
 
-    public Aeropuerto getAeropuertoOrigen() {
-        return aeropuertoOrigen;
+    public String getAeropuertoOrigen() {
+        return aeropuertoOrigen.getCodigoIATAAeropuerto();
     }
 
     public void setAceptadoOrigen(boolean aceptadoOrigen) {
@@ -86,5 +90,11 @@ public class Vuelo {
         this.aceptadoDestino = aceptadoDestino;
     }
 
+    public boolean isAceptadoOrigen() {
+        return aceptadoOrigen;
+    }
 
+    public boolean isAceptadoDestino() {
+        return aceptadoDestino;
+    }
 }

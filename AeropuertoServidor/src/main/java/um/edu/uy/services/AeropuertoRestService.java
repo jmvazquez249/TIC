@@ -10,6 +10,8 @@ import um.edu.uy.business.AeropuertoMapper;
 import um.edu.uy.business.entities.Aeropuerto;
 import um.edu.uy.persistence.AeropuertoRepository;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/aeropuerto")
 public class AeropuertoRestService {
@@ -29,5 +31,6 @@ public class AeropuertoRestService {
         Aeropuerto aeropuerto = aeropuertoMapper.toAeropuerto(aeropuertoDTO);
         aeropuertoRepository.save(aeropuerto);
     }
+
 
 }

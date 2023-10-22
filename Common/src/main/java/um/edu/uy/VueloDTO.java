@@ -6,28 +6,28 @@ public class VueloDTO {
 
     private String codigoVuelo;
 
-    private long idAeropuertoDestino;
+    private String codigoAeropuertoDestino;
 
-    private long idAeropuertoOrigen;
+    private String codigoAeropuertoOrigen;
 
-    private long idAvion;
+    private String matriculaAvion;
 
-    private long idAerolinea;
+    private String codigoAerolinea;
 
-    public long getIdAvion() {
-        return idAvion;
+    public String getMatriculaAvion() {
+        return matriculaAvion;
     }
 
-    public void setIdAvion(long idAvion) {
-        this.idAvion = idAvion;
+    public void setMatriculaAvion(String matriculaAvion) {
+        this.matriculaAvion = matriculaAvion;
     }
 
-    public long getIdAerolinea() {
-        return idAerolinea;
+    public String getCodigoAerolinea() {
+        return codigoAerolinea;
     }
 
-    public void setIdAerolinea(long idAerolinea) {
-        this.idAerolinea = idAerolinea;
+    public void setCodigoAerolinea(String codigoAerolinea) {
+        this.codigoAerolinea = codigoAerolinea;
     }
 
     private boolean aceptadoOrigen;
@@ -55,20 +55,20 @@ public class VueloDTO {
         this.codigoVuelo = codigoVuelo;
     }
 
-    public long getIdAeropuertoDestino() {
-        return idAeropuertoDestino;
+    public String getCodigoAeropuertoDestino() {
+        return codigoAeropuertoDestino;
     }
 
-    public void setIdAeropuertoDestino(long idAeropuertoDestino) {
-        this.idAeropuertoDestino = idAeropuertoDestino;
+    public void setCodigoAeropuertoDestino(String codigoAeropuertoDestino) {
+        this.codigoAeropuertoDestino = codigoAeropuertoDestino;
     }
 
-    public long getIdAeropuertoOrigen() {
-        return idAeropuertoOrigen;
+    public String getCodigoAeropuertoOrigen() {
+        return codigoAeropuertoOrigen;
     }
 
-    public void setIdAeropuertoOrigen(long idAeropuertoOrigen) {
-        this.idAeropuertoOrigen = idAeropuertoOrigen;
+    public void setCodigoAeropuertoOrigen(String codigoAeropuertoOrigen) {
+        this.codigoAeropuertoOrigen = codigoAeropuertoOrigen;
     }
 
     public boolean isAceptadoOrigen() {
