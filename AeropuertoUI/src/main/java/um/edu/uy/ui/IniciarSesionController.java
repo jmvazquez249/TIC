@@ -556,13 +556,15 @@ public class IniciarSesionController  {
         }
         stage.setScene(scene);
 
-        //ObservableList<VueloDTO> vuelosLlegada = FXCollections.observableArrayList(vueloRepository.findAllByAeropuertoDestinoAndAceptadoOrigenAndAceptadoDestinoAndRechadado(aeropuerto,true,true, false));
-        //ObservableList<VueloDTO> vuelosSalida = FXCollections.observableArrayList(vueloRepository.findAllByAeropuertoOrigenAndAceptadoOrigenAndAceptadoDestinoAndRechadado(aeropuerto,true,true, false));
-
-        ResponseEntity response1 = aeropuertoRestService.getListaAeropuertos(codigoAeropuerto);
+        ResponseEntity response1 = aeropuertoRestService.getListaAeropuertosLlegada(codigoAeropuerto);
+        ResponseEntity response2 = aeropuertoRestService.getListaAeropuertosSalida(codigoAeropuerto);
 
         List vueloDTOS = (List) response1.getBody();
+        List vueloDTOS2 = (List) response2.getBody();
+
         List<VueloDTO> vuelosLle = new ArrayList<>();
+        List<VueloDTO> vuelosSal = new ArrayList<>();
+
         for (int i=0;i<vueloDTOS.size();i++){
             VueloDTO vueloDTO = new VueloDTO();
             LinkedHashMap hashMap = (LinkedHashMap) vueloDTOS.get(i);
@@ -573,21 +575,35 @@ public class IniciarSesionController  {
             vuelosLle.add(vueloDTO);
         }
 
+        for (int i=0;i<vueloDTOS2.size();i++){
+            VueloDTO vueloDTO2 = new VueloDTO();
+            LinkedHashMap hashMap = (LinkedHashMap) vueloDTOS2.get(i);
+            vueloDTO2.setCodigoVuelo((String) hashMap.get("codigoVuelo"));
+            vueloDTO2.setCodigoAeropuertoOrigen((String) hashMap.get("codigoAeropuertoOrigen"));
+            vueloDTO2.setCodigoAeropuertoDestino((String) hashMap.get("codigoAeropuertoDestino"));
+            vueloDTO2.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
+            vuelosSal.add(vueloDTO2);
+        }
+
 
 
         ObservableList<VueloDTO> vuelosLlegada = FXCollections.observableArrayList(vuelosLle);
+        ObservableList<VueloDTO> vuelosSalida = FXCollections.observableArrayList(vuelosSal);
+
+
 
         codigoVueloAceptadoLlegada.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
         aeropuertoOrigenAceptadoLlegada.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoOrigen"));
         aeropuertoDestinoAceptadoLlegada.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoDestino"));
         matriculaAvionAceptadoLlegada.setCellValueFactory(new PropertyValueFactory<>("matriculaAvion"));
         tablaVuelosAceptadosLlegada.setItems(vuelosLlegada);
-            /*
+
+
         codigoVueloAceptadoSalida.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
-        aeropuertoOrigenAceptadoSalida.setCellValueFactory(new PropertyValueFactory<>("aeropuertoOrigen"));
-        aeropuertoDestinoAceptadoSalida.setCellValueFactory(new PropertyValueFactory<>("aeropuertoDestino"));
-        matriculaAvionAceptadoSalida.setCellValueFactory(new PropertyValueFactory<>("avion"));
-        tablaVuelosAceptadosSalida.setItems(vuelosSalida);*/
+        aeropuertoOrigenAceptadoSalida.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoOrigen"));
+        aeropuertoDestinoAceptadoSalida.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoDestino"));
+        matriculaAvionAceptadoSalida.setCellValueFactory(new PropertyValueFactory<>("matriculaAvion"));
+        tablaVuelosAceptadosSalida.setItems(vuelosSalida);
 
         stage.show();
     }
