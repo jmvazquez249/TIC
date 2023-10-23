@@ -52,5 +52,13 @@ public class AerolineaRestService {
         avionRepository.save(avion);
         aerolineaRepository.save(aerolinea);
     }
+    @PostMapping("/getAerolinea")
+    public AerolineaDTO getAerolinea(@RequestBody String codigoIATAAerolinea){
+        Aerolinea aerolinea = aerolineaRepository.findAerolineaByCodigoIATAAerolinea(codigoIATAAerolinea);
+        if (aerolinea==null){
+            return null;
+        }
+        return aerolineaMapper.toAerolineaDTO(aerolinea);
+    }
 
 }

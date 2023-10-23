@@ -22,5 +22,8 @@ public class AerolineaRestService {
     public ResponseEntity agregarAvionAerolinea(AvionDTO avionDTO){
         return restTemplate.postForEntity("http://localhost:8080/aerolinea/avion",avionDTO,AvionDTO.class);
     }
+    public ResponseEntity getAerolinea(String codigoIATAAerolinea){
+        return restTemplate.postForEntity("http://localhost:8080/aerolinea/getAerolinea",codigoIATAAerolinea, AerolineaDTO.class);
+    }
 
 }
