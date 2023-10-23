@@ -33,4 +33,7 @@ public class AeropuertoRestService {
     }
 
 
+    public ResponseEntity getAeropuerto(String codigoAeropuerto){
+        return restTemplate.postForEntity("http://localhost:8080/aeropuerto/getAeropuerto",codigoAeropuerto,AeropuertoDTO.class);
+    }
 }

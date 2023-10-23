@@ -12,6 +12,14 @@ public class AeropuertoMapper {
         Aeropuerto aeropuerto = new Aeropuerto(aeropuertoDTO.getCodigoIATAAeropuerto(), aeropuertoDTO.getNombre(), aeropuertoDTO.getCiudad(), aeropuertoDTO.getPais());
         return aeropuerto;
     }
+    public AeropuertoDTO toAeropuertoDTO(Aeropuerto aeropuerto){
+        AeropuertoDTO aeropuertoDTO = new AeropuertoDTO();
+        aeropuertoDTO.setCodigoIATAAeropuerto(aeropuerto.getCodigoIATAAeropuerto());
+        aeropuertoDTO.setNombre(aeropuerto.getNombre());
+        aeropuertoDTO.setCiudad(aeropuerto.getCiudad());
+        aeropuertoDTO.setPais(aeropuerto.getPais());
+        return aeropuertoDTO;
+    }
 
 
 

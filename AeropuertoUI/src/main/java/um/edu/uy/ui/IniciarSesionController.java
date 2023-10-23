@@ -136,7 +136,31 @@ public class IniciarSesionController  {
         String contrasenaAdAero = contrasena.getText();
         String codigoAeropuertoAdAero = codigoaeropuerto.getText();
 
-        if (pasaporte.getText() == null ||pasaporte.getText().equals("") ||
+        ResponseEntity response1 = aeropuertoRestService.getAeropuerto(codigoAeropuertoAdAero);
+        AeropuertoDTO aeropuertoDTO = (AeropuertoDTO) response1.getBody();
+
+        ResponseEntity response2 = usuarioGeneralRestService.getUsuarioGeneralPasaporte(pasaporteAdAero);
+        UsuarioGeneralDTO usuarioGeneralDTOPasaporte = (UsuarioGeneralDTO) response2.getBody();
+
+
+
+        //funcion para controlar que exista el aeropuerto dentro de la base de datos comparandolo con el codigo del aeropuerto
+        if (aeropuertoDTO != null){
+            String codigoIATAAeropuerto = aeropuertoDTO.getCodigoIATAAeropuerto();
+            if (!codigoIATAAeropuerto.equals(codigoAeropuertoAdAero)){
+                showAlert("Aeropuerto no existe", "El aeropuerto no esta registrado");
+            }
+
+        }
+        else if (usuarioGeneralDTOPasaporte != null){
+            long pasaporte = usuarioGeneralDTOPasaporte.getPasaporte();
+            if (pasaporte == pasaporteAdAero){
+                showAlert("Administrador ya existe", "El administrador ya esta registrado");
+            }
+        }
+
+
+        else if (pasaporte.getText() == null ||pasaporte.getText().equals("") ||
                 nombreAdAero == null || nombreAdAero.equals("") ||
                 apellidoAdAero == null || apellidoAdAero.equals("")||
                 contrasenaAdAero == null || contrasenaAdAero.equals("")||
@@ -146,11 +170,9 @@ public class IniciarSesionController  {
             showAlert(
                     "Datos faltantes!",
                     "No se ingresaron los datos necesarios para completar el ingreso.");
-            //Controlar que exista aeropuerto
 
 
-        //}else if (usuarioGeneralRepository.findOneByPasaporte(pasaporteAdAero)!=null) {
-        //   showAlert("Administradoe Ya Existe","El administrador ya esta resgistrado");
+
         } else {
             UsuarioGeneralDTO usuarioGeneralDTO = new UsuarioGeneralDTO();
             usuarioGeneralDTO.setPasaporte(pasaporteAdAero);
@@ -194,6 +216,7 @@ public class IniciarSesionController  {
                     "Datos faltantes!",
                     "No se ingresaron los datos necesarios para completar el ingreso.");
         }
+
         //else if  (usuarioGeneralRepository.findOneByEmail(emailUsu)!=null){
         //    showAlert("Usuario Ya Existe","El usuario ya esta registrado");
         //}
@@ -267,12 +290,6 @@ public class IniciarSesionController  {
                 showAlert("Aeropuerto agregado", "Se agrego con exito el aeropuerto!");
 
             }
-
-
-
-
-
-
 
         }
     }
