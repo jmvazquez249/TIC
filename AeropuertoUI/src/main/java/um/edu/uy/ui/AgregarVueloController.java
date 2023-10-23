@@ -111,7 +111,7 @@ public class AgregarVueloController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        /*
         List<AeropuertoDTO> aeropuertos = aeropuertoRepository.findAll();
         List<Avion> aviones = avionRepository.findAll();
         for (int i=0; i<aeropuertos.size();i++) {
@@ -124,6 +124,8 @@ public class AgregarVueloController implements Initializable {
             String avion = aviones.get(j).getMatricula();
             matricula.getItems().addAll(avion);
         }
+
+         */
 
 
     }

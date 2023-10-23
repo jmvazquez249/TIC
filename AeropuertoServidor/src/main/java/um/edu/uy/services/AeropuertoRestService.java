@@ -35,6 +35,9 @@ public class AeropuertoRestService {
     @PostMapping("/getAeropuerto")
     public AeropuertoDTO getAeropuerto(@RequestBody String codigoIATAAeropuerto){
         Aeropuerto aeropuerto = aeropuertoRepository.findAeropuertoByCodigoIATAAeropuerto(codigoIATAAeropuerto);
+        if (aeropuerto==null){
+            return null;
+        }
         return aeropuertoMapper.toAeropuertoDTO(aeropuerto);
     }
 

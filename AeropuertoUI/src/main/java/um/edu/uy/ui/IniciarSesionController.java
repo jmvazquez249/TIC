@@ -139,41 +139,31 @@ public class IniciarSesionController  {
         ResponseEntity response1 = aeropuertoRestService.getAeropuerto(codigoAeropuertoAdAero);
         AeropuertoDTO aeropuertoDTO = (AeropuertoDTO) response1.getBody();
 
-        ResponseEntity response2 = usuarioGeneralRestService.getUsuarioGeneralPasaporte(pasaporteAdAero);
-        UsuarioGeneralDTO usuarioGeneralDTOPasaporte = (UsuarioGeneralDTO) response2.getBody();
 
 
-
-        //funcion para controlar que exista el aeropuerto dentro de la base de datos comparandolo con el codigo del aeropuerto
-        if (aeropuertoDTO != null){
-            String codigoIATAAeropuerto = aeropuertoDTO.getCodigoIATAAeropuerto();
-            if (!codigoIATAAeropuerto.equals(codigoAeropuertoAdAero)){
-                showAlert("Aeropuerto no existe", "El aeropuerto no esta registrado");
-            }
-
-        }
-        else if (usuarioGeneralDTOPasaporte != null){
-            long pasaporte = usuarioGeneralDTOPasaporte.getPasaporte();
-            if (pasaporte == pasaporteAdAero){
-                showAlert("Administrador ya existe", "El administrador ya esta registrado");
-            }
-        }
-
-
-        else if (pasaporte.getText() == null ||pasaporte.getText().equals("") ||
-                nombreAdAero == null || nombreAdAero.equals("") ||
-                apellidoAdAero == null || apellidoAdAero.equals("")||
-                contrasenaAdAero == null || contrasenaAdAero.equals("")||
-                codigoAeropuertoAdAero == null || codigoAeropuertoAdAero.equals("")||
-                emailAdAero == null || emailAdAero.equals("")) {
+        if(aeropuertoDTO==null){
 
             showAlert(
-                    "Datos faltantes!",
-                    "No se ingresaron los datos necesarios para completar el ingreso.");
+                    "Aeropuero No existe",
+                    "El aeropuerto ingresado no existe");
+
+
+        }
+        //funcion para controlar que exista el aeropuerto dentro de la base de datos comparandolo con el codigo del aeropuerto
+        else if (pasaporte.getText() == null ||pasaporte.getText().equals("") ||
+                    nombreAdAero == null || nombreAdAero.equals("") ||
+                    apellidoAdAero == null || apellidoAdAero.equals("")||
+                    contrasenaAdAero == null || contrasenaAdAero.equals("")||
+                    codigoAeropuertoAdAero == null || codigoAeropuertoAdAero.equals("")||
+                    emailAdAero == null || emailAdAero.equals("")) {
+
+                showAlert(
+                        "Datos faltantes!",
+                        "No se ingresaron los datos necesarios para completar el ingreso.");
 
 
 
-        } else {
+            } else {
             UsuarioGeneralDTO usuarioGeneralDTO = new UsuarioGeneralDTO();
             usuarioGeneralDTO.setPasaporte(pasaporteAdAero);
             usuarioGeneralDTO.setEmail(emailAdAero);
@@ -192,6 +182,7 @@ public class IniciarSesionController  {
                 showAlert("Administrador agregado", "Se agrego con exito el Administrador!");
 
             }
+
         }
 
     }
