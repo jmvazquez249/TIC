@@ -140,7 +140,6 @@ public class IniciarSesionController  {
         AeropuertoDTO aeropuertoDTO = (AeropuertoDTO) response1.getBody();
 
 
-
         if(aeropuertoDTO==null){
 
             showAlert(
