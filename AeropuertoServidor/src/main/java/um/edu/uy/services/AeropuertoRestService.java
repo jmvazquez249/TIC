@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import um.edu.uy.AeropuertoDTO;
+import um.edu.uy.VueloDTO;
 import um.edu.uy.business.AeropuertoMapper;
 import um.edu.uy.business.entities.Aeropuerto;
 import um.edu.uy.persistence.AeropuertoRepository;
@@ -31,6 +32,8 @@ public class AeropuertoRestService {
         Aeropuerto aeropuerto = aeropuertoMapper.toAeropuerto(aeropuertoDTO);
         aeropuertoRepository.save(aeropuerto);
     }
+
+
 
 
 }

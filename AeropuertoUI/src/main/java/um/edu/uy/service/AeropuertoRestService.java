@@ -21,10 +21,16 @@ public class AeropuertoRestService {
         return restTemplate.postForEntity("http://localhost:8080/aeropuerto/agregar",aeropuertoDTO,AeropuertoDTO.class);
     }
 
-    public ResponseEntity getListaAeropuertosLlegada(String codigoAeropuerto){
+    public ResponseEntity getListaAeropuertosLlegada(String codigoAeropuerto){//cambiar a VuelosLlegadaConfirmados
         return restTemplate.postForEntity("http://localhost:8080/vuelo/getListaVuelosLlegada",codigoAeropuerto, List.class);
     }
-    public ResponseEntity getListaAeropuertosSalida(String codigoAeropuerto){
+    public ResponseEntity getListaAeropuertosSalida(String codigoAeropuerto){//Idem
         return restTemplate.postForEntity("http://localhost:8080/vuelo/getListaVuelosSalida",codigoAeropuerto, List.class);
     }
+
+    public ResponseEntity getListaVuelosSinConfirmarLlegada(String codigoAeropuerto){
+        return restTemplate.postForEntity("http://localhost:8080/vuelo/getListaVuelosSinConfirmarLlegada",codigoAeropuerto, List.class);
+    }
+
+
 }

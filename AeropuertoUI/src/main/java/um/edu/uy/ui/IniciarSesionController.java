@@ -109,7 +109,7 @@ public class IniciarSesionController  {
                     redireccion(event,"CheckIn.fxml",null);
                 }
                 else if (tipoUsuario.equals("OFICINA")){
-                    //redireccion(event,"UsuarioAerolinea.fxml",usu.getAerolinea());
+                    redireccion(event,"UsuarioAerolinea.fxml",usu.getCodigoAerolinea());
                 }
                 else if (tipoUsuario.equals("MALETERIA")){
                     redireccion(event, "Maletero.fxml", null);
@@ -117,7 +117,7 @@ public class IniciarSesionController  {
                 else if (tipoUsuario.equals("BOARDING")){
                     redireccion(event, "Boarding.fxml", null);
                 }else if (tipoUsuario.equals("ADMINVUELOS")){
-                    //cargarAdministradorVuelos(event, usu.getAeropuerto());
+                    cargarAdministradorVuelos(event, usu.getCodigoAeropuerto());
                 }
             } else{
                 showAlert("No Existe Usuario","El usuario no esta registrado");
@@ -608,27 +608,25 @@ public class IniciarSesionController  {
         stage.show();
     }
 
-    /*
 
-    @Autowired
-    private VueloRepository vueloRepository;
-    @FXML
-    private TableView<Vuelo> tablaLlegada;
-    @FXML
-    private TableColumn<Vuelo,String> aeropuertoOrigen;
-    @FXML
-    private TableColumn<Vuelo, String> codigoVueloLlegada;
-    @FXML
-    private TableColumn<Avion,String> matriculaAvionLlegada;
 
     @FXML
-    private TableView<Vuelo> tablaSalida;
+    private TableView<VueloDTO> tablaLlegada;
     @FXML
-    private TableColumn<Vuelo,String> aeropuertoDestino;
+    private TableColumn<VueloDTO,String> aeropuertoOrigen;
     @FXML
-    private TableColumn<Vuelo, String> codigoVueloSalida;
+    private TableColumn<VueloDTO, String> codigoVueloLlegada;
     @FXML
-    private TableColumn<Avion,String> matriculaAvionSalida;
+    private TableColumn<VueloDTO,String> matriculaAvionLlegada;
+
+    @FXML
+    private TableView<VueloDTO> tablaSalida;
+    @FXML
+    private TableColumn<VueloDTO,String> aeropuertoDestino;
+    @FXML
+    private TableColumn<VueloDTO, String> codigoVueloSalida;
+    @FXML
+    private TableColumn<VueloDTO,String> matriculaAvionSalida;
 
 
 
@@ -636,7 +634,7 @@ public class IniciarSesionController  {
 
 
     @FXML
-    void cargarAdministradorVuelos(ActionEvent event, Aeropuerto aeropuerto) throws IOException {
+    void cargarAdministradorVuelos(ActionEvent event, String codigoAeropuerto) throws IOException {
 
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setControllerFactory(Main.getContext()::getBean);
@@ -646,31 +644,49 @@ public class IniciarSesionController  {
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
 
         stage.setScene(scene);
+
+        ResponseEntity response1 = aeropuertoRestService.getListaVuelosSinConfirmarLlegada(codigoAeropuerto);
+
+        List vueloDTOS = (List) response1.getBody();
+        List<VueloDTO> vuelosLle = new ArrayList<>();
+
+        for (int i=0;i<vueloDTOS.size();i++){
+            VueloDTO vueloDTO = new VueloDTO();
+            LinkedHashMap hashMap = (LinkedHashMap) vueloDTOS.get(i);
+            vueloDTO.setCodigoVuelo((String) hashMap.get("codigoVuelo"));
+            vueloDTO.setCodigoAeropuertoOrigen((String) hashMap.get("codigoAeropuertoOrigen"));
+            vueloDTO.setCodigoAeropuertoDestino((String) hashMap.get("codigoAeropuertoDestino"));
+            vueloDTO.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
+            vuelosLle.add(vueloDTO);
+        }
+        System.out.println(vuelosLle);
+
         //chquear funcion destinio origen
-        ObservableList<Vuelo> vuelosLlegada = FXCollections.observableArrayList(vueloRepository.findAllByAeropuertoDestinoAndAceptadoDestinoAndRechadado(aeropuerto,false,false));
-        ObservableList<Vuelo> vuelosSalida = FXCollections.observableArrayList(vueloRepository.findAllByAeropuertoOrigenAndAceptadoOrigenAndRechadado(aeropuerto,false,false));
+        //ObservableList<Vuelo> vuelosLlegada = FXCollections.observableArrayList(vueloRepository.findAllByAeropuertoDestinoAndAceptadoDestinoAndRechadado(aeropuerto,false,false));
+        //ObservableList<Vuelo> vuelosSalida = FXCollections.observableArrayList(vueloRepository.findAllByAeropuertoOrigenAndAceptadoOrigenAndRechadado(aeropuerto,false,false));
 
 
-        codigoVueloLlegada.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
-        aeropuertoOrigen.setCellValueFactory(new PropertyValueFactory<>("aeropuertoOrigen"));
-        matriculaAvionLlegada.setCellValueFactory(new PropertyValueFactory<>("avion"));
-        tablaLlegada.setItems(vuelosLlegada);
-        addButtonToTableAceptar(tablaLlegada, true, aeropuerto);
-        addButtonToTableRechazar(tablaLlegada,aeropuerto);
+        //codigoVueloLlegada.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
+        //aeropuertoOrigen.setCellValueFactory(new PropertyValueFactory<>("aeropuertoOrigen"));
+        //matriculaAvionLlegada.setCellValueFactory(new PropertyValueFactory<>("avion"));
+        //tablaLlegada.setItems(vuelosLlegada);
+        //addButtonToTableAceptar(tablaLlegada, true, aeropuerto);
+        //addButtonToTableRechazar(tablaLlegada,aeropuerto);
 
 
-        codigoVueloSalida.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
-        aeropuertoDestino.setCellValueFactory(new PropertyValueFactory<>("aeropuertoDestino"));
-        matriculaAvionSalida.setCellValueFactory(new PropertyValueFactory<>("avion"));
-        tablaSalida.setItems(vuelosSalida);
-        addButtonToTableAceptar(tablaSalida, false, aeropuerto);
-        addButtonToTableRechazar(tablaSalida,aeropuerto);
+        //codigoVueloSalida.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
+        //aeropuertoDestino.setCellValueFactory(new PropertyValueFactory<>("aeropuertoDestino"));
+        //matriculaAvionSalida.setCellValueFactory(new PropertyValueFactory<>("avion"));
+        //tablaSalida.setItems(vuelosSalida);
+        //addButtonToTableAceptar(tablaSalida, false, aeropuerto);
+        //addButtonToTableRechazar(tablaSalida,aeropuerto);
 
         stage.show();
 
 
 
     }
+    /*
     private void addButtonToTableAceptar(TableView t, boolean llegada, Aeropuerto aeropuerto) {
         TableColumn<Data, Void> colBtn = new TableColumn("Aceptar");
 

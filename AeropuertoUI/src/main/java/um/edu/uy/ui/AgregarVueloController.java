@@ -16,9 +16,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Text;
+import um.edu.uy.AeropuertoDTO;
 import um.edu.uy.Main;
+import um.edu.uy.VueloDTO;
+import um.edu.uy.service.VueloRestService;
 
 
 import javax.transaction.Transactional;
@@ -39,7 +44,10 @@ public class AgregarVueloController implements Initializable {
     @FXML
     private TextField codigoIATAAvuelo;
 
-    /*
+    @Autowired
+    private VueloRestService vueloRestService;
+
+
     @Transactional
     @FXML
     void registrarVuelo(ActionEvent event){
@@ -48,15 +56,9 @@ public class AgregarVueloController implements Initializable {
         String codigoIATAAeropOri = codigoIATAeropuertoOrigen.getValue();
         Long codigoIATAVue = Long.parseLong(codigoIATAAvuelo.getText());
 
-        Aeropuerto aeropuertoDestino = aeropuertoRepository.findAeropuertoByCodigoIATAAeropuerto(codigoIATAAeropDest);
-        Aeropuerto aeropuertoOrigen = aeropuertoRepository.findAeropuertoByCodigoIATAAeropuerto(codigoIATAAeropOri);
-        Avion avion = avionRepository.findByMatricula(matriculaAvion);
 
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-        Aerolinea aero = (Aerolinea) stage.getUserData();
-        String codigoIATAAerol = aero.getCodigoIATAAerolinea();
-
-
+        String codAerol = (String) stage.getUserData();
 
         if (matriculaAvion == null || matriculaAvion.equals("") ||
                 codigoIATAAeropDest == null || codigoIATAAeropDest.equals("")||
@@ -65,14 +67,21 @@ public class AgregarVueloController implements Initializable {
             showAlert("Datos faltantes!", "No se ingresaron los datos necesarios para completar el ingreso.");
         } else {
 
-            List<Vuelo> vuelosAero = aero.getVuelos();
-            Vuelo vuelo = new Vuelo(codigoIATAAerol+codigoIATAVue,aeropuertoDestino,aeropuertoOrigen,avion,aero,false,false);
-            vuelosAero.add(vuelo);
+            VueloDTO vueloDTO = new VueloDTO();
+            vueloDTO.setCodigoVuelo(codAerol+codigoIATAVue);
+            vueloDTO.setCodigoAeropuertoDestino(codigoIATAAeropDest);
+            vueloDTO.setCodigoAeropuertoOrigen(codigoIATAAeropOri);
+            vueloDTO.setMatriculaAvion(matriculaAvion);
+            vueloDTO.setCodigoAerolinea(codAerol);
+            vueloDTO.setAceptadoOrigen(false);
+            vueloDTO.setAcepradoDestino(false);
+            vueloDTO.setRechadado(false);
 
-            vueloRepository.save(vuelo);
-            aerolineaRepository.save(aero);
-            showAlert("Vuelo agregado", "Se agrego con exito el vuelo!");
+            ResponseEntity response = vueloRestService.agregarVuelo(vueloDTO);
 
+            if (response.getStatusCode() == HttpStatus.OK) {
+                showAlert("Vuelo agregado", "Se agrego con exito el vuelo!");
+            }
 
         }
     }
@@ -99,11 +108,11 @@ public class AgregarVueloController implements Initializable {
     }
 
 
-     */
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        /*
-        List<Aeropuerto> aeropuertos = aeropuertoRepository.findAll();
+
+        List<AeropuertoDTO> aeropuertos = aeropuertoRepository.findAll();
         List<Avion> aviones = avionRepository.findAll();
         for (int i=0; i<aeropuertos.size();i++) {
             String aeropuerto = aeropuertos.get(i).getCodigoIATAAeropuerto();
@@ -116,7 +125,7 @@ public class AgregarVueloController implements Initializable {
             matricula.getItems().addAll(avion);
         }
 
-         */
+
     }
 
 
