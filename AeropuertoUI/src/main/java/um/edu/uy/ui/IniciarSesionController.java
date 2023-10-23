@@ -374,7 +374,34 @@ public class IniciarSesionController  {
         String contrasenaUsu = contrasena.getText();
         String apellidoUsu = apellido.getText();
 
-        if (nombreAero == null || nombreAero.equals("") ||
+        ResponseEntity response3 = aerolineaRestService.getAerolinea(codigoIATAAerol);
+        AerolineaDTO aerolineaDTOCodigo = (AerolineaDTO) response3.getBody();
+
+        ResponseEntity response4 = usuarioGeneralRestService.getUsuarioGeneralPasaporte(pasaporteUsu);
+        UsuarioGeneralDTO usuarioGeneralDTOPasaporte = (UsuarioGeneralDTO) response4.getBody();
+
+        ResponseEntity response5 = usuarioGeneralRestService.getUsuarioGeneralEmail(emailUsu);
+        UsuarioGeneralDTO usuarioGeneralDTOEmail = (UsuarioGeneralDTO) response5.getBody();
+
+
+
+        if(aerolineaDTOCodigo!=null){
+            showAlert(
+                    "Aerolinea ya registrada",
+                    "La aerolinea ingresada ya esta registrada");
+        }
+        else if(usuarioGeneralDTOPasaporte!=null){
+            showAlert(
+                    "Pasaporte ya registrado",
+                    "El pasaporte ingresado ya esta registrado");
+        }
+        else if(usuarioGeneralDTOEmail!=null){
+            showAlert(
+                    "Email ya registrado",
+                    "El email ingresado ya esta registrado");
+        }
+
+        else if (nombreAero == null || nombreAero.equals("") ||
                 codigoIATAAerol == null || codigoIATAAerol.equals("") ||
                 nombreUsu == null || nombreUsu.equals("")||
                 apellidoUsu == null || apellidoUsu.equals("")||
@@ -386,8 +413,7 @@ public class IniciarSesionController  {
                     "Datos faltantes!",
                     "No se ingresaron los datos necesarios para completar el ingreso.");
 
-        //} else if (aerolineaRepository.findAerolineaByCodigoIATAAerolinea(codigoIATAAerol)!=null) {
-        //   showAlert("Aerolinea Ya Existe","Aerolinea ya esta registrada");
+
         } else {
             AerolineaDTO aerolineaDTO = new AerolineaDTO();
             aerolineaDTO.setCodigoIATAAerolinea(codigoIATAAerol);
@@ -412,14 +438,7 @@ public class IniciarSesionController  {
                 showAlert("Aerolinea agregado", "Se agrego con exito la aerolinea!");
             }
 
-
-
-
-
-
-
         }
-
 
     }
 
@@ -434,8 +453,43 @@ public class IniciarSesionController  {
         String contrasenaUsu = contrasena.getText();
         String apellidoUsu = apellido.getText();
 
+        ResponseEntity response3 = aerolineaRestService.getAerolinea(codigoIATAAerol);
+        AerolineaDTO aerolineaDTOCodigo = (AerolineaDTO) response3.getBody();
 
-        if (codigoIATAAerol == null || codigoIATAAerol.equals("") ||
+        ResponseEntity response4 = usuarioGeneralRestService.getUsuarioGeneralPasaporte(pasaporteUsu);
+        UsuarioGeneralDTO usuarioGeneralDTOPasaporte = (UsuarioGeneralDTO) response4.getBody();
+
+        ResponseEntity response5 = usuarioGeneralRestService.getUsuarioGeneralEmail(emailUsu);
+        UsuarioGeneralDTO usuarioGeneralDTOEmail = (UsuarioGeneralDTO) response5.getBody();
+
+        if(aerolineaDTOCodigo==null){
+            showAlert(
+                    "Aerolinea no registrada",
+                    "La aerolinea ingresada no esta registrada");
+        }
+        else if(usuarioGeneralDTOPasaporte!=null){
+            showAlert(
+                    "Pasaporte ya registrado",
+                    "El pasaporte ingresado ya esta registrado");
+        }
+        else if(usuarioGeneralDTOEmail!=null){
+            showAlert(
+                    "Email ya registrado",
+                    "El email ingresado ya esta registrado");
+        }
+
+        else if (nombreUsu == null || nombreUsu.equals("")||
+                apellidoUsu == null || apellidoUsu.equals("")||
+                pasaporte.getText() == null || pasaporte.getText().equals("")||
+                contrasenaUsu == null || contrasenaUsu.equals("")||
+                emailUsu == null || emailUsu.equals("")) {
+
+            showAlert(
+                    "Datos faltantes!",
+                    "No se ingresaron los datos necesarios para completar el ingreso.");}
+
+
+        else if (codigoIATAAerol == null || codigoIATAAerol.equals("") ||
                 nombreUsu == null || nombreUsu.equals("")||
                 apellidoUsu == null || apellidoUsu.equals("")||
                 pasaporte.getText() == null || pasaporte.getText().equals("")||
@@ -448,9 +502,7 @@ public class IniciarSesionController  {
 
         } else {
 
-            //asegurar que exista aerolinea
-            //asegurar que no se repita email
-            //asegurar que no se repita pasaporte
+
             UsuarioGeneralDTO usuarioGeneralDTO =  new UsuarioGeneralDTO();
             usuarioGeneralDTO.setPasaporte(pasaporteUsu);
             usuarioGeneralDTO.setNombre(nombreUsu);

@@ -18,4 +18,10 @@ public class AerolineaMapper {
         Avion avion = new Avion(avionDTO.getMatricula(), avionDTO.getModelo(), avionDTO.getCapacidad());
         return avion;
     }
+    public AerolineaDTO toAerolineaDTO(Aerolinea aerolinea){
+        AerolineaDTO aerolineaDTO = new AerolineaDTO();
+        aerolineaDTO.setCodigoIATAAerolinea(aerolinea.getCodigoIATAAerolinea());
+        aerolineaDTO.setNombre(aerolinea.getNombre());
+        return aerolineaDTO;
+    }
 }
