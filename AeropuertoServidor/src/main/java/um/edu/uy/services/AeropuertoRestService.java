@@ -11,6 +11,7 @@ import um.edu.uy.business.AeropuertoMapper;
 import um.edu.uy.business.entities.Aeropuerto;
 import um.edu.uy.persistence.AeropuertoRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -39,6 +40,17 @@ public class AeropuertoRestService {
             return null;
         }
         return aeropuertoMapper.toAeropuertoDTO(aeropuerto);
+    }
+
+    @PostMapping("/getAeropuertos")
+    public List<AeropuertoDTO> getAeropuertos(){
+        List<Aeropuerto> aeropuertos = aeropuertoRepository.findAll();
+        List<AeropuertoDTO> aeropuertoDTOS = new ArrayList<>();
+        for(int i=0;i< aeropuertos.size();i++){
+            Aeropuerto aeropuerto = aeropuertos.get(i);
+            aeropuertoDTOS.add(aeropuertoMapper.toAeropuertoDTO(aeropuerto));
+        }
+        return aeropuertoDTOS;
     }
 
 

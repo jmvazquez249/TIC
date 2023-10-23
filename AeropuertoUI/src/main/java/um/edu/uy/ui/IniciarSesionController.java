@@ -21,6 +21,7 @@ import um.edu.uy.*;
 import um.edu.uy.service.AerolineaRestService;
 import um.edu.uy.service.AeropuertoRestService;
 import um.edu.uy.service.UsuarioGeneralRestService;
+import um.edu.uy.service.VueloRestService;
 
 import javax.transaction.Transactional;
 import javax.xml.crypto.Data;
@@ -109,7 +110,7 @@ public class IniciarSesionController  {
                     redireccion(event,"CheckIn.fxml",null);
                 }
                 else if (tipoUsuario.equals("OFICINA")){
-                    redireccion(event,"UsuarioAerolinea.fxml",usu.getCodigoAerolinea());
+                    cargarAgregarVuelo(event,"UsuarioAerolinea.fxml",usu.getCodigoAerolinea());
                 }
                 else if (tipoUsuario.equals("MALETERIA")){
                     redireccion(event, "Maletero.fxml", null);
@@ -666,6 +667,7 @@ public class IniciarSesionController  {
             vueloDTO.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
             vuelosLle.add(vueloDTO);
         }
+
         System.out.println(vuelosLle);
 
         //chquear funcion destinio origen
@@ -756,7 +758,9 @@ public class IniciarSesionController  {
     }
 
 
-    private void addButtonToTableRechazar(TableView t,Aeropuerto aeropuerto) {
+
+     */
+    private void addButtonToTableRechazar(TableView t,String codigoAeropuerto) {
         TableColumn<Data, Void> colBtn = new TableColumn("Rechazar");
 
         Callback<TableColumn<Data, Void>, TableCell<Data, Void>> cellFactory = new Callback<>() {
@@ -768,25 +772,47 @@ public class IniciarSesionController  {
 
                     {
                         btn.setOnAction((ActionEvent event) -> {
-                            Vuelo vuelo = (Vuelo) getTableView().getItems().get(getIndex());
-                            vuelo.setRechadado(true);
-                            vueloRepository.save(vuelo);
-
-                            ObservableList<Vuelo> vuelosLlegada = FXCollections.observableArrayList(vueloRepository.findAllByAeropuertoDestinoAndAceptadoDestinoAndRechadado(aeropuerto,false,false));
-                            ObservableList<Vuelo> vuelosSalida = FXCollections.observableArrayList(vueloRepository.findAllByAeropuertoOrigenAndAceptadoOrigenAndRechadado(aeropuerto,false,false));
+                            VueloDTO vuelo = (VueloDTO) getTableView().getItems().get(getIndex());
+                            String codigoVuelo = vuelo.getCodigoVuelo();
+                            ResponseEntity response = vueloRestService.rechazarVuelo(codigoVuelo);
 
 
-                            codigoVueloLlegada.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
-                            aeropuertoOrigen.setCellValueFactory(new PropertyValueFactory<>("aeropuertoOrigen"));
-                            matriculaAvionLlegada.setCellValueFactory(new PropertyValueFactory<>("avion"));
+
+                            //ObservableList<VueloDTO> vuelosLlegada = FXCollections.observableArrayList(vueloRepository.findAllByAeropuertoDestinoAndAceptadoDestinoAndRechadado(aeropuerto,false,false));
+                            //ObservableList<VueloDTO> vuelosSalida = FXCollections.observableArrayList(vueloRepository.findAllByAeropuertoOrigenAndAceptadoOrigenAndRechadado(aeropuerto,false,false));
+
+
+
+
+                            ResponseEntity response1 = aeropuertoRestService.getListaVuelosSinConfirmarLlegada(codigoAeropuerto);
+
+                            List vueloDTOS = (List) response1.getBody();
+                            List<VueloDTO> vuelosLle = new ArrayList<>();
+
+                            for (int i=0;i<vueloDTOS.size();i++){
+                                VueloDTO vueloDTO = new VueloDTO();
+                                LinkedHashMap hashMap = (LinkedHashMap) vueloDTOS.get(i);
+                                vueloDTO.setCodigoVuelo((String) hashMap.get("codigoVuelo"));
+                                vueloDTO.setCodigoAeropuertoOrigen((String) hashMap.get("codigoAeropuertoOrigen"));
+                                vueloDTO.setCodigoAeropuertoDestino((String) hashMap.get("codigoAeropuertoDestino"));
+                                vueloDTO.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
+                                vuelosLle.add(vueloDTO);
+                            }
+
+                            ObservableList<VueloDTO> vuelosLlegada = FXCollections.observableArrayList(vuelosLle);
+
+                            matriculaAvionLlegada.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
+                            matriculaAvionLlegada.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoOrigen"));
+                            matriculaAvionLlegada.setCellValueFactory(new PropertyValueFactory<>("matriculaAvion"));
                             tablaLlegada.setItems(vuelosLlegada);
 
-
-
+                            /*
                             codigoVueloSalida.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
                             aeropuertoDestino.setCellValueFactory(new PropertyValueFactory<>("aeropuertoDestino"));
                             matriculaAvionSalida.setCellValueFactory(new PropertyValueFactory<>("avion"));
                             tablaSalida.setItems(vuelosSalida);
+
+                             */
 
 
 
@@ -813,7 +839,7 @@ public class IniciarSesionController  {
 
     }
 
-    */
+
 
 
     @FXML
@@ -868,6 +894,39 @@ public class IniciarSesionController  {
         stage.show();
     }
 
+    @FXML
+    void cargarAgregarVuelo(ActionEvent event, String fxml, String codigoAerolinea) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setControllerFactory(Main.getContext()::getBean);
+
+        Parent root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream(fxml));
+        Scene scene = new Scene(root);
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+
+        ResponseEntity response1 = aeropuertoRestService.getAeropuertos();
+        List listaAeropuertos = (List) response1.getBody();
+        //List<Avion> aviones = avionRepository.findAll();
+
+
+
+
+        for (int i=0; i<listaAeropuertos.size();i++) {
+            LinkedHashMap aeropuerto = (LinkedHashMap) listaAeropuertos.get(i);
+            codigoIATAeropuertoDestino.getItems().addAll((String) aeropuerto.get("codigoIATAAeropuerto"));
+            codigoIATAeropuertoOrigen.getItems().addAll((String) aeropuerto.get("codigoIATAAeropuerto"));
+        }
+        /*
+        for (int j=0;j<aviones.size();j++){
+            String avion = aviones.get(j).getMatricula();
+            matriculaBox.getItems().addAll(avion);
+        }
+
+         */
+
+        stage.setScene(scene);
+        stage.show();
+    }
+
 
 
 
@@ -877,6 +936,56 @@ public class IniciarSesionController  {
         alert.setHeaderText(null);
         alert.setContentText(contextText);
         alert.showAndWait();
+    }
+
+
+    @FXML
+    private ComboBox<String> matriculaBox;
+    @FXML
+    private ComboBox<String> codigoIATAeropuertoDestino;
+    @FXML
+    private ComboBox<String> codigoIATAeropuertoOrigen;
+    @FXML
+    private TextField codigoIATAAvuelo;
+
+    @Autowired
+    private VueloRestService vueloRestService;
+    @Transactional
+    @FXML
+    void registrarVuelo(ActionEvent event){
+        String matriculaAvion = matriculaBox.getValue();
+        String codigoIATAAeropDest = codigoIATAeropuertoDestino.getValue();
+        String codigoIATAAeropOri = codigoIATAeropuertoOrigen.getValue();
+        Long codigoIATAVue = Long.parseLong(codigoIATAAvuelo.getText());
+
+
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        String codAerol = (String) stage.getUserData();
+
+        if (matriculaAvion == null || matriculaAvion.equals("") ||
+                codigoIATAAeropDest == null || codigoIATAAeropDest.equals("")||
+                codigoIATAAeropOri == null || codigoIATAAeropOri.equals("") ||
+                codigoIATAVue == null || codigoIATAVue.equals("") ) {
+            showAlert("Datos faltantes!", "No se ingresaron los datos necesarios para completar el ingreso.");
+        } else {
+
+            VueloDTO vueloDTO = new VueloDTO();
+            vueloDTO.setCodigoVuelo(codAerol+codigoIATAVue);
+            vueloDTO.setCodigoAeropuertoDestino(codigoIATAAeropDest);
+            vueloDTO.setCodigoAeropuertoOrigen(codigoIATAAeropOri);
+            vueloDTO.setMatriculaAvion(matriculaAvion);
+            vueloDTO.setCodigoAerolinea(codAerol);
+            vueloDTO.setAceptadoOrigen(false);
+            vueloDTO.setAcepradoDestino(false);
+            vueloDTO.setRechadado(false);
+
+            ResponseEntity response = vueloRestService.agregarVuelo(vueloDTO);
+
+            if (response.getStatusCode() == HttpStatus.OK) {
+                showAlert("Vuelo agregado", "Se agrego con exito el vuelo!");
+            }
+
+        }
     }
 
 

@@ -17,4 +17,8 @@ public class VueloRestService {
         return restTemplate.postForEntity("http://localhost:8080/vuelo/agregar",vueloDTO,VueloDTO.class);
     }
 
+    public ResponseEntity rechazarVuelo(String codigoVuelo){
+        return restTemplate.postForEntity("http://localhost:8080/vuelo/rechazar", codigoVuelo,null);
+    }
+
 }

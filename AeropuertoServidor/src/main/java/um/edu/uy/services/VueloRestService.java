@@ -78,6 +78,14 @@ public class VueloRestService {
         aerolineaRepository.save(aerol);
     }
 
+    @Transactional
+    @PostMapping("/rechazar")
+    public void rechazarVuelo(@RequestBody String codigoVuelo){
+        Vuelo vuelo = vueloRepository.findByCodigoVuelo(codigoVuelo);
+        vuelo.setRechadado(true);
+        vueloRepository.save(vuelo);
+    }
+
 
 
 }
