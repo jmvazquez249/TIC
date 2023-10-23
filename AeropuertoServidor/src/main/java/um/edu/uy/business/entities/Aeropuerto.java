@@ -53,7 +53,15 @@ public class Aeropuerto {
         return this.codigoIATAAeropuerto;
     }
 
+    public String getNombre() {
+        return nombre;
+    }
 
+    public String getCiudad() {
+        return ciudad;
+    }
 
-
+    public String getPais() {
+        return pais;
+    }
 }

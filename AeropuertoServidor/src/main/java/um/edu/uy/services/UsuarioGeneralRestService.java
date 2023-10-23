@@ -33,4 +33,10 @@ public class UsuarioGeneralRestService {
         return usuarioGeneralMapper.toUsuarioGeneralDTO(usuarioGeneral);
 
     }
+    @PostMapping("/getPasaporte")
+    public UsuarioGeneralDTO getUsuarioGeneralPasaporte(@RequestBody long pasaporte){
+        UsuarioGeneral usuarioGeneral =  usuarioGeneralRepository.findOneByPasaporte(pasaporte);
+        return usuarioGeneralMapper.toUsuarioGeneralDTO(usuarioGeneral);
+
+    }
 }

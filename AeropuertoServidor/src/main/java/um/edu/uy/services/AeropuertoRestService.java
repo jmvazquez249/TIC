@@ -31,6 +31,12 @@ public class AeropuertoRestService {
         Aeropuerto aeropuerto = aeropuertoMapper.toAeropuerto(aeropuertoDTO);
         aeropuertoRepository.save(aeropuerto);
     }
+    @PostMapping("/getAeropuerto")
+    public AeropuertoDTO getAeropuerto(@RequestBody String codigoIATAAeropuerto){
+        Aeropuerto aeropuerto = aeropuertoRepository.findAeropuertoByCodigoIATAAeropuerto(codigoIATAAeropuerto);
+        return aeropuertoMapper.toAeropuertoDTO(aeropuerto);
+    }
+
 
 
 }

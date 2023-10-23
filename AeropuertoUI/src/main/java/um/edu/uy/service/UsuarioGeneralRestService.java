@@ -24,6 +24,10 @@ public class UsuarioGeneralRestService {
         return restTemplate.postForEntity("http://localhost:8080/usuarioGeneral/get",loginDTO,UsuarioGeneralDTO.class);
 
     }
+    public ResponseEntity getUsuarioGeneralPasaporte(long pasaporte){
+        return restTemplate.postForEntity("http://localhost:8080/usuarioGeneral/getPasaporte",pasaporte,UsuarioGeneralDTO.class);
+
+    }
 
 
 }
