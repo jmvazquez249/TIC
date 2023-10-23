@@ -20,6 +20,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import um.edu.uy.*;
 import um.edu.uy.service.AerolineaRestService;
 import um.edu.uy.service.AeropuertoRestService;
+import um.edu.uy.service.AvionRestService;
 import um.edu.uy.service.UsuarioGeneralRestService;
 import um.edu.uy.service.VueloRestService;
 
@@ -140,15 +141,32 @@ public class IniciarSesionController  {
         ResponseEntity response1 = aeropuertoRestService.getAeropuerto(codigoAeropuertoAdAero);
         AeropuertoDTO aeropuertoDTO = (AeropuertoDTO) response1.getBody();
 
+        ResponseEntity response2 = usuarioGeneralRestService.getUsuarioGeneralPasaporte(pasaporteAdAero);
+        UsuarioGeneralDTO usuarioGeneralDTOPasaporte = (UsuarioGeneralDTO) response2.getBody();
+
+        ResponseEntity response3 = usuarioGeneralRestService.getUsuarioGeneralEmail(emailAdAero);
+        UsuarioGeneralDTO usuarioGeneralDTOEmail = (UsuarioGeneralDTO) response3.getBody();
+
+
+
 
         if(aeropuertoDTO==null){
-
             showAlert(
-                    "Aeropuero No existe",
+                    "Aeropuerto No existe",
                     "El aeropuerto ingresado no existe");
 
-
         }
+        else if(usuarioGeneralDTOEmail!=null){
+            showAlert(
+                    "Email ya registrado",
+                    "El email ingresado ya esta registrado");
+        }
+        else if(usuarioGeneralDTOPasaporte!=null){
+            showAlert(
+                    "Pasaporte ya registrado",
+                    "El pasaporte ingresado ya esta registrado");
+        }
+
         //funcion para controlar que exista el aeropuerto dentro de la base de datos comparandolo con el codigo del aeropuerto
         else if (pasaporte.getText() == null ||pasaporte.getText().equals("") ||
                     nombreAdAero == null || nombreAdAero.equals("") ||
@@ -197,24 +215,35 @@ public class IniciarSesionController  {
         String contrasenaUsu = contrasena.getText();
         String emailUsu = email.getText();
 
-        if(pasaporte.getText() == null ||pasaporte.getText().equals("") ||
-                nombreUsu == null || nombreUsu.equals("") ||
-                apellidoUsu == null || apellidoUsu.equals("")||
-                contrasenaUsu == null || contrasenaUsu.equals("")||
-                emailUsu == null || emailUsu.equals("")){
+        ResponseEntity response1 = usuarioGeneralRestService.getUsuarioGeneralPasaporte(pasaporteUsu);
+        UsuarioGeneralDTO usuarioGeneralDTOPasaporte = (UsuarioGeneralDTO) response1.getBody();
+
+        ResponseEntity response2 = usuarioGeneralRestService.getUsuarioGeneralEmail(emailUsu);
+        UsuarioGeneralDTO usuarioGeneralDTOEmail = (UsuarioGeneralDTO) response2.getBody();
+
+
+
+        if(usuarioGeneralDTOPasaporte!=null){
+            showAlert(
+                    "Pasaporte ya registrado",
+                    "El pasaporte ingresado ya esta registrado");
+        }
+        else if(usuarioGeneralDTOEmail!=null){
+            showAlert(
+                    "Email ya registrado",
+                    "El email ingresado ya esta registrado");
+        }
+
+        else if(pasaporte.getText() == null ||pasaporte.getText().equals("") ||
+                    nombreUsu == null || nombreUsu.equals("") ||
+                    apellidoUsu == null || apellidoUsu.equals("")||
+                    contrasenaUsu == null || contrasenaUsu.equals("")||
+                    emailUsu == null || emailUsu.equals("")){
 
             showAlert(
                     "Datos faltantes!",
                     "No se ingresaron los datos necesarios para completar el ingreso.");
-        }
-
-        //else if  (usuarioGeneralRepository.findOneByEmail(emailUsu)!=null){
-        //    showAlert("Usuario Ya Existe","El usuario ya esta registrado");
-        //}
-        //else if (usuarioGeneralRepository.findOneByPasaporte(Long.parseLong(pasaporte.getText()))!=null){
-        //    showAlert("Usuario Ya Existe","El usuario ya esta registrado");
-        //}
-        else{
+        }else{
                 UsuarioGeneralDTO usuarioGeneralDTO = new UsuarioGeneralDTO();
                 usuarioGeneralDTO.setPasaporte(pasaporteUsu);
                 usuarioGeneralDTO.setEmail(emailUsu);
@@ -262,11 +291,21 @@ public class IniciarSesionController  {
         String codigoIATAAero = codigoIATAAeropuerto.getText();
         String ciudadAero = ciudad.getText();
         String paisAero = pais.getText();
-        if (nombreAero == null ||nombreAero.equals("") ||
+
+        ResponseEntity response1 = aeropuertoRestService.getAeropuerto(codigoIATAAero);
+        AeropuertoDTO aeropuertoDTOCodigo = (AeropuertoDTO) response1.getBody();
+
+        if(aeropuertoDTOCodigo!=null){
+            showAlert(
+                    "Aeropuerto ya registrado",
+                    "El aeropuerto ingresado ya esta registrado");
+        }
+
+        else if (nombreAero == null ||nombreAero.equals("") ||
                 codigoIATAAero == null || codigoIATAAero.equals("") || ciudadAero == null  || paisAero == null ) {
             showAlert("Datos faltantes!", "No se ingresaron los datos necesarios para completar el ingreso.");
-        //} else if (aeropuertoRepository.findAeropuertoByCodigoIATAAeropuerto(codigoIATAAero)!=null) {
-        //    showAlert("Aeropuerto Ya Existe", "El aeropuerto ya existe");
+
+
         } else {
 
             AeropuertoDTO aeropuertoDTO = new AeropuertoDTO();
@@ -285,18 +324,28 @@ public class IniciarSesionController  {
         }
     }
 
-
+    @Autowired
+    private AvionRestService avionRestService;
     @Transactional
     @FXML
     void registrarAvion(ActionEvent event){
         String modeloAv = modelo.getText();
         String matriculaAv = matricula.getText();
         int capacidadAv = Integer.parseInt(capacidad.getText());
-        if (modeloAv == null ||modeloAv.equals("") ||
+
+        ResponseEntity response1 = avionRestService.getAvion(matriculaAv);
+        AvionDTO avionDTOMatricula = (AvionDTO) response1.getBody();
+
+
+        if(avionDTOMatricula!=null){
+            showAlert(
+                    "Avion ya registrado",
+                    "El avion ingresado ya esta registrado");
+        }
+        else if (modeloAv == null ||modeloAv.equals("") ||
                 matriculaAv == null || matriculaAv.equals("") || capacidadAv == 0) {
             showAlert("Datos faltantes!", "No se ingresaron los datos necesarios para completar el ingreso.");
-        //} else if (avionRepository.findByMatricula(matriculaAv)!=null) {
-        //    showAlert("Avion Ya Existe", "El avion ya existe");
+
         } else {
             Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
             String codigoAerolinea = (String) stage.getUserData();

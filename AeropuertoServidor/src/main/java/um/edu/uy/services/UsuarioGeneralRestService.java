@@ -36,6 +36,18 @@ public class UsuarioGeneralRestService {
     @PostMapping("/getPasaporte")
     public UsuarioGeneralDTO getUsuarioGeneralPasaporte(@RequestBody long pasaporte){
         UsuarioGeneral usuarioGeneral =  usuarioGeneralRepository.findOneByPasaporte(pasaporte);
+        if (usuarioGeneral==null){
+            return null;
+        }
+        return usuarioGeneralMapper.toUsuarioGeneralDTO(usuarioGeneral);
+
+    }
+    @PostMapping("/getEmail")
+    public UsuarioGeneralDTO getUsuarioGeneralEmail(@RequestBody String email){
+        UsuarioGeneral usuarioGeneral =  usuarioGeneralRepository.findOneByEmail(email);
+        if (usuarioGeneral==null){
+            return null;
+        }
         return usuarioGeneralMapper.toUsuarioGeneralDTO(usuarioGeneral);
 
     }
