@@ -33,4 +33,15 @@ public class Avion {
         this.capacidad = capacidad;
     }
 
+    public long getId_avion() {
+        return id_avion;
+    }
+
+    public String getModelo() {
+        return modelo;
+    }
+
+    public int getCapacidad() {
+        return capacidad;
+    }
 }
