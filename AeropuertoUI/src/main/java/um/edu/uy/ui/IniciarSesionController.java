@@ -832,7 +832,6 @@ public class IniciarSesionController  {
 
 
 
-
                             ResponseEntity response1 = aeropuertoRestService.getListaVuelosSinConfirmarLlegada(codigoAeropuerto);
 
                             List vueloDTOS = (List) response1.getBody();
@@ -843,7 +842,6 @@ public class IniciarSesionController  {
                                 LinkedHashMap hashMap = (LinkedHashMap) vueloDTOS.get(i);
                                 vueloDTO.setCodigoVuelo((String) hashMap.get("codigoVuelo"));
                                 vueloDTO.setCodigoAeropuertoOrigen((String) hashMap.get("codigoAeropuertoOrigen"));
-                                vueloDTO.setCodigoAeropuertoDestino((String) hashMap.get("codigoAeropuertoDestino"));
                                 vueloDTO.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
                                 vuelosLle.add(vueloDTO);
                             }
@@ -854,6 +852,8 @@ public class IniciarSesionController  {
                             matriculaAvionLlegada.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoOrigen"));
                             matriculaAvionLlegada.setCellValueFactory(new PropertyValueFactory<>("matriculaAvion"));
                             tablaLlegada.setItems(vuelosLlegada);
+                            addButtonToTableRechazar(tablaLlegada, codigoAeropuerto);
+
 
                             /*
                             codigoVueloSalida.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
@@ -951,10 +951,15 @@ public class IniciarSesionController  {
         Parent root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream(fxml));
         Scene scene = new Scene(root);
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        if(codigoAerolinea != null){
+            stage.setUserData(codigoAerolinea);
+        }
 
         ResponseEntity response1 = aeropuertoRestService.getAeropuertos();
         List listaAeropuertos = (List) response1.getBody();
-        //List<Avion> aviones = avionRepository.findAll();
+
+        ResponseEntity response2 = avionRestService.getAviones();
+        List listaAviones = (List) response2.getBody();
 
 
 
@@ -964,13 +969,13 @@ public class IniciarSesionController  {
             codigoIATAeropuertoDestino.getItems().addAll((String) aeropuerto.get("codigoIATAAeropuerto"));
             codigoIATAeropuertoOrigen.getItems().addAll((String) aeropuerto.get("codigoIATAAeropuerto"));
         }
-        /*
-        for (int j=0;j<aviones.size();j++){
-            String avion = aviones.get(j).getMatricula();
-            matriculaBox.getItems().addAll(avion);
+        //Hacer que se vean los aviones de cada aerolinea
+        for (int j=0;j<listaAviones.size();j++){
+            LinkedHashMap avion = (LinkedHashMap) listaAviones.get(j);
+            matriculaBox.getItems().addAll((String) avion.get("matricula"));
         }
 
-         */
+
 
         stage.setScene(scene);
         stage.show();
@@ -1017,6 +1022,8 @@ public class IniciarSesionController  {
                 codigoIATAVue == null || codigoIATAVue.equals("") ) {
             showAlert("Datos faltantes!", "No se ingresaron los datos necesarios para completar el ingreso.");
         } else {
+
+            System.out.println(codAerol);
 
             VueloDTO vueloDTO = new VueloDTO();
             vueloDTO.setCodigoVuelo(codAerol+codigoIATAVue);

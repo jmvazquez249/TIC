@@ -10,6 +10,9 @@ import um.edu.uy.business.AvionMapper;
 import um.edu.uy.business.entities.Avion;
 import um.edu.uy.persistence.AvionRepository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("/avion")
 public class AvionRestService {
@@ -28,5 +31,16 @@ public class AvionRestService {
             return null;
         }
         return avionMapper.toAvionDTO(avion);
+    }
+
+    @PostMapping("getAviones")
+    public List<AvionDTO> getAviones(){
+        List<Avion> aviones = avionRepository.findAll();
+        List<AvionDTO> avionDTOS = new ArrayList<>();
+        for (int i=0;i< aviones.size();i++){
+            avionDTOS.add(avionMapper.toAvionDTO(aviones.get(i)));
+        }
+        return avionDTOS;
+
     }
 }
