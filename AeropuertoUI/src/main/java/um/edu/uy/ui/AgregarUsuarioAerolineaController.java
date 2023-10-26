@@ -56,6 +56,7 @@ public class AgregarUsuarioAerolineaController implements Initializable {
     @Transactional
     @FXML
     void registrarUsuarioAerolinea(ActionEvent event) {
+        try{
         long pasaporteUsuAero = Long.parseLong(pasaporte.getText());
         String nombreUsuAero = nombre.getText();
         String apellidoUsuAero = apellido.getText();
@@ -63,44 +64,52 @@ public class AgregarUsuarioAerolineaController implements Initializable {
         String contrasenaUsuAero = contrasena.getText();
         String tipoUsuAero = registroUsuarioBox.getValue().toUpperCase();
 
-        //Hacer control de que no se puedan poner otros tipos
+            ResponseEntity response4 = usuarioGeneralRestService.getUsuarioGeneralPasaporte(pasaporteUsuAero);
+            UsuarioGeneralDTO usuarioGeneralDTOPasaporte = (UsuarioGeneralDTO) response4.getBody();
 
-        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-        String codigoAerolinea = (String) stage.getUserData();
-
-        if (pasaporte.getText() == null ||pasaporte.getText().equals("") ||
-                nombreUsuAero == null || nombreUsuAero.equals("") ||
-                apellidoUsuAero == null || apellidoUsuAero.equals("")||
-                contrasenaUsuAero == null || contrasenaUsuAero.equals("")||
-                emailUsuAero == null || emailUsuAero.equals("")) {
-
-            showAlert(
-                    "Datos faltantes!",
-                    "No se ingresaron los datos necesarios para completar el ingreso.");
-
-        //} else if (usuarioGeneralRepository.findOneByPasaporte(pasaporteUsuAero)!=null) {
-        //    showAlert("Usuario Ya Existe","El usuario ya esta resgistrado");
-        } else {
-
-            UsuarioGeneralDTO usuarioGeneralDTO = new UsuarioGeneralDTO();
-            usuarioGeneralDTO.setPasaporte(pasaporteUsuAero);
-            usuarioGeneralDTO.setEmail(emailUsuAero);
-            usuarioGeneralDTO.setContrasena(contrasenaUsuAero);
-            usuarioGeneralDTO.setNombre(nombreUsuAero);
-            usuarioGeneralDTO.setApellido(apellidoUsuAero);
-            usuarioGeneralDTO.setTipo(tipoUsuAero);
-            usuarioGeneralDTO.setCodigoAerolinea(codigoAerolinea);
-            usuarioGeneralDTO.setCodigoAeropuerto(null);
+            ResponseEntity response5 = usuarioGeneralRestService.getUsuarioGeneralEmail(emailUsuAero);
+            UsuarioGeneralDTO usuarioGeneralDTOEmail = (UsuarioGeneralDTO) response5.getBody();
 
 
-            ResponseEntity response = usuarioGeneralRestService.agregarUsuarioGeneral(usuarioGeneralDTO);
 
-            if(response.getStatusCode() == HttpStatus.OK){
+            if (usuarioGeneralDTOPasaporte != null) {
+                showAlert(
+                        "Pasaporte ya registrado",
+                        "El pasaporte ingresado ya esta registrado");
+            } else if (usuarioGeneralDTOEmail != null) {
+                showAlert(
+                        "Email ya registrado",
+                        "El email ingresado ya esta registrado");
+            }
+            else {
 
-                showAlert("Usuario agregado", "Se agrego con exito el usuario!");
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                String codigoAerolinea = (String) stage.getUserData();
 
+
+                UsuarioGeneralDTO usuarioGeneralDTO = new UsuarioGeneralDTO();
+                usuarioGeneralDTO.setPasaporte(pasaporteUsuAero);
+                usuarioGeneralDTO.setEmail(emailUsuAero);
+                usuarioGeneralDTO.setContrasena(contrasenaUsuAero);
+                usuarioGeneralDTO.setNombre(nombreUsuAero);
+                usuarioGeneralDTO.setApellido(apellidoUsuAero);
+                usuarioGeneralDTO.setTipo(tipoUsuAero);
+                usuarioGeneralDTO.setCodigoAerolinea(codigoAerolinea);
+                usuarioGeneralDTO.setCodigoAeropuerto(null);
+
+
+                ResponseEntity response = usuarioGeneralRestService.agregarUsuarioGeneral(usuarioGeneralDTO);
+
+                if (response.getStatusCode() == HttpStatus.OK) {
+
+                    showAlert("Usuario agregado", "Se agrego con exito el usuario!");
+
+
+                }
             }
 
+        }catch (Exception e){
+            showAlert("Datos incorrectos", "Los datos ingresados no son correctos");
         }
 
     }

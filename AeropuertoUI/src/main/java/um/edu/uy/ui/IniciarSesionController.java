@@ -1066,6 +1066,7 @@ public class IniciarSesionController {
     @Transactional
     @FXML
     void registrarVuelo(ActionEvent event){
+        try {
         String matriculaAvion = matriculaBox.getValue();
         String codigoIATAAeropDest = codigoIATAeropuertoDestino.getValue();
         String codigoIATAAeropOri = codigoIATAeropuertoOrigen.getValue();
@@ -1075,14 +1076,6 @@ public class IniciarSesionController {
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         String codAerol = (String) stage.getUserData();
 
-        if (matriculaAvion == null || matriculaAvion.equals("") ||
-                codigoIATAAeropDest == null || codigoIATAAeropDest.equals("")||
-                codigoIATAAeropOri == null || codigoIATAAeropOri.equals("") ||
-                codigoIATAVue == null || codigoIATAVue.equals("") ) {
-            showAlert("Datos faltantes!", "No se ingresaron los datos necesarios para completar el ingreso.");
-        } else {
-
-            System.out.println(codAerol);
 
             VueloDTO vueloDTO = new VueloDTO();
             vueloDTO.setCodigoVuelo(codAerol+codigoIATAVue);
@@ -1100,6 +1093,12 @@ public class IniciarSesionController {
                 showAlert("Vuelo agregado", "Se agrego con exito el vuelo!");
             }
 
+
+    }
+        catch (Exception e) {
+            showAlert(
+                    "ERROR!",
+                    "No se ingresaron los datos necesarios para completar el ingreso o algun dato es incorrecto");
         }
     }
 

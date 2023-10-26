@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import um.edu.uy.AerolineaDTO;
 import um.edu.uy.Main;
 import um.edu.uy.UsuarioGeneralDTO;
 import um.edu.uy.VueloDTO;
@@ -68,48 +69,57 @@ public class AgregarUsuarioAeropuertoController implements Initializable {
     @Transactional
     @FXML
     void agregarUsuarioAeropuerto(ActionEvent event){
-        long pasaporteAdAero = Long.parseLong(pasaporte.getText());
-        String nombreAdAero = nombre.getText();
-        String apellidoAdAero = apellido.getText();
-        String emailAdAero = email.getText();
-        String contrasenaAdAero = contrasena.getText();
-        String tipoUsuAerop = registroUsuarioBox.getValue().toUpperCase();
+        try {
+            long pasaporteAdAero = Long.parseLong(pasaporte.getText());
+            String nombreAdAero = nombre.getText();
+            String apellidoAdAero = apellido.getText();
+            String emailAdAero = email.getText();
+            String contrasenaAdAero = contrasena.getText();
+            String tipoUsuAerop = registroUsuarioBox.getValue().toUpperCase();
 
 
 
-        if (pasaporte.getText() == null ||pasaporte.getText().equals("") ||
-                nombreAdAero == null || nombreAdAero.equals("") ||
-                apellidoAdAero == null || apellidoAdAero.equals("")||
-                contrasenaAdAero == null || contrasenaAdAero.equals("")||
-                emailAdAero == null || emailAdAero.equals("")) {
+            ResponseEntity response4 = usuarioGeneralRestService.getUsuarioGeneralPasaporte(pasaporteAdAero);
+            UsuarioGeneralDTO usuarioGeneralDTOPasaporte = (UsuarioGeneralDTO) response4.getBody();
 
-            showAlert(
-                    "Datos faltantes!",
-                    "No se ingresaron los datos necesarios para completar el ingreso.");
+            ResponseEntity response5 = usuarioGeneralRestService.getUsuarioGeneralEmail(emailAdAero);
+            UsuarioGeneralDTO usuarioGeneralDTOEmail = (UsuarioGeneralDTO) response5.getBody();
 
-        //} else if (usuarioGeneralRepository.findOneByPasaporte(pasaporteAdAero)!=null) {
-        //    showAlert("Usuario Ya Existe","El usuario ya esta resgistrado");
-        } else {
-            Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-            String codigoAeropuero = (String) stage.getUserData();
 
-            UsuarioGeneralDTO usuarioGeneralDTO = new UsuarioGeneralDTO();
-            usuarioGeneralDTO.setEmail(emailAdAero);
-            usuarioGeneralDTO.setNombre(nombreAdAero);
-            usuarioGeneralDTO.setApellido(apellidoAdAero);
-            usuarioGeneralDTO.setContrasena(contrasenaAdAero);
-            usuarioGeneralDTO.setPasaporte(pasaporteAdAero);
-            usuarioGeneralDTO.setTipo(tipoUsuAerop);
-            usuarioGeneralDTO.setCodigoAeropuerto(codigoAeropuero);
-            usuarioGeneralDTO.setCodigoAerolinea(null);
 
-            ResponseEntity response = usuarioGeneralRestService.agregarUsuarioGeneral(usuarioGeneralDTO);
+             if (usuarioGeneralDTOPasaporte != null) {
+                showAlert(
+                        "Pasaporte ya registrado",
+                        "El pasaporte ingresado ya esta registrado");
+            } else if (usuarioGeneralDTOEmail != null) {
+                showAlert(
+                        "Email ya registrado",
+                        "El email ingresado ya esta registrado");
+            } else {
 
-            if(response.getStatusCode() == HttpStatus.OK) {
-                showAlert("Usuario agregado", "Se agrego con exito el usuario!");
+
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                String codigoAeropuero = (String) stage.getUserData();
+
+                UsuarioGeneralDTO usuarioGeneralDTO = new UsuarioGeneralDTO();
+                usuarioGeneralDTO.setEmail(emailAdAero);
+                usuarioGeneralDTO.setNombre(nombreAdAero);
+                usuarioGeneralDTO.setApellido(apellidoAdAero);
+                usuarioGeneralDTO.setContrasena(contrasenaAdAero);
+                usuarioGeneralDTO.setPasaporte(pasaporteAdAero);
+                usuarioGeneralDTO.setTipo(tipoUsuAerop);
+                usuarioGeneralDTO.setCodigoAeropuerto(codigoAeropuero);
+                usuarioGeneralDTO.setCodigoAerolinea(null);
+
+                ResponseEntity response = usuarioGeneralRestService.agregarUsuarioGeneral(usuarioGeneralDTO);
+
+                if (response.getStatusCode() == HttpStatus.OK) {
+                    showAlert("Usuario agregado", "Se agrego con exito el usuario!");
+                }
             }
 
-
+        }catch (Exception e){
+            showAlert("Datos incorrectos","Los datos ingresados no son correctos");
         }
 
     }
