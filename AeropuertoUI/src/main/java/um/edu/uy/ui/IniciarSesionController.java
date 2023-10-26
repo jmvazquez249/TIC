@@ -885,7 +885,7 @@ public class IniciarSesionController {
                             List vueloDTOS = (List) response1.getBody();
                             List<VueloDTO> vuelosLle = new ArrayList<>();
 
-                            List vueloDTOS2 = (List) response1.getBody();
+                            List vueloDTOS2 = (List) response2.getBody();
                             List<VueloDTO> vuelosSal = new ArrayList<>();
 
 
@@ -901,9 +901,9 @@ public class IniciarSesionController {
 
                             for (int i=0;i<vueloDTOS2.size();i++){
                                 VueloDTO vueloDTO = new VueloDTO();
-                                LinkedHashMap hashMap = (LinkedHashMap) vueloDTOS.get(i);
+                                LinkedHashMap hashMap = (LinkedHashMap) vueloDTOS2.get(i);
                                 vueloDTO.setCodigoVuelo((String) hashMap.get("codigoVuelo"));
-                                vueloDTO.setCodigoAeropuertoOrigen((String) hashMap.get("codigoAeropuertoOrigen"));
+                                vueloDTO.setCodigoAeropuertoDestino((String) hashMap.get("codigoAeropuertoOrigen"));
                                 vueloDTO.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
                                 vuelosSal.add(vueloDTO);
                             }
@@ -918,7 +918,7 @@ public class IniciarSesionController {
                             tablaLlegada.setItems(vuelosLlegada);
 
                             matriculaAvionSalida.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
-                            matriculaAvionSalida.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoOrigen"));
+                            matriculaAvionSalida.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoDestino"));
                             matriculaAvionSalida.setCellValueFactory(new PropertyValueFactory<>("matriculaAvion"));
                             tablaSalida.setItems(vuelosSalida);
 

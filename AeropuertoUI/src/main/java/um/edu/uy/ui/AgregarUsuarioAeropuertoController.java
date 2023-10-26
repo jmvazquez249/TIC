@@ -13,13 +13,20 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import um.edu.uy.Main;
+import um.edu.uy.UsuarioGeneralDTO;
+import um.edu.uy.VueloDTO;
+import um.edu.uy.service.AeropuertoRestService;
+import um.edu.uy.service.UsuarioGeneralRestService;
 
 
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -40,6 +47,9 @@ public class AgregarUsuarioAeropuertoController implements Initializable {
     @FXML
     private ComboBox<String> registroUsuarioBox;
 
+    @Autowired
+    private UsuarioGeneralRestService usuarioGeneralRestService;
+
     @FXML
     void cargarAgregarUsuarioAeropuerto(ActionEvent event) throws IOException{
         FXMLLoader fxmlLoader = new FXMLLoader();
@@ -53,7 +63,7 @@ public class AgregarUsuarioAeropuertoController implements Initializable {
         stage.show();
     }
 
-    /*
+
     @Transactional
     @FXML
     void agregarUsuarioAeropuerto(ActionEvent event){
@@ -76,14 +86,25 @@ public class AgregarUsuarioAeropuertoController implements Initializable {
                     "Datos faltantes!",
                     "No se ingresaron los datos necesarios para completar el ingreso.");
 
-        } else if (usuarioGeneralRepository.findOneByPasaporte(pasaporteAdAero)!=null) {
-            showAlert("Usuario Ya Existe","El usuario ya esta resgistrado");
+        //} else if (usuarioGeneralRepository.findOneByPasaporte(pasaporteAdAero)!=null) {
+        //    showAlert("Usuario Ya Existe","El usuario ya esta resgistrado");
         } else {
             Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-            Aeropuerto aeropuerto = (Aeropuerto) stage.getUserData();
+            String codigoAeropuero = (String) stage.getUserData();
 
-            UsuarioGeneral usuarioGeneral = new UsuarioGeneral(pasaporteAdAero,nombreAdAero,apellidoAdAero,contrasenaAdAero,emailAdAero,aeropuerto,tipoUsuAerop);
-            usuarioGeneralRepository.save(usuarioGeneral);
+            UsuarioGeneralDTO usuarioGeneralDTO = new UsuarioGeneralDTO();
+            usuarioGeneralDTO.setEmail(emailAdAero);
+            usuarioGeneralDTO.setNombre(nombreAdAero);
+            usuarioGeneralDTO.setApellido(apellidoAdAero);
+            usuarioGeneralDTO.setContrasena(contrasenaAdAero);
+            usuarioGeneralDTO.setPasaporte(pasaporteAdAero);
+            usuarioGeneralDTO.setTipo(tipoUsuAerop);
+            usuarioGeneralDTO.setCodigoAeropuerto(codigoAeropuero);
+            usuarioGeneralDTO.setCodigoAerolinea(null);
+
+            usuarioGeneralRestService.agregarUsuarioGeneral(usuarioGeneralDTO);
+
+
 
             showAlert("Usuario agregado", "Se agrego con exito el usuario!");
 
@@ -93,33 +114,34 @@ public class AgregarUsuarioAeropuertoController implements Initializable {
     }
 
     @FXML
-    public TableView<Vuelo> tablaVuelosAceptadosSalida;
+    public TableView<VueloDTO> tablaVuelosAceptadosSalida;
     @FXML
-    public TableColumn<Vuelo, String> codigoVueloAceptadoSalida;
+    public TableColumn<VueloDTO, String> codigoVueloAceptadoSalida;
     @FXML
-    public TableColumn<Vuelo, String> aeropuertoOrigenAceptadoSalida;
+    public TableColumn<VueloDTO, String> aeropuertoOrigenAceptadoSalida;
     @FXML
-    public TableColumn<Vuelo, String> aeropuertoDestinoAceptadoSalida;
+    public TableColumn<VueloDTO, String> aeropuertoDestinoAceptadoSalida;
     @FXML
-    public TableColumn<Vuelo, String> matriculaAvionAceptadoSalida;
+    public TableColumn<VueloDTO, String> matriculaAvionAceptadoSalida;
     @FXML
-    public TableView<Vuelo> tablaVuelosAceptadosLlegada;
+    public TableView<VueloDTO> tablaVuelosAceptadosLlegada;
     @FXML
-    public TableColumn<Vuelo, String> codigoVueloAceptadoLlegada;
+    public TableColumn<VueloDTO, String> codigoVueloAceptadoLlegada;
     @FXML
-    public TableColumn<Vuelo, String> aeropuertoOrigenAceptadoLlegada;
+    public TableColumn<VueloDTO, String> aeropuertoOrigenAceptadoLlegada;
     @FXML
-    public TableColumn<Vuelo, String> aeropuertoDestinoAceptadoLlegada;
+    public TableColumn<VueloDTO, String> aeropuertoDestinoAceptadoLlegada;
     @FXML
-    public TableColumn<Vuelo, String> matriculaAvionAceptadoLlegada;
+    public TableColumn<VueloDTO, String> matriculaAvionAceptadoLlegada;
+
     @Autowired
-    private VueloRepository vueloRepository;
+    private AeropuertoRestService aeropuertoRestService;
 
 
     @FXML
     void backToAdminAeropuerto(ActionEvent event) throws IOException {
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-        Aeropuerto aeropuerto = (Aeropuerto) stage.getUserData();
+        String codigoAeropuerto = (String) stage.getUserData();
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setControllerFactory(Main.getContext()::getBean);
 
@@ -127,27 +149,60 @@ public class AgregarUsuarioAeropuertoController implements Initializable {
         Scene inicioAeropuertoScene = new Scene(inicioAeropuerto);
         Stage inicioAeropuertoStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         inicioAeropuertoStage.setScene(inicioAeropuertoScene);
-        inicioAeropuertoStage.setUserData(aeropuerto);
+        inicioAeropuertoStage.setUserData(codigoAeropuerto);
 
-        ObservableList<Vuelo> vuelosLlegada = FXCollections.observableArrayList(vueloRepository.findAllByAeropuertoDestinoAndAceptadoOrigenAndAceptadoDestinoAndRechadado(aeropuerto,true,true, false));
-        ObservableList<Vuelo> vuelosSalida = FXCollections.observableArrayList(vueloRepository.findAllByAeropuertoOrigenAndAceptadoOrigenAndAceptadoDestinoAndRechadado(aeropuerto,true,true, false));
+        ResponseEntity response1 = aeropuertoRestService.getListaAeropuertosLlegada(codigoAeropuerto);
+        ResponseEntity response2 = aeropuertoRestService.getListaAeropuertosSalida(codigoAeropuerto);
+
+        List vueloDTOS = (List) response1.getBody();
+        List vueloDTOS2 = (List) response2.getBody();
+
+        List<VueloDTO> vuelosLle = new ArrayList<>();
+        List<VueloDTO> vuelosSal = new ArrayList<>();
+
+        for (int i=0;i<vueloDTOS.size();i++){
+            VueloDTO vueloDTO = new VueloDTO();
+            LinkedHashMap hashMap = (LinkedHashMap) vueloDTOS.get(i);
+            vueloDTO.setCodigoVuelo((String) hashMap.get("codigoVuelo"));
+            vueloDTO.setCodigoAeropuertoOrigen((String) hashMap.get("codigoAeropuertoOrigen"));
+            vueloDTO.setCodigoAeropuertoDestino((String) hashMap.get("codigoAeropuertoDestino"));
+            vueloDTO.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
+            vuelosLle.add(vueloDTO);
+        }
+
+        for (int j=0;j<vueloDTOS2.size();j++){
+            VueloDTO vueloDTO2 = new VueloDTO();
+            LinkedHashMap hashMap = (LinkedHashMap) vueloDTOS2.get(j);
+            vueloDTO2.setCodigoVuelo((String) hashMap.get("codigoVuelo"));
+            vueloDTO2.setCodigoAeropuertoOrigen((String) hashMap.get("codigoAeropuertoOrigen"));
+            vueloDTO2.setCodigoAeropuertoDestino((String) hashMap.get("codigoAeropuertoDestino"));
+            vueloDTO2.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
+            vuelosSal.add(vueloDTO2);
+        }
+
+
+
+        ObservableList<VueloDTO> vuelosLlegada = FXCollections.observableArrayList(vuelosLle);
+        ObservableList<VueloDTO> vuelosSalida = FXCollections.observableArrayList(vuelosSal);
+
 
 
         codigoVueloAceptadoLlegada.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
-        aeropuertoOrigenAceptadoLlegada.setCellValueFactory(new PropertyValueFactory<>("aeropuertoOrigen"));
-        aeropuertoDestinoAceptadoLlegada.setCellValueFactory(new PropertyValueFactory<>("aeropuertoDestino"));
-        matriculaAvionAceptadoLlegada.setCellValueFactory(new PropertyValueFactory<>("avion"));
+        aeropuertoOrigenAceptadoLlegada.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoOrigen"));
+        aeropuertoDestinoAceptadoLlegada.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoDestino"));
+        matriculaAvionAceptadoLlegada.setCellValueFactory(new PropertyValueFactory<>("matriculaAvion"));
         tablaVuelosAceptadosLlegada.setItems(vuelosLlegada);
 
+
         codigoVueloAceptadoSalida.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
-        aeropuertoOrigenAceptadoSalida.setCellValueFactory(new PropertyValueFactory<>("aeropuertoOrigen"));
-        aeropuertoDestinoAceptadoSalida.setCellValueFactory(new PropertyValueFactory<>("aeropuertoDestino"));
-        matriculaAvionAceptadoSalida.setCellValueFactory(new PropertyValueFactory<>("avion"));
+        aeropuertoOrigenAceptadoSalida.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoOrigen"));
+        aeropuertoDestinoAceptadoSalida.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoDestino"));
+        matriculaAvionAceptadoSalida.setCellValueFactory(new PropertyValueFactory<>("matriculaAvion"));
         tablaVuelosAceptadosSalida.setItems(vuelosSalida);
 
         inicioAeropuertoStage.show();
     }
-    */
+
     @FXML
     void logOut(ActionEvent event) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
