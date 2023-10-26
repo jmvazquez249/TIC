@@ -30,6 +30,9 @@ public class UsuarioGeneralRestService {
     @PostMapping("/get")
     public UsuarioGeneralDTO getUsuarioGeneral(@RequestBody LoginDTO loginDTO){
         UsuarioGeneral usuarioGeneral =  usuarioGeneralRepository.findOneByEmailAndContrasena(loginDTO.getEmail(), loginDTO.getPassword());
+        if (usuarioGeneral==null){
+            return null;
+        }
         return usuarioGeneralMapper.toUsuarioGeneralDTO(usuarioGeneral);
 
     }
