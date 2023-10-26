@@ -66,6 +66,17 @@ public class VueloRestService {
         return vueloDTOs;
     }
 
+    @PostMapping("/getListaVuelosSinConfirmarSalida")
+    public List<VueloDTO> getListaVuelosSinConfirmarSalida(@RequestBody String codigoAeropuerto){
+        Aeropuerto aeropuerto = aeropuertoRepository.findAeropuertoByCodigoIATAAeropuerto(codigoAeropuerto);
+        List<Vuelo> vuelos = vueloRepository.findAllByAeropuertoOrigenAndAceptadoOrigenAndRechadado(aeropuerto,false,false);
+        List<VueloDTO> vueloDTOs = new ArrayList<>();
+        for(int i=0; i<vuelos.size();i++){
+            vueloDTOs.add(vueloMapper.toVueloDTO(vuelos.get(i)));
+        }
+        return vueloDTOs;
+    }
+
     @Transactional
     @PostMapping("/agregar")
     public void agregarVuelo(@RequestBody VueloDTO vueloDTO){
@@ -85,6 +96,24 @@ public class VueloRestService {
         vuelo.setRechadado(true);
         vueloRepository.save(vuelo);
     }
+
+    @Transactional
+    @PostMapping("/aceptarDestino")
+    public void aceptarDestino(@RequestBody String codigoVuelo){
+        Vuelo vuelo = vueloRepository.findByCodigoVuelo(codigoVuelo);
+        vuelo.setAceptadoDestino(true);
+        vueloRepository.save(vuelo);
+    }
+
+    @Transactional
+    @PostMapping("/aceptarOrigen")
+    public void aceptarOrigen(@RequestBody String codigoVuelo){
+        Vuelo vuelo = vueloRepository.findByCodigoVuelo(codigoVuelo);
+        vuelo.setAceptadoOrigen(true);
+        vueloRepository.save(vuelo);
+    }
+
+
 
 
 

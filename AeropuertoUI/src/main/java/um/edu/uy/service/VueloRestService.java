@@ -21,4 +21,12 @@ public class VueloRestService {
         return restTemplate.postForEntity("http://localhost:8080/vuelo/rechazar", codigoVuelo,null);
     }
 
+    public ResponseEntity aceptarDestino(String codigoVuelo){
+        return restTemplate.postForEntity("http://localhost:8080/vuelo/aceptarDestino", codigoVuelo, null);
+    }
+
+    public ResponseEntity aceptarOrigen(String codigoVuelo){
+        return restTemplate.postForEntity("http://localhost:8080/vuelo/aceptarOrigen",codigoVuelo,null);
+    }
+
 }

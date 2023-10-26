@@ -32,6 +32,10 @@ public class AeropuertoRestService {
         return restTemplate.postForEntity("http://localhost:8080/vuelo/getListaVuelosSinConfirmarLlegada",codigoAeropuerto, List.class);
     }
 
+    public ResponseEntity getListaVuelosSinConfirmarSalida(String codigoAeropuerto){
+        return restTemplate.postForEntity("http://localhost:8080/vuelo/getListaVuelosSinConfirmarSalida",codigoAeropuerto, List.class);
+    }
+
     public ResponseEntity getAeropuerto(String codigoAeropuerto){
         return restTemplate.postForEntity("http://localhost:8080/aeropuerto/getAeropuerto",codigoAeropuerto,AeropuertoDTO.class);
     }

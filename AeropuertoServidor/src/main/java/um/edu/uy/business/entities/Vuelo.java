@@ -13,7 +13,7 @@ public class Vuelo {
     @GeneratedValue(strategy = IDENTITY)
     private long id_vuelo;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String codigoVuelo;
 
     @OneToOne(targetEntity = Aeropuerto.class)
