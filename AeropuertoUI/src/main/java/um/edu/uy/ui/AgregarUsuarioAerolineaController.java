@@ -13,9 +13,13 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import um.edu.uy.AerolineaDTO;
 import um.edu.uy.Main;
+import um.edu.uy.UsuarioGeneralDTO;
+import um.edu.uy.service.UsuarioGeneralRestService;
 
 
 import javax.transaction.Transactional;
@@ -45,7 +49,10 @@ public class AgregarUsuarioAerolineaController implements Initializable {
     @FXML
     private ComboBox<String> registroUsuarioBox;
 
-    /*
+    @Autowired
+    private UsuarioGeneralRestService usuarioGeneralRestService;
+
+
     @Transactional
     @FXML
     void registrarUsuarioAerolinea(ActionEvent event) {
@@ -59,7 +66,7 @@ public class AgregarUsuarioAerolineaController implements Initializable {
         //Hacer control de que no se puedan poner otros tipos
 
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-        Aerolinea aero = (Aerolinea) stage.getUserData();
+        String codigoAerolinea = (String) stage.getUserData();
 
         if (pasaporte.getText() == null ||pasaporte.getText().equals("") ||
                 nombreUsuAero == null || nombreUsuAero.equals("") ||
@@ -71,29 +78,47 @@ public class AgregarUsuarioAerolineaController implements Initializable {
                     "Datos faltantes!",
                     "No se ingresaron los datos necesarios para completar el ingreso.");
 
-        } else if (usuarioGeneralRepository.findOneByPasaporte(pasaporteUsuAero)!=null) {
-            showAlert("Usuario Ya Existe","El usuario ya esta resgistrado");
+        //} else if (usuarioGeneralRepository.findOneByPasaporte(pasaporteUsuAero)!=null) {
+        //    showAlert("Usuario Ya Existe","El usuario ya esta resgistrado");
         } else {
 
-            UsuarioGeneral usuarioGeneral = new UsuarioGeneral(pasaporteUsuAero,nombreUsuAero,apellidoUsuAero,contrasenaUsuAero,emailUsuAero,aero,tipoUsuAero);
-            usuarioGeneralRepository.save(usuarioGeneral);
+            UsuarioGeneralDTO usuarioGeneralDTO = new UsuarioGeneralDTO();
+            usuarioGeneralDTO.setPasaporte(pasaporteUsuAero);
+            usuarioGeneralDTO.setEmail(emailUsuAero);
+            usuarioGeneralDTO.setContrasena(contrasenaUsuAero);
+            usuarioGeneralDTO.setNombre(nombreUsuAero);
+            usuarioGeneralDTO.setApellido(apellidoUsuAero);
+            usuarioGeneralDTO.setTipo(tipoUsuAero);
+            usuarioGeneralDTO.setCodigoAerolinea(codigoAerolinea);
+            usuarioGeneralDTO.setCodigoAeropuerto(null);
 
-            showAlert("Usuario agregado", "Se agrego con exito el usuario!");
+
+            ResponseEntity response = usuarioGeneralRestService.agregarUsuarioGeneral(usuarioGeneralDTO);
+
+            if(response.getStatusCode() == HttpStatus.OK){
+
+                showAlert("Usuario agregado", "Se agrego con exito el usuario!");
+
+            }
+
         }
 
     }
-    */
+
     @FXML
     void backToAdminAerolinea(ActionEvent event) throws IOException {
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-        AerolineaDTO aero = (AerolineaDTO) stage.getUserData();
+        String codigoAerolinea = (String) stage.getUserData();
+
+
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setControllerFactory(Main.getContext()::getBean);
 
         Parent root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream("AdminAerolinea.fxml"));
         Scene scene = new Scene(root);
+
         Stage stage2 = (Stage)((Node) event.getSource()).getScene().getWindow();
-        stage2.setUserData(aero);
+        stage2.setUserData(codigoAerolinea);
         stage2.setScene(scene);
         stage2.show();
     }

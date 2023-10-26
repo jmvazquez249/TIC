@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import um.edu.uy.Main;
@@ -102,11 +103,11 @@ public class AgregarUsuarioAeropuertoController implements Initializable {
             usuarioGeneralDTO.setCodigoAeropuerto(codigoAeropuero);
             usuarioGeneralDTO.setCodigoAerolinea(null);
 
-            usuarioGeneralRestService.agregarUsuarioGeneral(usuarioGeneralDTO);
+            ResponseEntity response = usuarioGeneralRestService.agregarUsuarioGeneral(usuarioGeneralDTO);
 
-
-
-            showAlert("Usuario agregado", "Se agrego con exito el usuario!");
+            if(response.getStatusCode() == HttpStatus.OK) {
+                showAlert("Usuario agregado", "Se agrego con exito el usuario!");
+            }
 
 
         }
