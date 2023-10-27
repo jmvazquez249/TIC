@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="um.edu.uy.ui.IniciarSesionController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="544.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="um.edu.uy.ui.IniciarSesionController">
    <children>
       <Text layoutX="14.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Usuario Aerolinea">
          <font>
             <Font size="38.0" />
          </font>
       </Text>
-      <Button layoutX="510.0" layoutY="341.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
-      <Button layoutX="429.0" layoutY="341.0" mnemonicParsing="false" onAction="#registrarVuelo" text="Confirmar" />
+      <Button layoutX="513.0" layoutY="484.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
+      <Button layoutX="435.0" layoutY="484.0" mnemonicParsing="false" onAction="#registrarVuelo" text="Confirmar" />
       <Text layoutX="32.0" layoutY="151.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Aeropuerto Destino" wrappingWidth="142.134765625">
          <font>
             <Font size="15.0" />
@@ -31,11 +34,51 @@
          </font>
       </Text>
       <ComboBox fx:id="codigoIATAeropuertoOrigen" layoutX="236.0" layoutY="96.0" prefHeight="25.0" prefWidth="232.0" />
+      <TextField fx:id="codigoIATAAvuelo" layoutX="236.0" layoutY="208.0" prefHeight="25.0" prefWidth="232.0" />
       <Text layoutX="32.0" layoutY="226.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Codigo IATA" wrappingWidth="142.134765625">
          <font>
             <Font size="15.0" />
          </font>
       </Text>
-      <TextField fx:id="codigoIATAAvuelo" layoutX="236.0" layoutY="208.0" prefHeight="25.0" prefWidth="232.0" />
+      <TextField fx:id="yyyyETA" layoutX="236.0" layoutY="291.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="MMETA" layoutX="317.0" layoutY="291.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="ddETA" layoutX="400.0" layoutY="291.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="HHETA" layoutX="236.0" layoutY="324.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="mmETA" layoutX="317.0" layoutY="324.0" prefHeight="25.0" prefWidth="69.0" />
+      <Text layoutX="32.0" layoutY="309.0" strokeType="OUTSIDE" strokeWidth="0.0" text="yyyy-MM-dd" wrappingWidth="142.134765625">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Text>
+      <Text layoutX="32.0" layoutY="342.0" strokeType="OUTSIDE" strokeWidth="0.0" text="HH-mm" wrappingWidth="142.134765625">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Text>
+      <Text layoutX="14.0" layoutY="282.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ETA" wrappingWidth="142.134765625">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Text>
+      <Text layoutX="14.0" layoutY="389.0" strokeType="OUTSIDE" strokeWidth="0.0" text="EDT" wrappingWidth="142.134765625">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Text>
+      <Text layoutX="32.0" layoutY="416.0" strokeType="OUTSIDE" strokeWidth="0.0" text="yyyy-MM-dd" wrappingWidth="142.134765625">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Text>
+      <Text layoutX="32.0" layoutY="449.0" strokeType="OUTSIDE" strokeWidth="0.0" text="HH-mm" wrappingWidth="142.134765625">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Text>
+      <TextField fx:id="yyyyEDT" layoutX="235.0" layoutY="398.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="MMEDT" layoutX="316.0" layoutY="398.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="ddEDT" layoutX="399.0" layoutY="398.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="HHEDT" layoutX="235.0" layoutY="431.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="mmEDT" layoutX="316.0" layoutY="431.0" prefHeight="25.0" prefWidth="69.0" />
    </children>
 </Pane>

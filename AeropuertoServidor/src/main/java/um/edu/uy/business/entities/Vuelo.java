@@ -1,7 +1,11 @@
 package um.edu.uy.business.entities;
 
 
+
+import org.apache.tomcat.jni.Local;
+
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -45,6 +49,12 @@ public class Vuelo {
     @Column(nullable = false)
     private boolean rechadado;
 
+    @Column(nullable = false)
+    private LocalDateTime EDT;
+
+    @Column(nullable = false)
+    private LocalDateTime ETA;
+
     public String getAerolinea() {
         return aerolinea.getCodigoIATAAerolinea();
     }
@@ -80,7 +90,7 @@ public class Vuelo {
         this.aceptadoOrigen = aceptadoOrigen;
     }
 
-    public Vuelo(String codigoVuelo, Aeropuerto aeropuertoDestino, Aeropuerto aeropuertoOrigen, Avion avion, Aerolinea aerolinea, boolean aceptadoOrigen, boolean aceptadoDestino) {
+    public Vuelo(String codigoVuelo, Aeropuerto aeropuertoDestino, Aeropuerto aeropuertoOrigen, Avion avion, Aerolinea aerolinea, boolean aceptadoOrigen, boolean aceptadoDestino, LocalDateTime EDT, LocalDateTime ETA) {
         this.codigoVuelo = codigoVuelo;
         this.aeropuertoDestino = aeropuertoDestino;
         this.aeropuertoOrigen = aeropuertoOrigen;
@@ -88,6 +98,8 @@ public class Vuelo {
         this.aerolinea = aerolinea;
         this.aceptadoOrigen = aceptadoOrigen;
         this.aceptadoDestino = aceptadoDestino;
+        this.EDT = EDT;
+        this.ETA = ETA;
     }
 
     public boolean isAceptadoOrigen() {

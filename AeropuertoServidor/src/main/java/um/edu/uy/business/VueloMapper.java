@@ -32,7 +32,7 @@ public class VueloMapper {
         Aeropuerto aeropuertoOrigen = aeropuertoRepository.findAeropuertoByCodigoIATAAeropuerto(vueloDTO.getCodigoAeropuertoOrigen());
         Avion avion = avionRepository.findByMatricula(vueloDTO.getMatriculaAvion());
         Aerolinea aerolinea = aerolineaRepository.findAerolineaByCodigoIATAAerolinea(vueloDTO.getCodigoAerolinea());
-        Vuelo vuelo = new Vuelo(vueloDTO.getCodigoVuelo(),aeropuertoDestino,aeropuertoOrigen,avion,aerolinea, vueloDTO.isAceptadoOrigen(), vueloDTO.isAcepradoDestino());
+        Vuelo vuelo = new Vuelo(vueloDTO.getCodigoVuelo(),aeropuertoDestino,aeropuertoOrigen,avion,aerolinea, vueloDTO.isAceptadoOrigen(), vueloDTO.isAcepradoDestino(),null,null);
         return vuelo;
     }
 

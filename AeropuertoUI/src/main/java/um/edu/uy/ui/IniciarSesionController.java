@@ -27,6 +27,7 @@ import um.edu.uy.service.VueloRestService;
 import javax.transaction.Transactional;
 import javax.xml.crypto.Data;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -889,7 +890,6 @@ public class IniciarSesionController {
                             List<VueloDTO> vuelosSal = new ArrayList<>();
 
 
-
                             for (int i=0;i<vueloDTOS.size();i++){
                                 VueloDTO vueloDTO = new VueloDTO();
                                 LinkedHashMap hashMap = (LinkedHashMap) vueloDTOS.get(i);
@@ -1063,9 +1063,72 @@ public class IniciarSesionController {
 
     @Autowired
     private VueloRestService vueloRestService;
+
+
+    @FXML
+    private TextField yyyyETA;
+
+    @FXML
+    private TextField MMETA;
+
+    @FXML
+    private TextField ddETA;
+
+    @FXML
+    private TextField HHETA;
+
+    @FXML
+    private TextField mmETA;
+
+    @FXML
+    private TextField yyyyEDT;
+
+    @FXML
+    private TextField MMEDT;
+
+    @FXML
+    private TextField ddEDT;
+
+    @FXML
+    private TextField HHEDT;
+
+    @FXML
+    private TextField mmEDT;
     @Transactional
     @FXML
     void registrarVuelo(ActionEvent event){
+
+        String anoETA = yyyyETA.getText();
+        String mesETA = MMETA.getText();
+        String diaETA = ddETA.getText();
+        String horaETA = HHETA.getText();
+        String minutoETA = mmETA.getText();
+
+        int anoIntETA = Integer.parseInt(anoETA);
+        int mesIntETA = Integer.parseInt(mesETA);
+        int diaIntETA = Integer.parseInt(diaETA);
+        int horaIntETA = Integer.parseInt(horaETA);
+        int minutoIntETA = Integer.parseInt(minutoETA);
+
+        LocalDateTime localDateTimeETA = LocalDateTime.of(anoIntETA,mesIntETA,diaIntETA,horaIntETA,minutoIntETA);
+        System.out.println(localDateTimeETA);
+
+        String anoEDT = yyyyEDT.getText();
+        String mesEDT = MMEDT.getText();
+        String diaEDT = ddEDT.getText();
+        String horaEDT = HHEDT.getText();
+        String minutoEDT = mmEDT.getText();
+
+        int anoIntEDT = Integer.parseInt(anoEDT);
+        int mesIntEDT = Integer.parseInt(mesEDT);
+        int diaIntEDT = Integer.parseInt(diaEDT);
+        int horaIntEDT = Integer.parseInt(horaEDT);
+        int minutoIntEDT = Integer.parseInt(minutoEDT);
+
+        LocalDateTime localDateTimeEDT = LocalDateTime.of(anoIntEDT,mesIntEDT,diaIntEDT,horaIntEDT,minutoIntEDT);
+        System.out.println(localDateTimeEDT);
+
+
         String matriculaAvion = matriculaBox.getValue();
         String codigoIATAAeropDest = codigoIATAeropuertoDestino.getValue();
         String codigoIATAAeropOri = codigoIATAeropuertoOrigen.getValue();
@@ -1081,8 +1144,6 @@ public class IniciarSesionController {
                 codigoIATAVue == null || codigoIATAVue.equals("") ) {
             showAlert("Datos faltantes!", "No se ingresaron los datos necesarios para completar el ingreso.");
         } else {
-
-            System.out.println(codAerol);
 
             VueloDTO vueloDTO = new VueloDTO();
             vueloDTO.setCodigoVuelo(codAerol+codigoIATAVue);

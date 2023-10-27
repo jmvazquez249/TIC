@@ -144,7 +144,6 @@ public class AgregarUsuarioAerolineaController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         registroUsuarioBox.setItems(FXCollections.observableArrayList("Check In","Oficina"));
 
     }
