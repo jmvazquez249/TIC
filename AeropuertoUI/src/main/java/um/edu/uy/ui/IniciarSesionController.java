@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.jsf.FacesContextUtils;
 import um.edu.uy.*;
 import um.edu.uy.service.AerolineaRestService;
 import um.edu.uy.service.AeropuertoRestService;
@@ -76,7 +77,7 @@ public class IniciarSesionController {
 
     @FXML
     void loginUsuario(ActionEvent event) throws IOException {
-        try {
+
 
             String emailUsu = email.getText();
             String contrasenaUsu = contrasena.getText();
@@ -113,11 +114,8 @@ public class IniciarSesionController {
             } else {
                 showAlert("No Existe Usuario", "El usuario no esta registrado");
             }
-        } catch (Exception e) {
-            showAlert("ERROR!", "No se ingresaron los datos necesarios para completar el ingreso");
-        }
-    }
 
+    }
 
     @Transactional
     @FXML
@@ -138,7 +136,6 @@ public class IniciarSesionController {
 
             ResponseEntity response3 = usuarioGeneralRestService.getUsuarioGeneralEmail(emailAdAero);
             UsuarioGeneralDTO usuarioGeneralDTOEmail = (UsuarioGeneralDTO) response3.getBody();
-
 
             if (aeropuertoDTO == null) {
                 showAlert(
@@ -168,15 +165,12 @@ public class IniciarSesionController {
 
                 ResponseEntity response = usuarioGeneralRestService.agregarUsuarioGeneral(usuarioGeneralDTO);
 
-
                 if (response.getStatusCode() == HttpStatus.OK) {
 
                     showAlert("Administrador agregado", "Se agrego con exito el Administrador!");
 
                 }
-
             }
-
         }
         catch (Exception e){
             showAlert(
@@ -195,15 +189,11 @@ public class IniciarSesionController {
         String emailUsu = email.getText();
         long pasaporteUsu = Long.parseLong(pasaporte.getText());
 
-
         ResponseEntity response1 = usuarioGeneralRestService.getUsuarioGeneralPasaporte(pasaporteUsu);
         UsuarioGeneralDTO usuarioGeneralDTOPasaporte = (UsuarioGeneralDTO) response1.getBody();
 
-
         ResponseEntity response2 = usuarioGeneralRestService.getUsuarioGeneralEmail(emailUsu);
         UsuarioGeneralDTO usuarioGeneralDTOEmail = (UsuarioGeneralDTO) response2.getBody();
-
-
 
         if(usuarioGeneralDTOPasaporte!=null){
             showAlert(
@@ -253,6 +243,7 @@ public class IniciarSesionController {
         }
 
         }catch (Exception e){
+            System.out.println(e);
             showAlert(
                     "ERROR!",
                     "No se ingresaron los datos necesarios para completar el ingreso o algun dato es incorrecto");
@@ -389,7 +380,6 @@ public class IniciarSesionController {
                 usuarioGeneralDTO.setTipo("ADMINAEROLINEA");
                 usuarioGeneralDTO.setCodigoAeropuerto(null);
 
-
                 //hacer que sea atomica la transaccion
                 ResponseEntity response1 = aerolineaRestService.agregarAerolinea(aerolineaDTO);
                 ResponseEntity response2 = usuarioGeneralRestService.agregarUsuarioGeneral(usuarioGeneralDTO);
@@ -441,8 +431,7 @@ public class IniciarSesionController {
                         "El email ingresado ya esta registrado");
             }
 
-
-         else{
+            else{
 
 
             UsuarioGeneralDTO usuarioGeneralDTO = new UsuarioGeneralDTO();
@@ -455,13 +444,11 @@ public class IniciarSesionController {
             usuarioGeneralDTO.setTipo("ADMINAEROLINEA");
             usuarioGeneralDTO.setCodigoAerolinea(codigoIATAAerol);
 
-
             ResponseEntity response = usuarioGeneralRestService.agregarUsuarioGeneral(usuarioGeneralDTO);
 
             if (response.getStatusCode() == HttpStatus.OK) {
                 showAlert("Administrador agregado", "Se agrego con exito el administrador de la aerolinea!");
             }
-
         }
     }catch (Exception e) {
             showAlert(
@@ -563,35 +550,32 @@ public class IniciarSesionController {
 
         stage.show();
     }
-
-
     @FXML
     public TableView<VueloDTO> tablaVuelosAceptadosLlegada;
-
     @FXML
     public TableColumn<VueloDTO, String> codigoVueloAceptadoLlegada;
-
     @FXML
     public TableColumn<VueloDTO, String> aeropuertoOrigenAceptadoLlegada;
-
     @FXML
     public TableColumn<VueloDTO, String> aeropuertoDestinoAceptadoLlegada;
-
     @FXML
     public TableColumn<VueloDTO, String> matriculaAvionAceptadoLlegada;
-
+    @FXML
+    public TableColumn<VueloDTO,String> EDTllegada;
+    @FXML
+    public TableColumn<VueloDTO,String> ETAllegada;
+    @FXML
+    public TableColumn<VueloDTO,String> EDTsalida;
+    @FXML
+    public TableColumn<VueloDTO,String> ETAsalida;
     @FXML
     public TableView<VueloDTO> tablaVuelosAceptadosSalida;
-
     @FXML
     public TableColumn<VueloDTO, String> codigoVueloAceptadoSalida;
-
     @FXML
     public TableColumn<VueloDTO, String> aeropuertoOrigenAceptadoSalida;
-
     @FXML
     public TableColumn<VueloDTO, String> aeropuertoDestinoAceptadoSalida;
-
     @FXML
     public TableColumn<VueloDTO, String> matriculaAvionAceptadoSalida;
 
@@ -624,6 +608,8 @@ public class IniciarSesionController {
             vueloDTO.setCodigoAeropuertoOrigen((String) hashMap.get("codigoAeropuertoOrigen"));
             vueloDTO.setCodigoAeropuertoDestino((String) hashMap.get("codigoAeropuertoDestino"));
             vueloDTO.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
+            vueloDTO.setETA(LocalDateTime.parse((String) hashMap.get("eta")));
+            vueloDTO.setEDT(LocalDateTime.parse((String) hashMap.get("edt")));
             vuelosLle.add(vueloDTO);
         }
 
@@ -634,33 +620,32 @@ public class IniciarSesionController {
             vueloDTO2.setCodigoAeropuertoOrigen((String) hashMap.get("codigoAeropuertoOrigen"));
             vueloDTO2.setCodigoAeropuertoDestino((String) hashMap.get("codigoAeropuertoDestino"));
             vueloDTO2.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
+            vueloDTO2.setETA((LocalDateTime) hashMap.get("eta"));
+            vueloDTO2.setEDT((LocalDateTime) hashMap.get("edt"));
             vuelosSal.add(vueloDTO2);
         }
 
-
-
         ObservableList<VueloDTO> vuelosLlegada = FXCollections.observableArrayList(vuelosLle);
         ObservableList<VueloDTO> vuelosSalida = FXCollections.observableArrayList(vuelosSal);
-
-
 
         codigoVueloAceptadoLlegada.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
         aeropuertoOrigenAceptadoLlegada.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoOrigen"));
         aeropuertoDestinoAceptadoLlegada.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoDestino"));
         matriculaAvionAceptadoLlegada.setCellValueFactory(new PropertyValueFactory<>("matriculaAvion"));
+        ETAllegada.setCellValueFactory(new PropertyValueFactory<>("ETA"));
+        EDTllegada.setCellValueFactory(new PropertyValueFactory<>("EDT"));
         tablaVuelosAceptadosLlegada.setItems(vuelosLlegada);
-
 
         codigoVueloAceptadoSalida.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
         aeropuertoOrigenAceptadoSalida.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoOrigen"));
         aeropuertoDestinoAceptadoSalida.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoDestino"));
         matriculaAvionAceptadoSalida.setCellValueFactory(new PropertyValueFactory<>("matriculaAvion"));
+        ETAsalida.setCellValueFactory(new PropertyValueFactory<>("ETA"));
+        EDTsalida.setCellValueFactory(new PropertyValueFactory<>("EDT"));
         tablaVuelosAceptadosSalida.setItems(vuelosSalida);
 
         stage.show();
     }
-
-
 
     @FXML
     private TableView<VueloDTO> tablaLlegada;
@@ -670,7 +655,6 @@ public class IniciarSesionController {
     private TableColumn<VueloDTO, String> codigoVueloLlegada;
     @FXML
     private TableColumn<VueloDTO,String> matriculaAvionLlegada;
-
     @FXML
     private TableView<VueloDTO> tablaSalida;
     @FXML
@@ -679,11 +663,6 @@ public class IniciarSesionController {
     private TableColumn<VueloDTO, String> codigoVueloSalida;
     @FXML
     private TableColumn<VueloDTO,String> matriculaAvionSalida;
-
-
-
-
-
 
     @FXML
     void cargarAdministradorVuelos(ActionEvent event, String codigoAeropuerto) throws IOException {
@@ -706,8 +685,6 @@ public class IniciarSesionController {
         List vueloDTOS2 = (List) response2.getBody();
         List<VueloDTO> vuelosSal = new ArrayList<>();
 
-
-
         for (int i=0;i<vueloDTOS.size();i++){
             VueloDTO vueloDTO = new VueloDTO();
             LinkedHashMap hashMap = (LinkedHashMap) vueloDTOS.get(i);
@@ -715,9 +692,10 @@ public class IniciarSesionController {
             vueloDTO.setCodigoAeropuertoOrigen((String) hashMap.get("codigoAeropuertoOrigen"));
             vueloDTO.setCodigoAeropuertoDestino((String) hashMap.get("codigoAeropuertoDestino"));
             vueloDTO.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
+            vueloDTO.setEDT(LocalDateTime.parse((String) hashMap.get("edt")));
+            vueloDTO.setETA(LocalDateTime.parse((String) hashMap.get("eta")));
             vuelosLle.add(vueloDTO);
         }
-
 
         for (int j=0;j<vueloDTOS2.size();j++){
             VueloDTO vueloDTO = new VueloDTO();
@@ -726,10 +704,10 @@ public class IniciarSesionController {
             vueloDTO.setCodigoAeropuertoOrigen((String) hashMap.get("codigoAeropuertoOrigen"));
             vueloDTO.setCodigoAeropuertoDestino((String) hashMap.get("codigoAeropuertoDestino"));
             vueloDTO.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
+            vueloDTO.setEDT(LocalDateTime.parse((String) hashMap.get("edt")));
+            vueloDTO.setETA(LocalDateTime.parse((String) hashMap.get("eta")));
             vuelosSal.add(vueloDTO);
         }
-
-
 
         ObservableList<VueloDTO> vuelosLlegada = FXCollections.observableArrayList(vuelosLle);
         ObservableList<VueloDTO> vuelosSalida = FXCollections.observableArrayList(vuelosSal);
@@ -737,24 +715,22 @@ public class IniciarSesionController {
         codigoVueloLlegada.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
         aeropuertoOrigen.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoOrigen"));
         matriculaAvionLlegada.setCellValueFactory(new PropertyValueFactory<>("matriculaAvion"));
+        ETAllegada.setCellValueFactory(new PropertyValueFactory<>("ETA"));
+        EDTllegada.setCellValueFactory(new PropertyValueFactory<>("EDT"));
         tablaLlegada.setItems(vuelosLlegada);
         addButtonToTableAceptar(tablaLlegada,true,codigoAeropuerto);
         addButtonToTableRechazar(tablaLlegada,codigoAeropuerto);
 
-
-
         codigoVueloSalida.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
         aeropuertoDestino.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoDestino"));
         matriculaAvionSalida.setCellValueFactory(new PropertyValueFactory<>("matriculaAvion"));
+        ETAsalida.setCellValueFactory(new PropertyValueFactory<>("ETA"));
+        EDTsalida.setCellValueFactory(new PropertyValueFactory<>("EDT"));
         tablaSalida.setItems(vuelosSalida);
         addButtonToTableAceptar(tablaSalida,false,codigoAeropuerto);
         addButtonToTableRechazar(tablaSalida,codigoAeropuerto);
 
-
         stage.show();
-
-
-
     }
 
         private void addButtonToTableAceptar(TableView t, boolean llegada, String codigoAeropuerto) {
@@ -789,6 +765,8 @@ public class IniciarSesionController {
                                             vueloDTO.setCodigoAeropuertoOrigen((String) hashMap.get("codigoAeropuertoOrigen"));
                                             vueloDTO.setCodigoAeropuertoDestino((String) hashMap.get("codigoAeropuertoDestino"));
                                             vueloDTO.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
+                                            vueloDTO.setEDT(LocalDateTime.parse((String) hashMap.get("edt")));
+                                            vueloDTO.setETA(LocalDateTime.parse((String) hashMap.get("eta")));
                                             vuelosLle.add(vueloDTO);
                                         }
 
@@ -797,6 +775,8 @@ public class IniciarSesionController {
                                         codigoVueloLlegada.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
                                         aeropuertoOrigen.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoOrigen"));
                                         matriculaAvionLlegada.setCellValueFactory(new PropertyValueFactory<>("matriculaAvion"));
+                                        ETAllegada.setCellValueFactory(new PropertyValueFactory<>("ETA"));
+                                        EDTllegada.setCellValueFactory(new PropertyValueFactory<>("EDT"));
                                         tablaLlegada.setItems(vuelosLlegada);
                                     }
 
@@ -817,6 +797,8 @@ public class IniciarSesionController {
                                             vueloDTO.setCodigoAeropuertoOrigen((String) hashMap.get("codigoAeropuertoOrigen"));
                                             vueloDTO.setCodigoAeropuertoDestino((String) hashMap.get("codigoAeropuertoDestino"));
                                             vueloDTO.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
+                                            vueloDTO.setEDT(LocalDateTime.parse((String) hashMap.get("edt")));
+                                            vueloDTO.setETA(LocalDateTime.parse((String) hashMap.get("eta")));
                                             vuelosSal.add(vueloDTO);
                                         }
 
@@ -825,18 +807,12 @@ public class IniciarSesionController {
                                         codigoVueloSalida.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
                                         aeropuertoDestino.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoDestino"));
                                         matriculaAvionSalida.setCellValueFactory(new PropertyValueFactory<>("matriculaAvion"));
+                                        ETAsalida.setCellValueFactory(new PropertyValueFactory<>("ETA"));
+                                        EDTsalida.setCellValueFactory(new PropertyValueFactory<>("EDT"));
                                         tablaSalida.setItems(vuelosSalida);
 
                                     }
-
-
-
-
-
-
-
                                 }
-
                             });
                         }
 
@@ -896,6 +872,8 @@ public class IniciarSesionController {
                                 vueloDTO.setCodigoVuelo((String) hashMap.get("codigoVuelo"));
                                 vueloDTO.setCodigoAeropuertoOrigen((String) hashMap.get("codigoAeropuertoOrigen"));
                                 vueloDTO.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
+                                vueloDTO.setEDT(LocalDateTime.parse((String) hashMap.get("edt")));
+                                vueloDTO.setETA(LocalDateTime.parse((String) hashMap.get("eta")));
                                 vuelosLle.add(vueloDTO);
                             }
 
@@ -905,6 +883,8 @@ public class IniciarSesionController {
                                 vueloDTO.setCodigoVuelo((String) hashMap.get("codigoVuelo"));
                                 vueloDTO.setCodigoAeropuertoDestino((String) hashMap.get("codigoAeropuertoOrigen"));
                                 vueloDTO.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
+                                vueloDTO.setEDT(LocalDateTime.parse((String) hashMap.get("edt")));
+                                vueloDTO.setETA(LocalDateTime.parse((String) hashMap.get("eta")));
                                 vuelosSal.add(vueloDTO);
                             }
 
@@ -915,11 +895,15 @@ public class IniciarSesionController {
                             matriculaAvionLlegada.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
                             matriculaAvionLlegada.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoOrigen"));
                             matriculaAvionLlegada.setCellValueFactory(new PropertyValueFactory<>("matriculaAvion"));
+                            ETAllegada.setCellValueFactory(new PropertyValueFactory<>("ETA"));
+                            EDTllegada.setCellValueFactory(new PropertyValueFactory<>("EDT"));
                             tablaLlegada.setItems(vuelosLlegada);
 
                             matriculaAvionSalida.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
                             matriculaAvionSalida.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoDestino"));
                             matriculaAvionSalida.setCellValueFactory(new PropertyValueFactory<>("matriculaAvion"));
+                            ETAsalida.setCellValueFactory(new PropertyValueFactory<>("ETA"));
+                            EDTsalida.setCellValueFactory(new PropertyValueFactory<>("EDT"));
                             tablaSalida.setItems(vuelosSalida);
 
 
@@ -1098,6 +1082,8 @@ public class IniciarSesionController {
     @FXML
     void registrarVuelo(ActionEvent event){
 
+        //poner los controles de las fechas
+        //ETA>EDT cambiar en FXML
         String anoETA = yyyyETA.getText();
         String mesETA = MMETA.getText();
         String diaETA = ddETA.getText();
@@ -1154,6 +1140,8 @@ public class IniciarSesionController {
             vueloDTO.setAceptadoOrigen(false);
             vueloDTO.setAcepradoDestino(false);
             vueloDTO.setRechadado(false);
+            vueloDTO.setEDT(localDateTimeEDT);
+            vueloDTO.setETA(localDateTimeETA);
 
             ResponseEntity response = vueloRestService.agregarVuelo(vueloDTO);
 

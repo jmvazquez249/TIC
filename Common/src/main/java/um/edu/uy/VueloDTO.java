@@ -1,5 +1,7 @@
 package um.edu.uy;
 
+import java.time.LocalDateTime;
+
 public class VueloDTO {
 
     private long idVuelo;
@@ -13,6 +15,25 @@ public class VueloDTO {
     private String matriculaAvion;
 
     private String codigoAerolinea;
+
+    private LocalDateTime ETA;
+    private LocalDateTime EDT;
+
+    public LocalDateTime getETA() {
+        return ETA;
+    }
+
+    public void setETA(LocalDateTime ETA) {
+        this.ETA = ETA;
+    }
+
+    public LocalDateTime getEDT() {
+        return EDT;
+    }
+
+    public void setEDT(LocalDateTime EDT) {
+        this.EDT = EDT;
+    }
 
     public String getMatriculaAvion() {
         return matriculaAvion;

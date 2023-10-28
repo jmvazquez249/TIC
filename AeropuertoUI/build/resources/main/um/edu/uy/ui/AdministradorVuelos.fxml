@@ -7,31 +7,35 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="um.edu.uy.ui.IniciarSesionController">
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="478.0" prefWidth="741.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="um.edu.uy.ui.IniciarSesionController">
    <children>
-      <TableView fx:id="tablaLlegada" layoutX="20.0" layoutY="36.0" prefHeight="150.0" prefWidth="500.0">
+      <TableView fx:id="tablaLlegada" layoutX="20.0" layoutY="36.0" prefHeight="174.0" prefWidth="707.0">
         <columns>
           <TableColumn fx:id="codigoVueloLlegada" prefWidth="91.33331298828125" text="Codigo Vuelo" />
           <TableColumn fx:id="aeropuertoOrigen" prefWidth="70.66671752929688" text="Origen" />
             <TableColumn fx:id="matriculaAvionLlegada" prefWidth="112.00006103515625" text="Matricula Avion" />
+            <TableColumn fx:id="EDTllegada" prefWidth="103.3333740234375" text="EDT" />
+            <TableColumn fx:id="ETAllegada" prefWidth="110.6666259765625" text="ETA" />
         </columns>
       </TableView>
-      <Button layoutX="529.0" layoutY="363.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
+      <Button layoutX="670.0" layoutY="439.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
       <Text layoutX="20.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="VUELOS PENDIENTES DE LLEGADA" wrappingWidth="343.0926208496094">
          <font>
             <Font name="System Italic" size="17.0" />
          </font>
       </Text>
-      <Text layoutX="20.0" layoutY="206.0" strokeType="OUTSIDE" strokeWidth="0.0" text="VUELOS PENDIENTES DE SALIDA" wrappingWidth="343.0926208496094">
+      <Text layoutX="20.0" layoutY="237.0" strokeType="OUTSIDE" strokeWidth="0.0" text="VUELOS PENDIENTES DE SALIDA" wrappingWidth="343.0926208496094">
          <font>
             <Font name="System Italic" size="17.0" />
          </font>
       </Text>
-      <TableView fx:id="tablaSalida" layoutX="20.0" layoutY="213.0" prefHeight="150.0" prefWidth="500.0">
+      <TableView fx:id="tablaSalida" layoutX="20.0" layoutY="248.0" prefHeight="174.0" prefWidth="707.0">
         <columns>
           <TableColumn fx:id="codigoVueloSalida" prefWidth="92.0" text="Codigo Vuelo" />
           <TableColumn fx:id="aeropuertoDestino" prefWidth="71.33334350585938" text="Destino" />
-            <TableColumn fx:id="matriculaAvionSalida" prefWidth="112.00006103515625" text="Matricula Avion" />
+            <TableColumn fx:id="matriculaAvionSalida" prefWidth="110.00001525878906" text="Matricula Avion" />
+            <TableColumn fx:id="EDTsalida" prefWidth="108.0" text="EDT" />
+            <TableColumn fx:id="ETAsalida" prefWidth="112.0" text="ETA" />
         </columns>
       </TableView>
    </children>

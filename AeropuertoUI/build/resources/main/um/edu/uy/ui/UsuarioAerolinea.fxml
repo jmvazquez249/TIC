@@ -40,45 +40,45 @@
             <Font size="15.0" />
          </font>
       </Text>
-      <TextField fx:id="yyyyETA" layoutX="236.0" layoutY="291.0" prefHeight="25.0" prefWidth="69.0" />
-      <TextField fx:id="MMETA" layoutX="317.0" layoutY="291.0" prefHeight="25.0" prefWidth="69.0" />
-      <TextField fx:id="ddETA" layoutX="400.0" layoutY="291.0" prefHeight="25.0" prefWidth="69.0" />
-      <TextField fx:id="HHETA" layoutX="236.0" layoutY="324.0" prefHeight="25.0" prefWidth="69.0" />
-      <TextField fx:id="mmETA" layoutX="317.0" layoutY="324.0" prefHeight="25.0" prefWidth="69.0" />
-      <Text layoutX="32.0" layoutY="309.0" strokeType="OUTSIDE" strokeWidth="0.0" text="yyyy-MM-dd" wrappingWidth="142.134765625">
+      <TextField fx:id="yyyyETA" layoutX="240.0" layoutY="393.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="MMETA" layoutX="321.0" layoutY="393.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="ddETA" layoutX="404.0" layoutY="393.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="HHETA" layoutX="240.0" layoutY="426.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="mmETA" layoutX="321.0" layoutY="426.0" prefHeight="25.0" prefWidth="69.0" />
+      <Text layoutX="36.0" layoutY="411.0" strokeType="OUTSIDE" strokeWidth="0.0" text="yyyy-MM-dd" wrappingWidth="142.134765625">
          <font>
             <Font size="15.0" />
          </font>
       </Text>
-      <Text layoutX="32.0" layoutY="342.0" strokeType="OUTSIDE" strokeWidth="0.0" text="HH-mm" wrappingWidth="142.134765625">
+      <Text layoutX="36.0" layoutY="444.0" strokeType="OUTSIDE" strokeWidth="0.0" text="HH-mm" wrappingWidth="142.134765625">
          <font>
             <Font size="15.0" />
          </font>
       </Text>
-      <Text layoutX="14.0" layoutY="282.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ETA" wrappingWidth="142.134765625">
+      <Text layoutX="18.0" layoutY="384.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ETA" wrappingWidth="142.134765625">
          <font>
             <Font size="25.0" />
          </font>
       </Text>
-      <Text layoutX="14.0" layoutY="389.0" strokeType="OUTSIDE" strokeWidth="0.0" text="EDT" wrappingWidth="142.134765625">
+      <Text layoutX="18.0" layoutY="278.0" strokeType="OUTSIDE" strokeWidth="0.0" text="EDT" wrappingWidth="142.134765625">
          <font>
             <Font size="25.0" />
          </font>
       </Text>
-      <Text layoutX="32.0" layoutY="416.0" strokeType="OUTSIDE" strokeWidth="0.0" text="yyyy-MM-dd" wrappingWidth="142.134765625">
+      <Text layoutX="36.0" layoutY="305.0" strokeType="OUTSIDE" strokeWidth="0.0" text="yyyy-MM-dd" wrappingWidth="142.134765625">
          <font>
             <Font size="15.0" />
          </font>
       </Text>
-      <Text layoutX="32.0" layoutY="449.0" strokeType="OUTSIDE" strokeWidth="0.0" text="HH-mm" wrappingWidth="142.134765625">
+      <Text layoutX="36.0" layoutY="338.0" strokeType="OUTSIDE" strokeWidth="0.0" text="HH-mm" wrappingWidth="142.134765625">
          <font>
             <Font size="15.0" />
          </font>
       </Text>
-      <TextField fx:id="yyyyEDT" layoutX="235.0" layoutY="398.0" prefHeight="25.0" prefWidth="69.0" />
-      <TextField fx:id="MMEDT" layoutX="316.0" layoutY="398.0" prefHeight="25.0" prefWidth="69.0" />
-      <TextField fx:id="ddEDT" layoutX="399.0" layoutY="398.0" prefHeight="25.0" prefWidth="69.0" />
-      <TextField fx:id="HHEDT" layoutX="235.0" layoutY="431.0" prefHeight="25.0" prefWidth="69.0" />
-      <TextField fx:id="mmEDT" layoutX="316.0" layoutY="431.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="yyyyEDT" layoutX="239.0" layoutY="287.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="MMEDT" layoutX="320.0" layoutY="287.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="ddEDT" layoutX="403.0" layoutY="287.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="HHEDT" layoutX="239.0" layoutY="320.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="mmEDT" layoutX="320.0" layoutY="320.0" prefHeight="25.0" prefWidth="69.0" />
    </children>
 </Pane>

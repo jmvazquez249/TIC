@@ -109,4 +109,12 @@ public class Vuelo {
     public boolean isAceptadoDestino() {
         return aceptadoDestino;
     }
+
+    public LocalDateTime getEDT() {
+        return EDT;
+    }
+
+    public LocalDateTime getETA() {
+        return ETA;
+    }
 }
