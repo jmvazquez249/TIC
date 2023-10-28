@@ -1080,75 +1080,76 @@ public class IniciarSesionController {
     private TextField mmEDT;
     @Transactional
     @FXML
-    void registrarVuelo(ActionEvent event){
+    void registrarVuelo(ActionEvent event) {
+        try {
 
-        //poner los controles de las fechas
-        //ETA>EDT cambiar en FXML
-        String anoETA = yyyyETA.getText();
-        String mesETA = MMETA.getText();
-        String diaETA = ddETA.getText();
-        String horaETA = HHETA.getText();
-        String minutoETA = mmETA.getText();
+            //poner los controles de las fechas
+            //ETA>EDT cambiar en FXML
+            String anoETA = yyyyETA.getText();
+            String mesETA = MMETA.getText();
+            String diaETA = ddETA.getText();
+            String horaETA = HHETA.getText();
+            String minutoETA = mmETA.getText();
 
-        int anoIntETA = Integer.parseInt(anoETA);
-        int mesIntETA = Integer.parseInt(mesETA);
-        int diaIntETA = Integer.parseInt(diaETA);
-        int horaIntETA = Integer.parseInt(horaETA);
-        int minutoIntETA = Integer.parseInt(minutoETA);
+            int anoIntETA = Integer.parseInt(anoETA);
+            int mesIntETA = Integer.parseInt(mesETA);
+            int diaIntETA = Integer.parseInt(diaETA);
+            int horaIntETA = Integer.parseInt(horaETA);
+            int minutoIntETA = Integer.parseInt(minutoETA);
 
-        LocalDateTime localDateTimeETA = LocalDateTime.of(anoIntETA,mesIntETA,diaIntETA,horaIntETA,minutoIntETA);
-        System.out.println(localDateTimeETA);
+            LocalDateTime localDateTimeETA = LocalDateTime.of(anoIntETA, mesIntETA, diaIntETA, horaIntETA, minutoIntETA);
+            System.out.println(localDateTimeETA);
 
-        String anoEDT = yyyyEDT.getText();
-        String mesEDT = MMEDT.getText();
-        String diaEDT = ddEDT.getText();
-        String horaEDT = HHEDT.getText();
-        String minutoEDT = mmEDT.getText();
+            String anoEDT = yyyyEDT.getText();
+            String mesEDT = MMEDT.getText();
+            String diaEDT = ddEDT.getText();
+            String horaEDT = HHEDT.getText();
+            String minutoEDT = mmEDT.getText();
 
-        int anoIntEDT = Integer.parseInt(anoEDT);
-        int mesIntEDT = Integer.parseInt(mesEDT);
-        int diaIntEDT = Integer.parseInt(diaEDT);
-        int horaIntEDT = Integer.parseInt(horaEDT);
-        int minutoIntEDT = Integer.parseInt(minutoEDT);
+            int anoIntEDT = Integer.parseInt(anoEDT);
+            int mesIntEDT = Integer.parseInt(mesEDT);
+            int diaIntEDT = Integer.parseInt(diaEDT);
+            int horaIntEDT = Integer.parseInt(horaEDT);
+            int minutoIntEDT = Integer.parseInt(minutoEDT);
 
-        LocalDateTime localDateTimeEDT = LocalDateTime.of(anoIntEDT,mesIntEDT,diaIntEDT,horaIntEDT,minutoIntEDT);
-        System.out.println(localDateTimeEDT);
-
-
-        String matriculaAvion = matriculaBox.getValue();
-        String codigoIATAAeropDest = codigoIATAeropuertoDestino.getValue();
-        String codigoIATAAeropOri = codigoIATAeropuertoOrigen.getValue();
-        Long codigoIATAVue = Long.parseLong(codigoIATAAvuelo.getText());
+            LocalDateTime localDateTimeEDT = LocalDateTime.of(anoIntEDT, mesIntEDT, diaIntEDT, horaIntEDT, minutoIntEDT);
 
 
-        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-        String codAerol = (String) stage.getUserData();
 
-        if (matriculaAvion == null || matriculaAvion.equals("") ||
-                codigoIATAAeropDest == null || codigoIATAAeropDest.equals("")||
-                codigoIATAAeropOri == null || codigoIATAAeropOri.equals("") ||
-                codigoIATAVue == null || codigoIATAVue.equals("") ) {
-            showAlert("Datos faltantes!", "No se ingresaron los datos necesarios para completar el ingreso.");
-        } else {
+            String matriculaAvion = matriculaBox.getValue();
+            String codigoIATAAeropDest = codigoIATAeropuertoDestino.getValue();
+            String codigoIATAAeropOri = codigoIATAeropuertoOrigen.getValue();
+            Long codigoIATAVue = Long.parseLong(codigoIATAAvuelo.getText());
 
-            VueloDTO vueloDTO = new VueloDTO();
-            vueloDTO.setCodigoVuelo(codAerol+codigoIATAVue);
-            vueloDTO.setCodigoAeropuertoDestino(codigoIATAAeropDest);
-            vueloDTO.setCodigoAeropuertoOrigen(codigoIATAAeropOri);
-            vueloDTO.setMatriculaAvion(matriculaAvion);
-            vueloDTO.setCodigoAerolinea(codAerol);
-            vueloDTO.setAceptadoOrigen(false);
-            vueloDTO.setAcepradoDestino(false);
-            vueloDTO.setRechadado(false);
-            vueloDTO.setEDT(localDateTimeEDT);
-            vueloDTO.setETA(localDateTimeETA);
 
-            ResponseEntity response = vueloRestService.agregarVuelo(vueloDTO);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            String codAerol = (String) stage.getUserData();
 
-            if (response.getStatusCode() == HttpStatus.OK) {
-                showAlert("Vuelo agregado", "Se agrego con exito el vuelo!");
+            if (localDateTimeEDT.isAfter(localDateTimeETA)) {
+                showAlert("Datos incorrectos!", "La fecha de llegada no puede ser anterior a la de salida.");
+            } else {
+
+                VueloDTO vueloDTO = new VueloDTO();
+                vueloDTO.setCodigoVuelo(codAerol + codigoIATAVue);
+                vueloDTO.setCodigoAeropuertoDestino(codigoIATAAeropDest);
+                vueloDTO.setCodigoAeropuertoOrigen(codigoIATAAeropOri);
+                vueloDTO.setMatriculaAvion(matriculaAvion);
+                vueloDTO.setCodigoAerolinea(codAerol);
+                vueloDTO.setAceptadoOrigen(false);
+                vueloDTO.setAcepradoDestino(false);
+                vueloDTO.setRechadado(false);
+                vueloDTO.setEDT(localDateTimeEDT);
+                vueloDTO.setETA(localDateTimeETA);
+
+                ResponseEntity response = vueloRestService.agregarVuelo(vueloDTO);
+
+                if (response.getStatusCode() == HttpStatus.OK) {
+                    showAlert("Vuelo agregado", "Se agrego con exito el vuelo!");
+                }
+
             }
-
+        }catch (Exception e){
+            showAlert("Datos incorrectos!", "Algun dato ingresado es incorrecto.");
         }
     }
 
