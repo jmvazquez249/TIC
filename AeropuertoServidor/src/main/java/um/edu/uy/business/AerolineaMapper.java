@@ -15,7 +15,7 @@ public class AerolineaMapper {
     }
 
     public Avion toAvion(AvionDTO avionDTO){
-        Avion avion = new Avion(avionDTO.getMatricula(), avionDTO.getModelo(), avionDTO.getCapacidad());
+        Avion avion = new Avion(avionDTO.getMatricula(), avionDTO.getModelo(), avionDTO.getCapacidad(), avionDTO.getCapacidadBulto());
         return avion;
     }
     public AerolineaDTO toAerolineaDTO(Aerolinea aerolinea){

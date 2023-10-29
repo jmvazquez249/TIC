@@ -10,6 +10,7 @@ public class AvionDTO {
     private int capacidad;
 
     private String codigoAeroliena;
+    private int capacidadBulto;
 
     public void setCodigoAeroliena(String codigoAeroliena) {
         this.codigoAeroliena = codigoAeroliena;
@@ -52,5 +53,13 @@ public class AvionDTO {
 
     public void setCapacidad(int capacidad) {
         this.capacidad = capacidad;
+    }
+
+    public int getCapacidadBulto() {
+        return capacidadBulto;
+    }
+
+    public void setCapacidadBulto(int capacidadBulto) {
+        this.capacidadBulto = capacidadBulto;
     }
 }

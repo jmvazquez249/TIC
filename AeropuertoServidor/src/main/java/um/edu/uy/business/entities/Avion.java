@@ -20,6 +20,9 @@ public class Avion {
     @Column(nullable = false)
     private int capacidad;
 
+    @Column(nullable = false)
+    private int capacidadBulto;
+
     public String getMatricula() {
         return matricula;
     }
@@ -27,10 +30,11 @@ public class Avion {
     public Avion() {
     }
 
-    public Avion(String matricula, String modelo, int capacidad) {
+    public Avion(String matricula, String modelo, int capacidad, int capacidadBulto) {
         this.matricula = matricula;
         this.modelo = modelo;
         this.capacidad = capacidad;
+        this.capacidadBulto = capacidadBulto;
     }
 
     public long getId_avion() {
@@ -43,5 +47,9 @@ public class Avion {
 
     public int getCapacidad() {
         return capacidad;
+    }
+
+    public int getCapacidadBulto() {
+        return capacidadBulto;
     }
 }

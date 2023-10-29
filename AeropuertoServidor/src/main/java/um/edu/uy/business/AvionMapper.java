@@ -9,7 +9,7 @@ import um.edu.uy.business.entities.Avion;
 public class AvionMapper {
 
         public Avion toAvion(AvionDTO avionDTO){
-            Avion avion = new Avion(avionDTO.getMatricula(), avionDTO.getModelo(), avionDTO.getCapacidad());
+            Avion avion = new Avion(avionDTO.getMatricula(), avionDTO.getModelo(), avionDTO.getCapacidad(), avionDTO.getCapacidadBulto());
             return avion;
         }
         public AvionDTO toAvionDTO(Avion avion){
@@ -17,6 +17,7 @@ public class AvionMapper {
             avionDTO.setMatricula(avion.getMatricula());
             avionDTO.setModelo(avion.getModelo());
             avionDTO.setCapacidad(avion.getCapacidad());
+            avionDTO.setCapacidadBulto(avion.getCapacidadBulto());
             return avionDTO;
         }
 

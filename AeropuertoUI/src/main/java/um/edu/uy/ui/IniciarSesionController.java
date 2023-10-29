@@ -31,7 +31,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static org.hibernate.query.criteria.internal.ValueHandlerFactory.isNumeric;
+
 
 
 @Component
@@ -71,6 +71,8 @@ public class IniciarSesionController {
     private TextField matricula;
     @FXML
     private TextField capacidad;
+    @FXML
+    private TextField capacidadBulto;
     @FXML
     private TextField ciudad;
     @FXML
@@ -309,6 +311,7 @@ public class IniciarSesionController {
             String modeloAv = modelo.getText();
             String matriculaAv = matricula.getText();
             int capacidadAv = Integer.parseInt(capacidad.getText());
+            int capacidadBultoAv = Integer.parseInt(capacidadBulto.getText());
 
             ResponseEntity response1 = avionRestService.getAvion(matriculaAv);
             AvionDTO avionDTOMatricula = (AvionDTO) response1.getBody();
@@ -327,6 +330,7 @@ public class IniciarSesionController {
                 avionDTO.setMatricula(matriculaAv);
                 avionDTO.setModelo(modeloAv);
                 avionDTO.setCodigoAeroliena(codigoAerolinea);
+                avionDTO.setCapacidadBulto(capacidadBultoAv);
 
                 ResponseEntity response = aerolineaRestService.agregarAvionAerolinea(avionDTO);
                 if (response.getStatusCode() == HttpStatus.OK) {
