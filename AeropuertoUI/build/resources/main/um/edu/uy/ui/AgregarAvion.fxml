@@ -15,12 +15,12 @@
       </Text>
       <TextField fx:id="matricula" layoutX="175.0" layoutY="118.0" prefHeight="25.0" prefWidth="299.0" />
       <TextField fx:id="modelo" layoutX="175.0" layoutY="159.0" prefHeight="25.0" prefWidth="299.0" />
-      <Text layoutX="54.0" layoutY="135.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Matricula">
+      <Text layoutX="38.0" layoutY="136.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Matricula">
          <font>
             <Font size="15.0" />
          </font>
       </Text>
-      <Text layoutX="54.0" layoutY="177.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Modelo">
+      <Text layoutX="38.0" layoutY="177.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Modelo">
          <font>
             <Font size="15.0" />
          </font>
@@ -28,10 +28,16 @@
       <Button layoutX="444.0" layoutY="355.0" mnemonicParsing="false" onAction="#registrarAvion" text="Agregar" />
       <Button layoutX="512.0" layoutY="355.0" mnemonicParsing="false" onAction="#backToAdminAerolinea" text="Cancelar" />
       <TextField fx:id="capacidad" layoutX="175.0" layoutY="200.0" prefHeight="25.0" prefWidth="299.0" />
-      <Text layoutX="54.0" layoutY="218.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Capacidad">
+      <Text layoutX="38.0" layoutY="219.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Capacidad Asientos">
          <font>
             <Font size="15.0" />
          </font>
       </Text>
+      <Text layoutX="38.0" layoutY="255.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Capacidad Equipaje">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Text>
+      <TextField fx:id="capacidadBulto" layoutX="175.0" layoutY="237.0" prefHeight="26.0" prefWidth="299.0" />
    </children>
 </Pane>

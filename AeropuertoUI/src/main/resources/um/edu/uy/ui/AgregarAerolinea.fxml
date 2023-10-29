@@ -13,10 +13,16 @@
             <Font size="33.0" />
          </font>
       </Text>
-      <TextField fx:id="nombreAerolinea" layoutX="164.0" layoutY="63.0" prefHeight="26.0" prefWidth="244.0" />
-      <TextField fx:id="codigoIATAAerolinea" layoutX="166.0" layoutY="96.0" prefHeight="25.0" prefWidth="244.0" />
-      <Text layoutX="27.0" layoutY="81.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre" />
-      <Text layoutX="30.0" layoutY="113.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Codigo IATA Aerolinea" />
+      <TextField fx:id="nombreAerolinea" layoutX="160.0" layoutY="96.0" prefHeight="26.0" prefWidth="244.0" />
+      <TextField fx:id="codigoIATAAerolinea" layoutX="160.0" layoutY="162.0" prefHeight="25.0" prefWidth="244.0" />
+      <Text layoutX="14.0" layoutY="115.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre">
+         <font>
+            <Font size="15.0" />
+         </font></Text>
+      <Text layoutX="14.0" layoutY="181.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Codigo IATA Aerolinea">
+         <font>
+            <Font size="15.0" />
+         </font></Text>
       <Button layoutX="454.0" layoutY="361.0" mnemonicParsing="false" onAction="#agregarAerolinea" text="Confirm" />
       <Button layoutX="524.0" layoutY="361.0" mnemonicParsing="false" onAction="#backToInicioDios" text="Back" />
       <Text layoutX="23.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="DATOS AEROLINEA">
@@ -24,24 +30,15 @@
             <Font name="System Bold" size="16.0" />
          </font>
       </Text>
-      <Text layoutX="27.0" layoutY="202.0" strokeType="OUTSIDE" strokeWidth="0.0" text="DATOS ADMINISTADOR">
+      <Text layoutX="14.0" layoutY="238.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pais">
          <font>
-            <Font name="System Bold" size="16.0" />
-         </font>
-      </Text>
-      <TextField fx:id="nombre" layoutX="166.0" layoutY="209.0" prefHeight="25.0" prefWidth="244.0" />
-      <TextField fx:id="apellido" layoutX="166.0" layoutY="241.0" prefHeight="25.0" prefWidth="244.0" />
-      <Text layoutX="29.0" layoutY="226.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre" />
-      <Text layoutX="29.0" layoutY="258.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Apellido" />
-      <TextField fx:id="email" layoutX="166.0" layoutY="273.0" prefHeight="25.0" prefWidth="244.0" />
-      <Text layoutX="29.0" layoutY="290.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email" />
-      <TextField fx:id="pasaporte" layoutX="166.0" layoutY="305.0" prefHeight="25.0" prefWidth="244.0" />
-      <Text layoutX="29.0" layoutY="322.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pasaporte" />
-      <TextField fx:id="contrasena" layoutX="166.0" layoutY="336.0" prefHeight="25.0" prefWidth="244.0" />
-      <Text layoutX="29.0" layoutY="353.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Contrasena" />
-      <Text layoutX="27.0" layoutY="147.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pais" />
-      <Text layoutX="26.0" layoutY="174.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Codigo ICAO" />
-      <TextField fx:id="paisAero" layoutX="166.0" layoutY="130.0" prefHeight="26.0" prefWidth="244.0" />
-      <TextField fx:id="codigoICAO" layoutX="166.0" layoutY="164.0" prefHeight="26.0" prefWidth="244.0" />
+            <Font size="15.0" />
+         </font></Text>
+      <Text layoutX="14.0" layoutY="290.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Codigo ICAO">
+         <font>
+            <Font size="15.0" />
+         </font></Text>
+      <TextField fx:id="paisAero" layoutX="160.0" layoutY="219.0" prefHeight="26.0" prefWidth="244.0" />
+      <TextField fx:id="codigoICAO" layoutX="160.0" layoutY="272.0" prefHeight="26.0" prefWidth="244.0" />
    </children>
 </Pane>
