@@ -28,5 +28,6 @@ dependencies {
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.4'
     implementation project(':Common')
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'javax.validation:validation-api:2.0.1.Final'
 
 }

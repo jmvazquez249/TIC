@@ -11,6 +11,7 @@ public interface AerolineaRepository extends JpaRepository<Aerolinea,Long> {
     Aerolinea findAerolineaByCodigoIATAAerolinea(String codigoIATA);
 
     Aerolinea findByIdAerolinea(long id);
+    Aerolinea findAerolineaByCodigoICAO(String codigoICAO);
 
 
 }

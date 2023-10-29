@@ -10,7 +10,7 @@ import um.edu.uy.business.entities.Avion;
 public class AerolineaMapper {
 
     public Aerolinea toAerolinea(AerolineaDTO aerolineaDTO){
-        Aerolinea aerolinea = new Aerolinea(aerolineaDTO.getCodigoIATAAerolinea(),aerolineaDTO.getNombre());
+        Aerolinea aerolinea = new Aerolinea(aerolineaDTO.getCodigoIATAAerolinea(),aerolineaDTO.getNombre(),aerolineaDTO.getPaisAero(),aerolineaDTO.getCodigoICAO());
         return aerolinea;
     }
 

@@ -3,6 +3,9 @@ package um.edu.uy.business.entities;
 import lombok.*;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import javax.validation.constraints.Pattern;
+
+
 
 import javax.persistence.*;
 
@@ -19,11 +22,15 @@ public class Aerolinea {
     @GeneratedValue(strategy = IDENTITY)
     public long idAerolinea;
 
-    @Column(unique = true)
+    @Column(unique = true,nullable = false, length = 2)
     public String codigoIATAAerolinea;
 
-    @Column
+    @Column(nullable = false)
     public String nombre;
+    @Column(nullable = false)
+    public String PaisAero;
+    @Column(unique = true,nullable = false, length = 3, columnDefinition = "text")
+    public String codigoICAO;
 
 
     @OneToMany(targetEntity = Avion.class,fetch = FetchType.EAGER)
@@ -53,9 +60,11 @@ public class Aerolinea {
         return codigoIATAAerolinea;
     }
 
-    public Aerolinea(String codigoIATAAerolinea, String nombre) {
+    public Aerolinea(String codigoIATAAerolinea, String nombre, String paisAero, String codigoICAO) {
         this.codigoIATAAerolinea = codigoIATAAerolinea;
         this.nombre = nombre;
+        this.PaisAero = paisAero;
+        this.codigoICAO = codigoICAO;
     }
 
     public List<Avion> getAviones() {
@@ -85,5 +94,21 @@ public class Aerolinea {
 
     public String getNombre() {
         return nombre;
+    }
+
+    public String getPaisAero() {
+        return PaisAero;
+    }
+
+    public void setPaisAero(String paisAero) {
+        PaisAero = paisAero;
+    }
+
+    public String getCodigoICAO() {
+        return codigoICAO;
+    }
+
+    public void setCodigoICAO(String codigoICAO) {
+        this.codigoICAO = codigoICAO;
     }
 }

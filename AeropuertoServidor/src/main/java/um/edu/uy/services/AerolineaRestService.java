@@ -60,5 +60,13 @@ public class AerolineaRestService {
         }
         return aerolineaMapper.toAerolineaDTO(aerolinea);
     }
+    @PostMapping("/getAerolineaICAO")
+    public AerolineaDTO getAerolineaICAO(@RequestBody String codigoICAOAerolinea){
+        Aerolinea aerolinea = aerolineaRepository.findAerolineaByCodigoICAO(codigoICAOAerolinea);
+        if (aerolinea==null){
+            return null;
+        }
+        return aerolineaMapper.toAerolineaDTO(aerolinea);
+    }
 
 }

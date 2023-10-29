@@ -31,6 +31,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import static org.hibernate.query.criteria.internal.ValueHandlerFactory.isNumeric;
+
 
 @Component
 public class IniciarSesionController {
@@ -73,6 +75,10 @@ public class IniciarSesionController {
     private TextField ciudad;
     @FXML
     private TextField pais;
+    @FXML
+    private TextField codigoICAO;
+    @FXML
+    private TextField paisAero;
 
 
     @FXML
@@ -267,6 +273,10 @@ public class IniciarSesionController {
                 showAlert(
                         "Aeropuerto ya registrado",
                         "El aeropuerto ingresado ya esta registrado");
+            }else if (codigoIATAAero.matches("^[A-Za-z]{2}$")){
+                showAlert(
+                        "Error en el codigo IATA",
+                        "El codigo IATA ingresado no es valido");
             } else {
 
                 AeropuertoDTO aeropuertoDTO = new AeropuertoDTO();
@@ -323,6 +333,7 @@ public class IniciarSesionController {
                     showAlert("Avion agregado", "Se agrego con exito el avion!");
                 }
 
+
             }
         }catch (Exception e){
             showAlert(
@@ -331,17 +342,23 @@ public class IniciarSesionController {
         }
     }
 
+
     @Transactional
     @FXML
     void agregarAerolinea(ActionEvent event) {
         try {
             String nombreAero = nombreAerolinea.getText();
             String codigoIATAAerol = codigoIATAAerolinea.getText();
+            String paisAerolinea = paisAero.getText();
+            String codigoICAOAero = codigoICAO.getText();
             String nombreUsu = nombre.getText();
             String emailUsu = email.getText();
             Long pasaporteUsu = Long.parseLong(pasaporte.getText());
             String contrasenaUsu = contrasena.getText();
             String apellidoUsu = apellido.getText();
+
+
+
 
             ResponseEntity response3 = aerolineaRestService.getAerolinea(codigoIATAAerol);
             AerolineaDTO aerolineaDTOCodigo = (AerolineaDTO) response3.getBody();
@@ -352,11 +369,18 @@ public class IniciarSesionController {
             ResponseEntity response5 = usuarioGeneralRestService.getUsuarioGeneralEmail(emailUsu);
             UsuarioGeneralDTO usuarioGeneralDTOEmail = (UsuarioGeneralDTO) response5.getBody();
 
+            ResponseEntity response6 = aerolineaRestService.getAerolineaICAO(codigoICAOAero);
+            AerolineaDTO aerolineaDTOICAO = (AerolineaDTO) response6.getBody();
+
 
             if (aerolineaDTOCodigo != null) {
                 showAlert(
                         "Aerolinea ya registrada",
                         "La aerolinea ingresada ya esta registrada");
+            }else if (aerolineaDTOICAO != null){
+                showAlert(
+                        "Codigo ICAO ya registrado",
+                        "El codigo ICAO ingresado ya esta registrado");
             } else if (usuarioGeneralDTOPasaporte != null) {
                 showAlert(
                         "Pasaporte ya registrado",
@@ -365,10 +389,16 @@ public class IniciarSesionController {
                 showAlert(
                         "Email ya registrado",
                         "El email ingresado ya esta registrado");
+            }else if  ( !codigoICAOAero.matches("^[A-Za-z]{3}$")|| !codigoIATAAerol.matches("^[A-Za-z]{2}$")) {
+                showAlert(
+                        "Error en el codigo IATA o ICAO",
+                        "El codigo IATA o ICAO ingresado no es valido");
             } else {
                 AerolineaDTO aerolineaDTO = new AerolineaDTO();
                 aerolineaDTO.setCodigoIATAAerolinea(codigoIATAAerol);
                 aerolineaDTO.setNombre(nombreAero);
+                aerolineaDTO.setPaisAero(paisAerolinea);
+                aerolineaDTO.setCodigoICAO(codigoICAOAero);
 
                 UsuarioGeneralDTO usuarioGeneralDTO = new UsuarioGeneralDTO();
                 usuarioGeneralDTO.setCodigoAerolinea(codigoIATAAerol);
