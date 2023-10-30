@@ -12,6 +12,16 @@ public class AeropuertoDTO {
 
     private String pais;
 
+    private long cantidadPuertas;
+
+    public long getCantidadPuertas() {
+        return cantidadPuertas;
+    }
+
+    public void setCantidadPuertas(long cantidadPuertas) {
+        this.cantidadPuertas = cantidadPuertas;
+    }
+
     public AeropuertoDTO() {
     }
 

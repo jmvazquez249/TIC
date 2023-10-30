@@ -258,6 +258,8 @@ public class IniciarSesionController {
         }
     }
 
+    @FXML
+    private TextField cantidadPuertas;
 
     @Transactional
     @FXML
@@ -267,6 +269,8 @@ public class IniciarSesionController {
             String codigoIATAAero = codigoIATAAeropuerto.getText();
             String ciudadAero = ciudad.getText();
             String paisAero = pais.getText();
+            String cantPuertas = cantidadPuertas.getText();
+            Long cantidadPuertas = Long.parseLong(cantPuertas);
 
             ResponseEntity response1 = aeropuertoRestService.getAeropuerto(codigoIATAAero);
             AeropuertoDTO aeropuertoDTOCodigo = (AeropuertoDTO) response1.getBody();
@@ -286,6 +290,7 @@ public class IniciarSesionController {
                 aeropuertoDTO.setNombre(nombreAero);
                 aeropuertoDTO.setCiudad(ciudadAero);
                 aeropuertoDTO.setPais(paisAero);
+                aeropuertoDTO.setCantidadPuertas(cantidadPuertas);
 
                 ResponseEntity response = aeropuertoRestService.agregarAeropuerto(aeropuertoDTO);
 
