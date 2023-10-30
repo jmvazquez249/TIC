@@ -382,9 +382,6 @@ public class IniciarSesionController {
                 aerolineaDTO.setPaisAero(paisAerolinea);
                 aerolineaDTO.setCodigoICAO(codigoICAOAero);
 
-
-
-                //hacer que sea atomica la transaccion
                 ResponseEntity response1 = aerolineaRestService.agregarAerolinea(aerolineaDTO);
 
 
@@ -722,7 +719,7 @@ public class IniciarSesionController {
         ETAllegada.setCellValueFactory(new PropertyValueFactory<>("ETA"));
         EDTllegada.setCellValueFactory(new PropertyValueFactory<>("EDT"));
         tablaLlegada.setItems(vuelosLlegada);
-        addButtonToTableAceptar(tablaLlegada,true,codigoAeropuerto);
+        addButtonToTable(tablaLlegada,true,codigoAeropuerto);
         addButtonToTableRechazar(tablaLlegada,codigoAeropuerto);
 
         codigoVueloSalida.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
@@ -731,10 +728,62 @@ public class IniciarSesionController {
         ETAsalida.setCellValueFactory(new PropertyValueFactory<>("ETA"));
         EDTsalida.setCellValueFactory(new PropertyValueFactory<>("EDT"));
         tablaSalida.setItems(vuelosSalida);
-        addButtonToTableAceptar(tablaSalida,false,codigoAeropuerto);
+        addButtonToTable(tablaSalida,false,codigoAeropuerto);
         addButtonToTableRechazar(tablaSalida,codigoAeropuerto);
 
         stage.show();
+    }
+
+
+    private void addButtonToTable(TableView t, boolean llegada, String codigoAeropuerto) {
+        TableColumn<Data, Void> colBtn = new TableColumn("Aceptar");
+
+        Callback<TableColumn<Data, Void>, TableCell<Data, Void>> cellFactory = new Callback<>() {
+            @Override
+            public TableCell<Data, Void> call(final TableColumn<Data, Void> param) {
+                final TableCell<Data, Void> cell = new TableCell<>() {
+
+                    private final Button btn = new Button("Aceptar");
+
+                    {
+                        btn.setOnAction((ActionEvent event) -> {
+
+                            FXMLLoader fxmlLoader = new FXMLLoader();
+                            fxmlLoader.setControllerFactory(Main.getContext()::getBean);
+
+                            Parent root = null;
+                            try {
+                                root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream("ReservaPuertaPista.fxml"));
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                            Scene scene = new Scene(root);
+
+                            Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                            stage.setScene(scene);
+                            stage.show();
+
+                        });
+                    }
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(btn);
+                        }
+                    }
+                };
+                return cell;
+            }
+        };
+
+        colBtn.setCellFactory(cellFactory);
+
+        t.getColumns().add(colBtn);
+
     }
 
         private void addButtonToTableAceptar(TableView t, boolean llegada, String codigoAeropuerto) {
@@ -782,6 +831,8 @@ public class IniciarSesionController {
                                         ETAllegada.setCellValueFactory(new PropertyValueFactory<>("ETA"));
                                         EDTllegada.setCellValueFactory(new PropertyValueFactory<>("EDT"));
                                         tablaLlegada.setItems(vuelosLlegada);
+                                    }else{
+                                        //
                                     }
 
                                 }else if(llegada==false){
@@ -1102,7 +1153,6 @@ public class IniciarSesionController {
             int minutoIntETA = Integer.parseInt(minutoETA);
 
             LocalDateTime localDateTimeETA = LocalDateTime.of(anoIntETA, mesIntETA, diaIntETA, horaIntETA, minutoIntETA);
-            System.out.println(localDateTimeETA);
 
             String anoEDT = yyyyEDT.getText();
             String mesEDT = MMEDT.getText();
