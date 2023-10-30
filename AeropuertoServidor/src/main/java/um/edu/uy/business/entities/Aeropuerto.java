@@ -1,7 +1,5 @@
 package um.edu.uy.business.entities;
 
-import org.springframework.data.jpa.repository.Query;
-
 import javax.persistence.*;
 
 import java.util.List;
@@ -30,6 +28,27 @@ public class Aeropuerto {
 
     @Column(nullable = false)
     private String pais;
+
+    @OneToMany(targetEntity = Puerta.class, cascade = {CascadeType.ALL})
+    @JoinTable(
+            name = "RelacionPuertaAeropuerto",
+            joinColumns = {@JoinColumn(
+                    name = "id_aeropuerto"
+            )},
+            inverseJoinColumns = {@JoinColumn(
+                    name = "id_puerta"
+            )}
+    )
+    private List<Puerta> puertas;
+    @OneToOne(
+            targetEntity = Pista.class,
+            cascade = {CascadeType.ALL}
+    )
+    @JoinColumn(
+            name = "id_pista"
+    )
+    private Pista pista;
+
 
 
 
@@ -63,5 +82,13 @@ public class Aeropuerto {
 
     public String getPais() {
         return pais;
+    }
+
+    public void setPuertas(List<Puerta> puertas) {
+        this.puertas = puertas;
+    }
+
+    public void setPista(Pista pista) {
+        this.pista = pista;
     }
 }
