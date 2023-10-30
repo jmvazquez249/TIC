@@ -16,7 +16,7 @@
       <Button layoutX="145.0" layoutY="155.0" mnemonicParsing="false" onAction="#cargarRegistrarAdministradorAeropuerto" text="Agregar Administrador Aeropuerto" />
       <Button layoutX="19.0" layoutY="281.0" mnemonicParsing="false" onAction="#cargarAgregarAerolinea" text="Agregar Aerolinea" />
       <Button layoutX="515.0" layoutY="345.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
-      <Button layoutX="136.0" layoutY="281.0" mnemonicParsing="false" onAction="#cargarRegistrarAdministradorAerolinaExistente" text="Agregar Administrador a Aerolinea Existente" />
+      <Button layoutX="136.0" layoutY="281.0" mnemonicParsing="false" onAction="#cargarRegistrarAdministradorAerolinaExistente" text="Agregar Administrador  Aerolinea " />
       <Text layoutX="19.0" layoutY="266.0" strokeType="OUTSIDE" strokeWidth="0.0" text="AEROLINEAS">
          <font>
             <Font name="System Bold" size="14.0" />
