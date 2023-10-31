@@ -739,6 +739,8 @@ public class IniciarSesionController {
         stage.show();
     }
 
+    @FXML
+    private ComboBox<Long> puerta;
 
     private void addButtonToTable(TableView t, boolean llegada, String codigoAeropuerto) {
         TableColumn<Data, Void> colBtn = new TableColumn("Aceptar");
@@ -753,10 +755,20 @@ public class IniciarSesionController {
                     {
                         btn.setOnAction((ActionEvent event) -> {
 
+                            VueloDTO vuelo = (VueloDTO) getTableView().getItems().get(getIndex());
+                            String codigoAeropuertoLleada = vuelo.getCodigoAeropuertoDestino();
+
+                            ResponseEntity response = aeropuertoRestService.getAeropuerto(codigoAeropuertoLleada);
+                            AeropuertoDTO aeroOrigen = (AeropuertoDTO) response.getBody();
+                            List<Long> codigoPuertas = aeroOrigen.getPuertas();
+                            for (int i=0;i<codigoPuertas.size();i++){
+
+                            }
+
                             FXMLLoader fxmlLoader = new FXMLLoader();
                             fxmlLoader.setControllerFactory(Main.getContext()::getBean);
 
-                            Parent root = null;
+                            Parent root;
                             try {
                                 root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream("ReservaPuertaPista.fxml"));
                             } catch (IOException e) {
@@ -766,6 +778,9 @@ public class IniciarSesionController {
 
                             Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                             stage.setScene(scene);
+
+                            puerta.getItems().addAll(codigoPuertas);
+
                             stage.show();
 
                         });
@@ -788,6 +803,62 @@ public class IniciarSesionController {
         colBtn.setCellFactory(cellFactory);
 
         t.getColumns().add(colBtn);
+
+    }
+
+    @FXML
+    private TextField anoInicioPuerta;
+    @FXML
+    private TextField mesInicioPuerta;
+    @FXML
+    private TextField diaInicioPuerta;
+    @FXML
+    private TextField horaInicioPuerta;
+    @FXML
+    private TextField minutoInicioPuerta;
+
+    @FXML
+    private TextField anoFInalizacionPuerta;
+    @FXML
+    private TextField mesFInalizacionPuerta;
+    @FXML
+    private TextField diaFInalizacionPuerta;
+    @FXML
+    private TextField horaFInalizacionPuerta;
+    @FXML
+    private TextField minutoFInalizacionPuerta;
+
+    @FXML
+    private TextField anoInicioPista;
+    @FXML
+    private TextField mesInicioPista;
+    @FXML
+    private TextField diaInicioPista;
+    @FXML
+    private TextField horaInicioPista;
+    @FXML
+    private TextField minutoInicioPista;
+
+    @FXML
+    private TextField anoFinalizacionPista;
+    @FXML
+    private TextField mesFinalizacionPista;
+    @FXML
+    private TextField diaFinalizacionPista;
+    @FXML
+    private TextField horaFinalizacionPista;
+    @FXML
+    private TextField minutoFinalizacionPista;
+
+
+
+
+
+
+
+
+    @FXML
+    private void confirmarReservas(){
 
     }
 

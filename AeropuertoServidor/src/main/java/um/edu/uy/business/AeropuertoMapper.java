@@ -30,6 +30,12 @@ public class AeropuertoMapper {
         aeropuertoDTO.setNombre(aeropuerto.getNombre());
         aeropuertoDTO.setCiudad(aeropuerto.getCiudad());
         aeropuertoDTO.setPais(aeropuerto.getPais());
+        List<Puerta> puertaList = aeropuerto.getPuertas();
+        List<Long> codigoPuertas = new ArrayList<>();
+        for (int i=0;i<puertaList.size();i++){
+            codigoPuertas.add(puertaList.get(i).getId_puerta());
+        }
+        aeropuertoDTO.setPuertas(codigoPuertas);
         return aeropuertoDTO;
     }
 

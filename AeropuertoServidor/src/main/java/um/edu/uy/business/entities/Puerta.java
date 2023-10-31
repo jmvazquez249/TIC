@@ -41,4 +41,8 @@ public class Puerta {
     public List<Reserva> getReservasPuerta() {
         return this.reservasPuerta;
     }
+
+    public long getId_puerta() {
+        return id_puerta;
+    }
 }

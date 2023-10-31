@@ -1,6 +1,7 @@
 package um.edu.uy;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class VueloDTO {
 
@@ -18,6 +19,8 @@ public class VueloDTO {
 
     private LocalDateTime ETA;
     private LocalDateTime EDT;
+
+
 
     public LocalDateTime getETA() {
         return ETA;

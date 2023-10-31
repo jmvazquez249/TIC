@@ -56,6 +56,10 @@ public class Aeropuerto {
     public Aeropuerto() {
     }
 
+    public List<Puerta> getPuertas() {
+        return puertas;
+    }
+
     public Aeropuerto(String codigoIATAAeropuerto, String nombre, String ciudad, String pais) {
         this.codigoIATAAeropuerto = codigoIATAAeropuerto;
         this.nombre = nombre;

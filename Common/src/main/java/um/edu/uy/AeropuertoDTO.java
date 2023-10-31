@@ -1,5 +1,7 @@
 package um.edu.uy;
 
+import java.util.List;
+
 public class AeropuertoDTO {
 
     private long idAeropuerto;
@@ -63,5 +65,15 @@ public class AeropuertoDTO {
 
     public void setPais(String pais) {
         this.pais = pais;
+    }
+
+    private List<Long> puertas;
+
+    public List<Long> getPuertas() {
+        return puertas;
+    }
+
+    public void setPuertas(List<Long> puertas) {
+        this.puertas = puertas;
     }
 }
