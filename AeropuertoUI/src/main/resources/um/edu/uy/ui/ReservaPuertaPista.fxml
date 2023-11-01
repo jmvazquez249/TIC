@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
@@ -9,7 +10,7 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="um.edu.uy.ui.IniciarSesionController">
    <children>
-      <ComboBox fx:id="puerta" layoutX="84.0" layoutY="91.0" prefWidth="150.0" />
+      <ComboBox fx:id="puerta" layoutX="74.0" layoutY="90.0" prefWidth="150.0" />
       <Text layoutX="14.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Reserva Pista - Puerta">
          <font>
             <Font size="39.0" />
@@ -26,46 +27,37 @@
             <Font name="System Italic" size="15.0" />
          </font>
       </Text>
-      <TextField fx:id="anoInicioPista" layoutX="82.0" layoutY="253.0" prefHeight="25.0" prefWidth="43.0" promptText="yyyy" />
-      <TextField fx:id="mesInicioPista" layoutX="138.0" layoutY="253.0" prefHeight="25.0" prefWidth="43.0" promptText="MM" />
-      <TextField fx:id="diaInicioPista" layoutX="195.0" layoutY="253.0" prefHeight="25.0" prefWidth="43.0" promptText="dd" />
-      <TextField fx:id="horaInicioPista" layoutX="82.0" layoutY="287.0" prefHeight="25.0" prefWidth="43.0" promptText="HH" />
-      <TextField fx:id="minutoInicioPista" layoutX="138.0" layoutY="287.0" prefHeight="25.0" prefWidth="43.0" promptText="mm" />
-      <TextField fx:id="anoFinalizacionPista" layoutX="384.0" layoutY="249.0" prefHeight="25.0" prefWidth="43.0" promptText="yyyy" />
-      <TextField fx:id="mesFinalizacionPista" layoutX="440.0" layoutY="249.0" prefHeight="25.0" prefWidth="43.0" promptText="MM" />
-      <TextField fx:id="diaFinalizacionPista" layoutX="497.0" layoutY="249.0" prefHeight="25.0" prefWidth="43.0" promptText="dd" />
-      <TextField fx:id="horaFinalizacionPista" layoutX="384.0" layoutY="283.0" prefHeight="25.0" prefWidth="43.0" promptText="HH" />
-      <TextField fx:id="minutoFinalizacionPista" layoutX="440.0" layoutY="283.0" prefHeight="25.0" prefWidth="43.0" promptText="mm" />
+      <TextField fx:id="horaInicioPista" layoutX="84.0" layoutY="250.0" prefHeight="25.0" prefWidth="43.0" promptText="HH" />
+      <TextField fx:id="minutoInicioPista" layoutX="138.0" layoutY="248.0" prefHeight="25.0" prefWidth="43.0" promptText="mm" />
+      <TextField fx:id="horaFinalizacionPista" layoutX="143.0" layoutY="286.0" prefHeight="25.0" prefWidth="43.0" promptText="HH" />
+      <TextField fx:id="minutoFinalizacionPista" layoutX="196.0" layoutY="286.0" prefHeight="25.0" prefWidth="43.0" promptText="mm" />
       <Text layoutX="19.0" layoutY="269.0" strokeType="OUTSIDE" strokeWidth="0.0" text="INICIO">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Text>
-      <Text layoutX="265.0" layoutY="267.0" strokeType="OUTSIDE" strokeWidth="0.0" text="FINALIZACION">
+      <Text layoutX="18.0" layoutY="305.0" strokeType="OUTSIDE" strokeWidth="0.0" text="FINALIZACION">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Text>
-      <TextField fx:id="anoInicioPuerta" layoutX="77.0" layoutY="132.0" prefHeight="25.0" prefWidth="43.0" promptText="yyyy" />
-      <TextField fx:id="mesInicioPuerta" layoutX="133.0" layoutY="132.0" prefHeight="25.0" prefWidth="43.0" promptText="MM" />
-      <TextField fx:id="diaInicioPuerta" layoutX="190.0" layoutY="132.0" prefHeight="25.0" prefWidth="43.0" promptText="dd" />
-      <TextField fx:id="horaInicioPuerta" layoutX="77.0" layoutY="166.0" prefHeight="25.0" prefWidth="43.0" promptText="HH" />
-      <TextField fx:id="minutoInicioPuerta" layoutX="133.0" layoutY="166.0" prefHeight="25.0" prefWidth="43.0" promptText="mm" />
-      <TextField fx:id="anoFInalizacionPuerta" layoutX="379.0" layoutY="128.0" prefHeight="25.0" prefWidth="43.0" promptText="yyyy" />
-      <TextField fx:id="mesFInalizacionPuerta" layoutX="435.0" layoutY="128.0" prefHeight="25.0" prefWidth="43.0" promptText="MM" />
-      <TextField fx:id="diaFInalizacionPuerta" layoutX="492.0" layoutY="128.0" prefHeight="25.0" prefWidth="43.0" promptText="dd" />
-      <TextField fx:id="horaFInalizacionPuerta" layoutX="379.0" layoutY="162.0" prefHeight="25.0" prefWidth="43.0" promptText="HH" />
-      <TextField fx:id="minutoFInalizacionPuerta" layoutX="435.0" layoutY="162.0" prefHeight="25.0" prefWidth="43.0" promptText="mm" />
-      <Text layoutX="14.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="INICIO">
+      <TextField fx:id="horaInicioPuerta" layoutX="78.0" layoutY="126.0" prefHeight="25.0" prefWidth="43.0" promptText="HH" />
+      <TextField fx:id="minutoInicioPuerta" layoutX="134.0" layoutY="126.0" prefHeight="25.0" prefWidth="43.0" promptText="mm" />
+      <TextField fx:id="horaFInalizacionPuerta" layoutX="137.0" layoutY="161.0" prefHeight="25.0" prefWidth="43.0" promptText="HH" />
+      <TextField fx:id="minutoFInalizacionPuerta" layoutX="193.0" layoutY="161.0" prefHeight="25.0" prefWidth="43.0" promptText="mm" />
+      <Text layoutX="18.0" layoutY="145.0" strokeType="OUTSIDE" strokeWidth="0.0" text="INICIO">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Text>
-      <Text layoutX="260.0" layoutY="146.0" strokeType="OUTSIDE" strokeWidth="0.0" text="FINALIZACION">
+      <Text layoutX="18.0" layoutY="180.0" strokeType="OUTSIDE" strokeWidth="0.0" text="FINALIZACION">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Text>
       <Button layoutX="534.0" layoutY="361.0" mnemonicParsing="false" text="Back" />
+      <DatePicker fx:id="fechaPuerta" layoutX="239.0" layoutY="90.0" />
+      <DatePicker fx:id="fechaPista" layoutX="72.0" layoutY="212.0" />
+      <Button layoutX="468.0" layoutY="361.0" mnemonicParsing="false" onAction="#confirmarReservas" text="Confirm" />
    </children>
 </Pane>

@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
@@ -40,21 +41,8 @@
             <Font size="15.0" />
          </font>
       </Text>
-      <TextField fx:id="yyyyETA" layoutX="240.0" layoutY="393.0" prefHeight="25.0" prefWidth="69.0" />
-      <TextField fx:id="MMETA" layoutX="321.0" layoutY="393.0" prefHeight="25.0" prefWidth="69.0" />
-      <TextField fx:id="ddETA" layoutX="404.0" layoutY="393.0" prefHeight="25.0" prefWidth="69.0" />
-      <TextField fx:id="HHETA" layoutX="240.0" layoutY="426.0" prefHeight="25.0" prefWidth="69.0" />
-      <TextField fx:id="mmETA" layoutX="321.0" layoutY="426.0" prefHeight="25.0" prefWidth="69.0" />
-      <Text layoutX="36.0" layoutY="411.0" strokeType="OUTSIDE" strokeWidth="0.0" text="yyyy-MM-dd" wrappingWidth="142.134765625">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Text>
-      <Text layoutX="36.0" layoutY="444.0" strokeType="OUTSIDE" strokeWidth="0.0" text="HH-mm" wrappingWidth="142.134765625">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Text>
+      <TextField fx:id="HHETA" layoutX="223.0" layoutY="401.0" prefHeight="25.0" prefWidth="69.0" promptText="HH" />
+      <TextField fx:id="mmETA" layoutX="304.0" layoutY="401.0" prefHeight="25.0" prefWidth="69.0" promptText="mm" />
       <Text layoutX="18.0" layoutY="384.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ETA" wrappingWidth="142.134765625">
          <font>
             <Font size="25.0" />
@@ -65,20 +53,9 @@
             <Font size="25.0" />
          </font>
       </Text>
-      <Text layoutX="36.0" layoutY="305.0" strokeType="OUTSIDE" strokeWidth="0.0" text="yyyy-MM-dd" wrappingWidth="142.134765625">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Text>
-      <Text layoutX="36.0" layoutY="338.0" strokeType="OUTSIDE" strokeWidth="0.0" text="HH-mm" wrappingWidth="142.134765625">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Text>
-      <TextField fx:id="yyyyEDT" layoutX="239.0" layoutY="287.0" prefHeight="25.0" prefWidth="69.0" />
-      <TextField fx:id="MMEDT" layoutX="320.0" layoutY="287.0" prefHeight="25.0" prefWidth="69.0" />
-      <TextField fx:id="ddEDT" layoutX="403.0" layoutY="287.0" prefHeight="25.0" prefWidth="69.0" />
-      <TextField fx:id="HHEDT" layoutX="239.0" layoutY="320.0" prefHeight="25.0" prefWidth="69.0" />
-      <TextField fx:id="mmEDT" layoutX="320.0" layoutY="320.0" prefHeight="25.0" prefWidth="69.0" />
+      <TextField fx:id="HHEDT" layoutX="221.0" layoutY="294.0" prefHeight="25.0" prefWidth="69.0" promptText="HH" />
+      <TextField fx:id="mmEDT" layoutX="302.0" layoutY="294.0" prefHeight="25.0" prefWidth="69.0" promptText="mm" />
+      <DatePicker fx:id="fechaETA" layoutX="32.0" layoutY="401.0" />
+      <DatePicker fx:id="fechaEDT" layoutX="32.0" layoutY="294.0" />
    </children>
 </Pane>

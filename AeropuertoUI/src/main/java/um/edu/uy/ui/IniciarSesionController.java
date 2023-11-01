@@ -12,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,9 @@ import um.edu.uy.service.VueloRestService;
 import javax.transaction.Transactional;
 import javax.xml.crypto.Data;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 
@@ -742,7 +745,7 @@ public class IniciarSesionController {
     @FXML
     private ComboBox<Long> puerta;
 
-    private void addButtonToTable(TableView t, boolean llegada, String codigoAeropuerto) {
+    private void addButtonToTable(TableView t, boolean llegada, String codigoVuelo) {
         TableColumn<Data, Void> colBtn = new TableColumn("Aceptar");
 
         Callback<TableColumn<Data, Void>, TableCell<Data, Void>> cellFactory = new Callback<>() {
@@ -761,9 +764,7 @@ public class IniciarSesionController {
                             ResponseEntity response = aeropuertoRestService.getAeropuerto(codigoAeropuertoLleada);
                             AeropuertoDTO aeroOrigen = (AeropuertoDTO) response.getBody();
                             List<Long> codigoPuertas = aeroOrigen.getPuertas();
-                            for (int i=0;i<codigoPuertas.size();i++){
 
-                            }
 
                             FXMLLoader fxmlLoader = new FXMLLoader();
                             fxmlLoader.setControllerFactory(Main.getContext()::getBean);
@@ -778,6 +779,10 @@ public class IniciarSesionController {
 
                             Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                             stage.setScene(scene);
+
+                            if(codigoVuelo != null){
+                                stage.setUserData(codigoVuelo);
+                            }
 
                             puerta.getItems().addAll(codigoPuertas);
 
@@ -807,58 +812,78 @@ public class IniciarSesionController {
     }
 
     @FXML
-    private TextField anoInicioPuerta;
-    @FXML
-    private TextField mesInicioPuerta;
-    @FXML
-    private TextField diaInicioPuerta;
-    @FXML
     private TextField horaInicioPuerta;
     @FXML
     private TextField minutoInicioPuerta;
 
-    @FXML
-    private TextField anoFInalizacionPuerta;
-    @FXML
-    private TextField mesFInalizacionPuerta;
-    @FXML
-    private TextField diaFInalizacionPuerta;
+
     @FXML
     private TextField horaFInalizacionPuerta;
     @FXML
     private TextField minutoFInalizacionPuerta;
 
-    @FXML
-    private TextField anoInicioPista;
-    @FXML
-    private TextField mesInicioPista;
-    @FXML
-    private TextField diaInicioPista;
+
     @FXML
     private TextField horaInicioPista;
     @FXML
     private TextField minutoInicioPista;
 
-    @FXML
-    private TextField anoFinalizacionPista;
-    @FXML
-    private TextField mesFinalizacionPista;
-    @FXML
-    private TextField diaFinalizacionPista;
+
     @FXML
     private TextField horaFinalizacionPista;
     @FXML
     private TextField minutoFinalizacionPista;
 
 
+    @FXML
+    private DatePicker fechaPuerta;
 
-
+    @FXML
+    private DatePicker fechaPista;
 
 
 
 
     @FXML
-    private void confirmarReservas(){
+    private void confirmarReservas(ActionEvent event){
+
+        Long numeroPuerta = puerta.getValue();
+
+        int horaIniPuerta = Integer.parseInt(horaInicioPuerta.getText());
+        int minIniPuerta = Integer.parseInt(minutoInicioPuerta.getText());
+        LocalTime timeIniPuerta = LocalTime.of(horaIniPuerta,minIniPuerta);
+
+        int horaFinPuerta = Integer.parseInt(horaFInalizacionPuerta.getText());
+        int minFinPuerta = Integer.parseInt(minutoFInalizacionPuerta.getText());
+        LocalTime timeFinPuerta = LocalTime.of(horaFinPuerta,minFinPuerta);
+
+        int horaIniPista = Integer.parseInt(horaInicioPista.getText());
+        int minIniPista = Integer.parseInt(minutoInicioPista.getText());
+        LocalTime timeIniPista = LocalTime.of(horaIniPista,minIniPista);
+
+        int horaFinPista = Integer.parseInt(horaFinalizacionPista.getText());
+        int minFinPista = Integer.parseInt(minutoFinalizacionPista.getText());
+        LocalTime timeFinPista = LocalTime.of(horaFinPista,minFinPista);
+
+        LocalDate fecPuerta = fechaPuerta.getValue();
+        LocalDate fecPista = fechaPista.getValue();
+
+        LocalDateTime localDateTimeIniPuerta = LocalDateTime.of(fecPuerta,timeIniPuerta);
+        LocalDateTime localDateTimeFinPuerta = LocalDateTime.of(fecPuerta,timeFinPuerta);
+        LocalDateTime localDateTimeIniPista = LocalDateTime.of(fecPista,timeIniPista);
+        LocalDateTime localDateTimeFinPista = LocalDateTime.of(fecPista,timeFinPista);
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        String codVuelo = (String) stage.getUserData();
+
+
+
+
+
+
+
+
+
 
     }
 
@@ -1180,14 +1205,6 @@ public class IniciarSesionController {
     private VueloRestService vueloRestService;
 
 
-    @FXML
-    private TextField yyyyETA;
-
-    @FXML
-    private TextField MMETA;
-
-    @FXML
-    private TextField ddETA;
 
     @FXML
     private TextField HHETA;
@@ -1196,19 +1213,17 @@ public class IniciarSesionController {
     private TextField mmETA;
 
     @FXML
-    private TextField yyyyEDT;
-
-    @FXML
-    private TextField MMEDT;
-
-    @FXML
-    private TextField ddEDT;
-
-    @FXML
     private TextField HHEDT;
 
     @FXML
     private TextField mmEDT;
+
+    @FXML
+    private DatePicker fechaETA;
+
+    @FXML
+    private DatePicker fechaEDT;
+
     @Transactional
     @FXML
     void registrarVuelo(ActionEvent event) {
@@ -1216,33 +1231,23 @@ public class IniciarSesionController {
 
             //poner los controles de las fechas
             //ETA>EDT cambiar en FXML
-            String anoETA = yyyyETA.getText();
-            String mesETA = MMETA.getText();
-            String diaETA = ddETA.getText();
             String horaETA = HHETA.getText();
             String minutoETA = mmETA.getText();
-
-            int anoIntETA = Integer.parseInt(anoETA);
-            int mesIntETA = Integer.parseInt(mesETA);
-            int diaIntETA = Integer.parseInt(diaETA);
             int horaIntETA = Integer.parseInt(horaETA);
             int minutoIntETA = Integer.parseInt(minutoETA);
+            LocalTime timeETA = LocalTime.of(horaIntETA,minutoIntETA);
+            LocalDate fecETA = fechaETA.getValue();
+            LocalDateTime localDateTimeETA = LocalDateTime.of(fecETA,timeETA);
 
-            LocalDateTime localDateTimeETA = LocalDateTime.of(anoIntETA, mesIntETA, diaIntETA, horaIntETA, minutoIntETA);
-
-            String anoEDT = yyyyEDT.getText();
-            String mesEDT = MMEDT.getText();
-            String diaEDT = ddEDT.getText();
             String horaEDT = HHEDT.getText();
             String minutoEDT = mmEDT.getText();
-
-            int anoIntEDT = Integer.parseInt(anoEDT);
-            int mesIntEDT = Integer.parseInt(mesEDT);
-            int diaIntEDT = Integer.parseInt(diaEDT);
             int horaIntEDT = Integer.parseInt(horaEDT);
             int minutoIntEDT = Integer.parseInt(minutoEDT);
+            LocalTime timeEDT = LocalTime.of(horaIntEDT,minutoIntEDT);
+            LocalDate fecEDT = fechaEDT.getValue();
 
-            LocalDateTime localDateTimeEDT = LocalDateTime.of(anoIntEDT, mesIntEDT, diaIntEDT, horaIntEDT, minutoIntEDT);
+
+            LocalDateTime localDateTimeEDT = LocalDateTime.of(fecEDT,timeEDT);
 
 
 

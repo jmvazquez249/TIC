@@ -27,6 +27,8 @@ public class Reserva {
     )
     private LocalDateTime horarioFinalizacion;
 
+    private String codigoVuelo;
+
     public Reserva() {
     }
 }
