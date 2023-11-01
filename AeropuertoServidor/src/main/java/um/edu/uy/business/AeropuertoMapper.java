@@ -33,7 +33,7 @@ public class AeropuertoMapper {
         List<Puerta> puertaList = aeropuerto.getPuertas();
         List<Long> codigoPuertas = new ArrayList<>();
         for (int i=0;i<puertaList.size();i++){
-            codigoPuertas.add(puertaList.get(i).getId_puerta());
+            codigoPuertas.add(puertaList.get(i).getIdPuerta());
         }
         aeropuertoDTO.setPuertas(codigoPuertas);
         return aeropuertoDTO;

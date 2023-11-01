@@ -883,9 +883,8 @@ public class IniciarSesionController {
         reservaDTO.setLocalDateTimeIniPista(localDateTimeIniPista);
         reservaDTO.setLocalDateTimeIniPuerta(localDateTimeIniPuerta);
         reservaDTO.setLocalDateTimeFinPuerta(localDateTimeFinPuerta);
-        reservaDTO.setLlegada((Boolean) list.get(0));
-        reservaDTO.setCodigoVuelo((String) list.get(1));
-
+        reservaDTO.setLlegada((boolean) list.get(1));
+        reservaDTO.setCodigoVuelo((String) list.get(0));
 
         ResponseEntity response  = vueloRestService.aceptarYReservar(reservaDTO);
 

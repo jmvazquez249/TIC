@@ -6,12 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import um.edu.uy.ReservaDTO;
 import um.edu.uy.VueloDTO;
 import um.edu.uy.business.VueloMapper;
-import um.edu.uy.business.entities.Aerolinea;
-import um.edu.uy.business.entities.Aeropuerto;
-import um.edu.uy.business.entities.Vuelo;
-import um.edu.uy.persistence.AerolineaRepository;
-import um.edu.uy.persistence.AeropuertoRepository;
-import um.edu.uy.persistence.VueloRepository;
+import um.edu.uy.business.entities.*;
+import um.edu.uy.persistence.*;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -24,15 +20,17 @@ public class VueloRestService {
     private VueloMapper vueloMapper;
     private VueloRepository vueloRepository;
     private AeropuertoRepository aeropuertoRepository;
-
     private AerolineaRepository aerolineaRepository;
-
+    private PuertaRepository puertaRepository;
+    private ReservaRepository reservaRepository;
     @Autowired
-    public VueloRestService(VueloMapper vueMapp, VueloRepository vueRepo, AeropuertoRepository aeroRepo, AerolineaRepository aerolRepo){
+    public VueloRestService(VueloMapper vueMapp, VueloRepository vueRepo, AeropuertoRepository aeroRepo, AerolineaRepository aerolRepo, PuertaRepository pueRepo, ReservaRepository resRepo){
         this.vueloMapper=vueMapp;
         this.vueloRepository=vueRepo;
         this.aeropuertoRepository=aeroRepo;
         this.aerolineaRepository=aerolRepo;
+        this.puertaRepository=pueRepo;
+        this.reservaRepository=resRepo;
     }
 
     @PostMapping("/getListaVuelosLlegada")
@@ -117,7 +115,28 @@ public class VueloRestService {
     @Transactional
     @PostMapping("/aceptarYReservar")
     public void aceptarYReservar(@RequestBody ReservaDTO reservaDTO){
+        Vuelo vuelo = vueloRepository.findByCodigoVuelo(reservaDTO.getCodigoVuelo());
+        Aeropuerto aeropuerto;
+        if (reservaDTO.isLlegada()){
+            vuelo.setAceptadoDestino(true);
+            aeropuerto = aeropuertoRepository.findAeropuertoByCodigoIATAAeropuerto(vuelo.getAeropuertoDestino());
 
+        }else{
+            vuelo.setAceptadoOrigen(true);
+            aeropuerto = aeropuertoRepository.findAeropuertoByCodigoIATAAeropuerto(vuelo.getAeropuertoOrigen());
+        }
+        Puerta puerta = puertaRepository.findByIdPuerta(reservaDTO.getNumeroPuerta());
+        Pista pista = aeropuerto.getPista();
+        List<Reserva> reservasPista = pista.getReservasPista();
+        List<Reserva> reservasPuerta = puerta.getReservasPuerta();
+        Reserva resPuerta = new Reserva(reservaDTO.getLocalDateTimeIniPista(),reservaDTO.getLocalDateTimeFinPuerta(),reservaDTO.getCodigoVuelo());
+        Reserva resPista = new Reserva(reservaDTO.getLocalDateTimeIniPista(), reservaDTO.getLocalDateTimeFinPista(), reservaDTO.getCodigoVuelo());
+        reservasPuerta.add(resPuerta);
+        reservasPista.add(resPista);
+        vueloRepository.save(vuelo);
+        reservaRepository.save(resPista);
+        reservaRepository.save(resPuerta);
+        puertaRepository.save(puerta);
     }
 
 

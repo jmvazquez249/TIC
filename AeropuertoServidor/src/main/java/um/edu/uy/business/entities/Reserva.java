@@ -18,6 +18,13 @@ public class Reserva {
             strategy = GenerationType.IDENTITY
     )
     private long id_reserva;
+
+    public Reserva(LocalDateTime horarioInicio, LocalDateTime horarioFinalizacion, String codigoVuelo) {
+        this.horarioInicio = horarioInicio;
+        this.horarioFinalizacion = horarioFinalizacion;
+        this.codigoVuelo = codigoVuelo;
+    }
+
     @Column(
             nullable = false
     )
