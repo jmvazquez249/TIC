@@ -727,7 +727,7 @@ public class IniciarSesionController {
         ETAllegada.setCellValueFactory(new PropertyValueFactory<>("ETA"));
         EDTllegada.setCellValueFactory(new PropertyValueFactory<>("EDT"));
         tablaLlegada.setItems(vuelosLlegada);
-        addButtonToTable(tablaLlegada,true,codigoAeropuerto);
+        addButtonToTable(tablaLlegada,true);
         addButtonToTableRechazar(tablaLlegada,codigoAeropuerto);
 
         codigoVueloSalida.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
@@ -736,7 +736,7 @@ public class IniciarSesionController {
         ETAsalida.setCellValueFactory(new PropertyValueFactory<>("ETA"));
         EDTsalida.setCellValueFactory(new PropertyValueFactory<>("EDT"));
         tablaSalida.setItems(vuelosSalida);
-        addButtonToTable(tablaSalida,false,codigoAeropuerto);
+        addButtonToTable(tablaSalida,false);
         addButtonToTableRechazar(tablaSalida,codigoAeropuerto);
 
         stage.show();
@@ -745,7 +745,7 @@ public class IniciarSesionController {
     @FXML
     private ComboBox<Long> puerta;
 
-    private void addButtonToTable(TableView t, boolean llegada, String codigoVuelo) {
+    private void addButtonToTable(TableView t, boolean llegada) {
         TableColumn<Data, Void> colBtn = new TableColumn("Aceptar");
 
         Callback<TableColumn<Data, Void>, TableCell<Data, Void>> cellFactory = new Callback<>() {
@@ -780,9 +780,10 @@ public class IniciarSesionController {
                             Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                             stage.setScene(scene);
 
-                            if(codigoVuelo != null){
-                                stage.setUserData(codigoVuelo);
-                            }
+                            ArrayList arrayList = new ArrayList();
+                            arrayList.add(vuelo.getCodigoVuelo());
+                            arrayList.add(llegada);
+                            stage.setUserData(arrayList);
 
                             puerta.getItems().addAll(codigoPuertas);
 
@@ -874,7 +875,21 @@ public class IniciarSesionController {
         LocalDateTime localDateTimeFinPista = LocalDateTime.of(fecPista,timeFinPista);
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        String codVuelo = (String) stage.getUserData();
+        List list = (List) stage.getUserData();
+
+        ReservaDTO reservaDTO = new ReservaDTO();
+        reservaDTO.setNumeroPuerta(numeroPuerta);
+        reservaDTO.setLocalDateTimeFinPista(localDateTimeFinPista);
+        reservaDTO.setLocalDateTimeIniPista(localDateTimeIniPista);
+        reservaDTO.setLocalDateTimeIniPuerta(localDateTimeIniPuerta);
+        reservaDTO.setLocalDateTimeFinPuerta(localDateTimeFinPuerta);
+        reservaDTO.setLlegada((Boolean) list.get(0));
+        reservaDTO.setCodigoVuelo((String) list.get(1));
+
+
+        ResponseEntity response  = vueloRestService.aceptarYReservar(reservaDTO);
+
+
 
 
 

@@ -3,6 +3,7 @@ package um.edu.uy.services;
 import org.hibernate.annotations.ManyToAny;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import um.edu.uy.ReservaDTO;
 import um.edu.uy.VueloDTO;
 import um.edu.uy.business.VueloMapper;
 import um.edu.uy.business.entities.Aerolinea;
@@ -111,6 +112,12 @@ public class VueloRestService {
         Vuelo vuelo = vueloRepository.findByCodigoVuelo(codigoVuelo);
         vuelo.setAceptadoOrigen(true);
         vueloRepository.save(vuelo);
+    }
+
+    @Transactional
+    @PostMapping("/aceptarYReservar")
+    public void aceptarYReservar(@RequestBody ReservaDTO reservaDTO){
+
     }
 
 
