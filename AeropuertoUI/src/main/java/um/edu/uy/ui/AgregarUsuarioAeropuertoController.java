@@ -27,6 +27,7 @@ import um.edu.uy.service.UsuarioGeneralRestService;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -144,6 +145,14 @@ public class AgregarUsuarioAeropuertoController implements Initializable {
     public TableColumn<VueloDTO, String> aeropuertoDestinoAceptadoLlegada;
     @FXML
     public TableColumn<VueloDTO, String> matriculaAvionAceptadoLlegada;
+    @FXML
+    public TableColumn<VueloDTO,String> EDTllegada;
+    @FXML
+    public TableColumn<VueloDTO,String> ETAllegada;
+    @FXML
+    public TableColumn<VueloDTO,String> EDTsalida;
+    @FXML
+    public TableColumn<VueloDTO,String> ETAsalida;
 
     @Autowired
     private AeropuertoRestService aeropuertoRestService;
@@ -178,6 +187,8 @@ public class AgregarUsuarioAeropuertoController implements Initializable {
             vueloDTO.setCodigoAeropuertoOrigen((String) hashMap.get("codigoAeropuertoOrigen"));
             vueloDTO.setCodigoAeropuertoDestino((String) hashMap.get("codigoAeropuertoDestino"));
             vueloDTO.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
+            vueloDTO.setETA(LocalDateTime.parse((String) hashMap.get("eta")));
+            vueloDTO.setEDT(LocalDateTime.parse((String) hashMap.get("edt")));
             vuelosLle.add(vueloDTO);
         }
 
@@ -188,30 +199,31 @@ public class AgregarUsuarioAeropuertoController implements Initializable {
             vueloDTO2.setCodigoAeropuertoOrigen((String) hashMap.get("codigoAeropuertoOrigen"));
             vueloDTO2.setCodigoAeropuertoDestino((String) hashMap.get("codigoAeropuertoDestino"));
             vueloDTO2.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
+            vueloDTO2.setETA(LocalDateTime.parse((String) hashMap.get("eta")));
+            vueloDTO2.setEDT(LocalDateTime.parse((String) hashMap.get("edt")));
             vuelosSal.add(vueloDTO2);
         }
 
-
-
         ObservableList<VueloDTO> vuelosLlegada = FXCollections.observableArrayList(vuelosLle);
         ObservableList<VueloDTO> vuelosSalida = FXCollections.observableArrayList(vuelosSal);
-
-
 
         codigoVueloAceptadoLlegada.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
         aeropuertoOrigenAceptadoLlegada.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoOrigen"));
         aeropuertoDestinoAceptadoLlegada.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoDestino"));
         matriculaAvionAceptadoLlegada.setCellValueFactory(new PropertyValueFactory<>("matriculaAvion"));
+        ETAllegada.setCellValueFactory(new PropertyValueFactory<>("ETA"));
+        EDTllegada.setCellValueFactory(new PropertyValueFactory<>("EDT"));
         tablaVuelosAceptadosLlegada.setItems(vuelosLlegada);
-
 
         codigoVueloAceptadoSalida.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
         aeropuertoOrigenAceptadoSalida.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoOrigen"));
         aeropuertoDestinoAceptadoSalida.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoDestino"));
         matriculaAvionAceptadoSalida.setCellValueFactory(new PropertyValueFactory<>("matriculaAvion"));
+        ETAsalida.setCellValueFactory(new PropertyValueFactory<>("ETA"));
+        EDTsalida.setCellValueFactory(new PropertyValueFactory<>("EDT"));
         tablaVuelosAceptadosSalida.setItems(vuelosSalida);
 
-        inicioAeropuertoStage.show();
+        stage.show();
     }
 
     @FXML

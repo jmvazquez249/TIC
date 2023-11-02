@@ -593,7 +593,7 @@ public class IniciarSesionController {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setControllerFactory(Main.getContext()::getBean);
 
-        Parent root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream("AdministradorAeropuerto.fxml"));
+        Parent root = fxmlLoader.load(AgregarUsuarioAeropuertoController.class.getResourceAsStream("AdministradorAeropuerto.fxml"));
         Scene scene = new Scene(root);
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         if(codigoAeropuerto != null){
@@ -629,8 +629,8 @@ public class IniciarSesionController {
             vueloDTO2.setCodigoAeropuertoOrigen((String) hashMap.get("codigoAeropuertoOrigen"));
             vueloDTO2.setCodigoAeropuertoDestino((String) hashMap.get("codigoAeropuertoDestino"));
             vueloDTO2.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
-            vueloDTO2.setETA((LocalDateTime) hashMap.get("eta"));
-            vueloDTO2.setEDT((LocalDateTime) hashMap.get("edt"));
+            vueloDTO2.setETA(LocalDateTime.parse((String) hashMap.get("eta")));
+            vueloDTO2.setEDT(LocalDateTime.parse((String) hashMap.get("edt")));
             vuelosSal.add(vueloDTO2);
         }
 
@@ -783,6 +783,7 @@ public class IniciarSesionController {
                             ArrayList arrayList = new ArrayList();
                             arrayList.add(vuelo.getCodigoVuelo());
                             arrayList.add(llegada);
+                            arrayList.add(codigoAeropuertoLleada);
                             stage.setUserData(arrayList);
 
                             puerta.getItems().addAll(codigoPuertas);
@@ -816,37 +817,26 @@ public class IniciarSesionController {
     private TextField horaInicioPuerta;
     @FXML
     private TextField minutoInicioPuerta;
-
-
     @FXML
     private TextField horaFInalizacionPuerta;
     @FXML
     private TextField minutoFInalizacionPuerta;
-
-
     @FXML
     private TextField horaInicioPista;
     @FXML
     private TextField minutoInicioPista;
-
-
     @FXML
     private TextField horaFinalizacionPista;
     @FXML
     private TextField minutoFinalizacionPista;
-
-
     @FXML
     private DatePicker fechaPuerta;
-
     @FXML
     private DatePicker fechaPista;
 
 
-
-
     @FXML
-    private void confirmarReservas(ActionEvent event){
+    private void confirmarReservas(ActionEvent event) throws IOException {
 
         Long numeroPuerta = puerta.getValue();
 
@@ -886,126 +876,17 @@ public class IniciarSesionController {
         reservaDTO.setLlegada((boolean) list.get(1));
         reservaDTO.setCodigoVuelo((String) list.get(0));
 
+
         ResponseEntity response  = vueloRestService.aceptarYReservar(reservaDTO);
+        if (response.getStatusCode()==HttpStatus.OK){
+            showAlert("Confirmacion Reserva","La reserva fue exitosa");
 
-
-
-
-
-
-
-
-
-
+        }
+        stage.setUserData(list.get(2));
+        cargarAdministradorVuelos(event, (String) list.get(2));
 
 
     }
-
-        private void addButtonToTableAceptar(TableView t, boolean llegada, String codigoAeropuerto) {
-            TableColumn<Data, Void> colBtn = new TableColumn("Aceptar");
-
-            Callback<TableColumn<Data, Void>, TableCell<Data, Void>> cellFactory = new Callback<>() {
-                @Override
-                public TableCell<Data, Void> call(final TableColumn<Data, Void> param) {
-                    final TableCell<Data, Void> cell = new TableCell<>() {
-
-                        private final Button btn = new Button("Aceptar");
-
-                        {
-                            btn.setOnAction((ActionEvent event) -> {
-                                VueloDTO vuelo = (VueloDTO) getTableView().getItems().get(getIndex());
-                                if (llegada==true){
-
-                                    //controlar que se acepte correctamente
-
-                                    ResponseEntity response = vueloRestService.aceptarDestino(vuelo.getCodigoVuelo());
-
-                                    if (response.getStatusCode() == HttpStatus.OK ) {
-                                        ResponseEntity response1 = aeropuertoRestService.getListaVuelosSinConfirmarLlegada(codigoAeropuerto);
-                                        List vueloDTOS = (List) response1.getBody();
-
-                                        List<VueloDTO> vuelosLle = new ArrayList<>();
-
-                                        for (int i = 0; i < vueloDTOS.size(); i++) {
-                                            VueloDTO vueloDTO = new VueloDTO();
-                                            LinkedHashMap hashMap = (LinkedHashMap) vueloDTOS.get(i);
-                                            vueloDTO.setCodigoVuelo((String) hashMap.get("codigoVuelo"));
-                                            vueloDTO.setCodigoAeropuertoOrigen((String) hashMap.get("codigoAeropuertoOrigen"));
-                                            vueloDTO.setCodigoAeropuertoDestino((String) hashMap.get("codigoAeropuertoDestino"));
-                                            vueloDTO.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
-                                            vueloDTO.setEDT(LocalDateTime.parse((String) hashMap.get("edt")));
-                                            vueloDTO.setETA(LocalDateTime.parse((String) hashMap.get("eta")));
-                                            vuelosLle.add(vueloDTO);
-                                        }
-
-                                        ObservableList<VueloDTO> vuelosLlegada = FXCollections.observableArrayList(vuelosLle);
-
-                                        codigoVueloLlegada.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
-                                        aeropuertoOrigen.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoOrigen"));
-                                        matriculaAvionLlegada.setCellValueFactory(new PropertyValueFactory<>("matriculaAvion"));
-                                        ETAllegada.setCellValueFactory(new PropertyValueFactory<>("ETA"));
-                                        EDTllegada.setCellValueFactory(new PropertyValueFactory<>("EDT"));
-                                        tablaLlegada.setItems(vuelosLlegada);
-                                    }else{
-                                        //
-                                    }
-
-                                }else if(llegada==false){
-                                    ResponseEntity response = vueloRestService.aceptarOrigen(vuelo.getCodigoVuelo());
-
-                                    if (response.getStatusCode() == HttpStatus.OK ) {
-                                        ResponseEntity response1 = aeropuertoRestService.getListaVuelosSinConfirmarSalida(codigoAeropuerto);
-
-                                        List vueloDTOS = (List) response1.getBody();
-
-                                        List<VueloDTO> vuelosSal = new ArrayList<>();
-
-                                        for (int i = 0; i < vueloDTOS.size(); i++) {
-                                            VueloDTO vueloDTO = new VueloDTO();
-                                            LinkedHashMap hashMap = (LinkedHashMap) vueloDTOS.get(i);
-                                            vueloDTO.setCodigoVuelo((String) hashMap.get("codigoVuelo"));
-                                            vueloDTO.setCodigoAeropuertoOrigen((String) hashMap.get("codigoAeropuertoOrigen"));
-                                            vueloDTO.setCodigoAeropuertoDestino((String) hashMap.get("codigoAeropuertoDestino"));
-                                            vueloDTO.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
-                                            vueloDTO.setEDT(LocalDateTime.parse((String) hashMap.get("edt")));
-                                            vueloDTO.setETA(LocalDateTime.parse((String) hashMap.get("eta")));
-                                            vuelosSal.add(vueloDTO);
-                                        }
-
-                                        ObservableList<VueloDTO> vuelosSalida = FXCollections.observableArrayList(vuelosSal);
-
-                                        codigoVueloSalida.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
-                                        aeropuertoDestino.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoDestino"));
-                                        matriculaAvionSalida.setCellValueFactory(new PropertyValueFactory<>("matriculaAvion"));
-                                        ETAsalida.setCellValueFactory(new PropertyValueFactory<>("ETA"));
-                                        EDTsalida.setCellValueFactory(new PropertyValueFactory<>("EDT"));
-                                        tablaSalida.setItems(vuelosSalida);
-
-                                    }
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void updateItem(Void item, boolean empty) {
-                            super.updateItem(item, empty);
-                            if (empty) {
-                                setGraphic(null);
-                            } else {
-                                setGraphic(btn);
-                            }
-                        }
-                    };
-                    return cell;
-                }
-            };
-
-            colBtn.setCellFactory(cellFactory);
-
-            t.getColumns().add(colBtn);
-
-        }
-
 
 
 

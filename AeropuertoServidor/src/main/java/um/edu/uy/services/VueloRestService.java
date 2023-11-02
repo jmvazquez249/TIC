@@ -120,7 +120,6 @@ public class VueloRestService {
         if (reservaDTO.isLlegada()){
             vuelo.setAceptadoDestino(true);
             aeropuerto = aeropuertoRepository.findAeropuertoByCodigoIATAAeropuerto(vuelo.getAeropuertoDestino());
-
         }else{
             vuelo.setAceptadoOrigen(true);
             aeropuerto = aeropuertoRepository.findAeropuertoByCodigoIATAAeropuerto(vuelo.getAeropuertoOrigen());
