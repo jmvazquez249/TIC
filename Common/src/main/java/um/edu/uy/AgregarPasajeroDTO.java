@@ -5,9 +5,15 @@ public class AgregarPasajeroDTO {
     private long pasaporte;
 
 
-    public AgregarPasajeroDTO(String codigoVuelo, long pasaporte) {
+    public void setCodigoVuelo(String codigoVuelo) {
         this.codigoVuelo = codigoVuelo;
+    }
+
+    public void setPasaporte(long pasaporte) {
         this.pasaporte = pasaporte;
+    }
+
+    public AgregarPasajeroDTO() {
 
     }
 

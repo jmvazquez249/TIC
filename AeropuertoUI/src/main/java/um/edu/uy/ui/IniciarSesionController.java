@@ -762,9 +762,19 @@ public class IniciarSesionController {
                         btn.setOnAction((ActionEvent event) -> {
 
                             VueloDTO vuelo = (VueloDTO) getTableView().getItems().get(getIndex());
-                            String codigoAeropuertoLleada = vuelo.getCodigoAeropuertoDestino();
 
-                            ResponseEntity response = aeropuertoRestService.getAeropuerto(codigoAeropuertoLleada);
+
+                            String codigoAeropuerto=null;
+                            if (llegada==true) {
+                                codigoAeropuerto = vuelo.getCodigoAeropuertoDestino();
+                            }else{
+                                codigoAeropuerto = vuelo.getCodigoAeropuertoOrigen();
+                            }
+
+
+
+                            ResponseEntity response = aeropuertoRestService.getAeropuerto(codigoAeropuerto);
+
                             AeropuertoDTO aeroOrigen = (AeropuertoDTO) response.getBody();
                             List<Long> codigoPuertas = aeroOrigen.getPuertas();
 
@@ -786,7 +796,7 @@ public class IniciarSesionController {
                             ArrayList arrayList = new ArrayList();
                             arrayList.add(vuelo.getCodigoVuelo());
                             arrayList.add(llegada);
-                            arrayList.add(codigoAeropuertoLleada);
+                            arrayList.add(codigoAeropuerto);
                             stage.setUserData(arrayList);
 
                             puerta.getItems().addAll(codigoPuertas);
@@ -1006,11 +1016,11 @@ public class IniciarSesionController {
     }
 
     @FXML
-    void cargarVuelosConfirmadosAero (ActionEvent event, String codigoAerolinea) throws IOException {
+    void cargarVuelosConfirmadosAero(ActionEvent event, String codigoAerolinea) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setControllerFactory(Main.getContext()::getBean);
 
-        Parent root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream("VuelosConfirmadosAeropuerto.fxml"));
+        Parent root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream("VuelosConfirmadosAero.fxml"));
         Scene scene = new Scene(root);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
@@ -1090,8 +1100,9 @@ public class IniciarSesionController {
     @FXML
     void agregarPasajero(ActionEvent event){
         String codigoVuelo = (String) ((Stage) ((Node) event.getSource()).getScene().getWindow()).getUserData();
-        AgregarPasajeroDTO agregarPasajeroDTO = new AgregarPasajeroDTO(codigoVuelo,Long.parseLong(pasaportePasajero.getText()));
-
+        AgregarPasajeroDTO agregarPasajeroDTO = new AgregarPasajeroDTO();
+        agregarPasajeroDTO.setCodigoVuelo(codigoVuelo);
+        agregarPasajeroDTO.setPasaporte(Long.parseLong(pasaportePasajero.getText()));
         ResponseEntity response = vueloRestService.agregarPasajero(agregarPasajeroDTO);
         if (response.getStatusCode()==HttpStatus.OK){
             showAlert("Exito!","Se agrego el pasajero al vuelo");

@@ -37,6 +37,10 @@ public class Asiento {
         this.numeroAsiento = numeroAsiento;
     }
 
+    public Asiento() {
+
+    }
+
     public long getIdAsiento() {
         return idAsiento;
     }
