@@ -1013,6 +1013,28 @@ public class IniciarSesionController {
         String codigoAeropuerto = (String) stage.getUserData();
         cargarVuelosConfirmadosAero(event,codigoAeropuerto);
     }
+    //funcion que me regrese a la pagina anterior, en este caso a Usuario Aerolinea y que siga manteniendo el codigo de aerolinea
+    @FXML
+    void backToUsuarioAerolinea(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setControllerFactory(Main.getContext()::getBean);
+
+        Parent root;
+        try {
+            root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream("UsuarioAerolinea.fxml"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Scene scene = new Scene(root);
+
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.setUserData(stage.getUserData());
+        stage.show();
+    }
+    //funcion que me regrese a la pagina anterior, en este caso a VuelosConfirmadosAero, vuelosConfirmadosAero tiene una tableview por lo tanto cuando vuelva necesito que las cosas que aparecen ahi sigan estando ahi
+
+
 
     @FXML
     void cargarVuelosConfirmadosAero(ActionEvent event, String codigoAerolinea) throws IOException {

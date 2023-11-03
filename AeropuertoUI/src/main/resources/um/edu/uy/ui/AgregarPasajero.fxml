@@ -21,6 +21,6 @@
       </Text>
       <TextField fx:id="pasaportePasajero" layoutX="220.0" layoutY="125.0" />
       <Button layoutX="432.0" layoutY="336.0" mnemonicParsing="false" text="Agregar" onAction="#agregarPasajero" />
-      <Button layoutX="505.0" layoutY="336.0" mnemonicParsing="false" text="Salir" />
+      <Button layoutX="505.0" layoutY="336.0" mnemonicParsing="false" text="Salir" onAction="#cargarVuelosConfirmadosAero2" />
    </children>
 </Pane>
