@@ -535,7 +535,6 @@ public class IniciarSesionController {
         stage.setScene(scene);
         stage.show();
     }
-
     @FXML
     void cargarAgregarUsuarioAerolinea(ActionEvent event) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
