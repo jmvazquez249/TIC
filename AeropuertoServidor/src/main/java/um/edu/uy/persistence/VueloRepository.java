@@ -3,6 +3,7 @@ package um.edu.uy.persistence;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import um.edu.uy.business.entities.Aerolinea;
 import um.edu.uy.business.entities.Aeropuerto;
 import um.edu.uy.business.entities.Vuelo;
 
@@ -15,5 +16,6 @@ public interface VueloRepository extends JpaRepository<Vuelo,Long> {
     List<Vuelo> findAllByAeropuertoOrigenAndAceptadoOrigenAndRechadado(Aeropuerto aeropuerto, boolean aceptado, boolean rechazado);
     List<Vuelo> findAllByAeropuertoDestinoAndAceptadoOrigenAndAceptadoDestinoAndRechadado(Aeropuerto aeropuerto, boolean aceptadoorigen, boolean aceptadodestino, boolean rechazado);
     List<Vuelo> findAllByAeropuertoOrigenAndAceptadoOrigenAndAceptadoDestinoAndRechadado(Aeropuerto aeropuerto, boolean aceptadoorigen, boolean aceptadodestino, boolean rechazado);
+    List<Vuelo> findAllByAerolineaAndAceptadoOrigenAndAceptadoDestinoAndRechadado(Aerolinea aerolinea, boolean aceptadoorigen, boolean aceptadodestino, boolean rechazado);
 
 }

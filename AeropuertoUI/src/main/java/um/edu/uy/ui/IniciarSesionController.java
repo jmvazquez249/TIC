@@ -588,6 +588,8 @@ public class IniciarSesionController {
     @FXML
     public TableColumn<VueloDTO, String> matriculaAvionAceptadoSalida;
 
+
+
     @FXML
     void cargarAdministradorAeropuerto(ActionEvent event, String codigoAeropuerto) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
@@ -655,6 +657,7 @@ public class IniciarSesionController {
 
         stage.show();
     }
+
 
     @FXML
     private TableView<VueloDTO> tablaLlegada;
@@ -982,6 +985,117 @@ public class IniciarSesionController {
 
         t.getColumns().add(colBtn);
 
+    }
+
+    @FXML
+    private TableView<VueloDTO> tablaVuelosConfirmadosAero;
+    @FXML
+    private TableColumn<VueloDTO,String> codigoVueloConfirmadoAero;
+    @FXML
+    private TableColumn<VueloDTO,String> aeropuertoOrigenConfirmadoAero;
+    @FXML
+    private TableColumn<VueloDTO,String> aeropuertoDestinoConfirmadoAero;
+    @FXML
+    private TableColumn<VueloDTO,String> matriculaAvionConfirmadoAero;
+
+    @FXML
+    void cargarVuelosConfirmadosAero2(ActionEvent event) throws IOException {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        String codigoAeropuerto = (String) stage.getUserData();
+        cargarVuelosConfirmadosAero(event,codigoAeropuerto);
+    }
+
+    @FXML
+    void cargarVuelosConfirmadosAero (ActionEvent event, String codigoAerolinea) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setControllerFactory(Main.getContext()::getBean);
+
+        Parent root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream("VuelosConfirmadosAeropuerto.fxml"));
+        Scene scene = new Scene(root);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+
+        ResponseEntity response = aerolineaRestService.getListaVuelosConfirmadosAero(codigoAerolinea);
+
+        List vueloDTOS = (List) response.getBody();
+        List<VueloDTO> vuelos = new ArrayList<>();
+
+        for (int i=0;i<vueloDTOS.size();i++){
+            VueloDTO vueloDTO = new VueloDTO();
+            LinkedHashMap hashMap = (LinkedHashMap) vueloDTOS.get(i);
+            vueloDTO.setCodigoVuelo((String) hashMap.get("codigoVuelo"));
+            vueloDTO.setCodigoAeropuertoOrigen((String) hashMap.get("codigoAeropuertoOrigen"));
+            vueloDTO.setCodigoAeropuertoDestino((String) hashMap.get("codigoAeropuertoDestino"));
+            vueloDTO.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
+            vuelos.add(vueloDTO);
+        }
+        ObservableList<VueloDTO> vuelosConfirmados = FXCollections.observableArrayList(vuelos);
+
+        codigoVueloConfirmadoAero.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
+        aeropuertoOrigenConfirmadoAero.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoOrigen"));
+        aeropuertoDestinoConfirmadoAero.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoDestino"));
+        matriculaAvionConfirmadoAero.setCellValueFactory(new PropertyValueFactory<>("matriculaAvion"));
+        tablaVuelosConfirmadosAero.setItems(vuelosConfirmados);
+        addButtonToTablePasajeros(tablaVuelosConfirmadosAero);
+
+        stage.show();
+    }
+    //boton que te redireccione a una nueva pagina para egregar pasajeros al vuelo a traves de su pasaporte
+    private void addButtonToTablePasajeros(TableView t) {
+        TableColumn<Data, Void> colBtn = new TableColumn("Agregar Pasajero");
+
+        Callback<TableColumn<Data, Void>, TableCell<Data, Void>> cellFactory = new Callback<>() {
+            @Override
+            public TableCell<Data, Void> call(final TableColumn<Data, Void> param) {
+                final TableCell<Data, Void> cell = new TableCell<>() {
+
+                    private final Button btn = new Button("Agregar Pasajero");
+
+                    {
+                        btn.setOnAction((ActionEvent event) -> {
+                            VueloDTO vuelo = (VueloDTO) getTableView().getItems().get(getIndex());
+                            String codigoVuelo = vuelo.getCodigoVuelo();
+                            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                            stage.setUserData(codigoVuelo);
+                            try {
+                                redireccion(event,"AgregarPasajero.fxml",codigoVuelo);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(btn);
+                        }
+                    }
+                };
+                return cell;
+            }
+        };
+
+        colBtn.setCellFactory(cellFactory);
+
+        t.getColumns().add(colBtn);
+
+    }
+    @FXML
+    private TextField pasaportePasajero;
+    //boton que agrega un pasajero al vuelo y le determian automaticamente un numero de asiento
+    @FXML
+    void agregarPasajero(ActionEvent event){
+        String codigoVuelo = (String) ((Stage) ((Node) event.getSource()).getScene().getWindow()).getUserData();
+        AgregarPasajeroDTO agregarPasajeroDTO = new AgregarPasajeroDTO(codigoVuelo,Long.parseLong(pasaportePasajero.getText()));
+
+        ResponseEntity response = vueloRestService.agregarPasajero(agregarPasajeroDTO);
+        if (response.getStatusCode()==HttpStatus.OK){
+            showAlert("Exito!","Se agrego el pasajero al vuelo");
+        }
     }
 
 

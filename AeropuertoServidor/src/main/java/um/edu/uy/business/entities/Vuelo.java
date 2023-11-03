@@ -6,6 +6,7 @@ import org.apache.tomcat.jni.Local;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -55,6 +56,18 @@ public class Vuelo {
     @Column(nullable = false)
     private LocalDateTime ETA;
 
+    @OneToMany(targetEntity = Asiento.class, cascade = {CascadeType.ALL})
+    @JoinTable(
+            name = "RelacionAsientoVuelo",
+            joinColumns = {@JoinColumn(
+                    name = "id_vuelo"
+            )},
+            inverseJoinColumns = {@JoinColumn(
+                    name = "id_asiento"
+            )}
+    )
+    private List<Asiento> asientos;
+
     public String getAerolinea() {
         return aerolinea.getCodigoIATAAerolinea();
     }
@@ -102,6 +115,14 @@ public class Vuelo {
         this.ETA = ETA;
     }
 
+    public List<Asiento> getAsientos() {
+        return asientos;
+    }
+
+    public void setAsientos(List<Asiento> asientos) {
+        this.asientos = asientos;
+    }
+
     public boolean isAceptadoOrigen() {
         return aceptadoOrigen;
     }
@@ -117,4 +138,5 @@ public class Vuelo {
     public LocalDateTime getETA() {
         return ETA;
     }
+
 }

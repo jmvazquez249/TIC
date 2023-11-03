@@ -57,5 +57,6 @@
       <TextField fx:id="mmEDT" layoutX="302.0" layoutY="294.0" prefHeight="25.0" prefWidth="69.0" promptText="mm" />
       <DatePicker fx:id="fechaETA" layoutX="32.0" layoutY="401.0" />
       <DatePicker fx:id="fechaEDT" layoutX="32.0" layoutY="294.0" />
+      <Button layoutX="62.0" layoutY="485.0" mnemonicParsing="false" onAction="#cargarVuelosConfirmadosAero2" text="Agregar Pasajero a Vuelo" />
    </children>
 </Pane>

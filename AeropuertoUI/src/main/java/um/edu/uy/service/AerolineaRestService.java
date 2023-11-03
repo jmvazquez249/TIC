@@ -7,6 +7,8 @@ import org.springframework.web.client.RestTemplate;
 import um.edu.uy.AerolineaDTO;
 import um.edu.uy.AvionDTO;
 
+import java.util.List;
+
 @Component
 public class AerolineaRestService {
 
@@ -27,6 +29,9 @@ public class AerolineaRestService {
     }
     public ResponseEntity getAerolineaICAO(String codigoICAOAerolinea){
         return restTemplate.postForEntity("http://localhost:8080/aerolinea/getAerolineaICAO",codigoICAOAerolinea, AerolineaDTO.class);
+    }
+    public ResponseEntity getListaVuelosConfirmadosAero(String codigoAerolinea){
+        return restTemplate.postForEntity("http://localhost:8080/vuelo/getListaVuelosConfirmadosAero",codigoAerolinea, List.class);
     }
 
 }
