@@ -19,8 +19,8 @@ public class AvionRestService {
         return restTemplate.postForEntity("http://localhost:8080/avion/getAvion",matricula, AvionDTO.class);
     }
 
-    public ResponseEntity getAviones(){
-        return restTemplate.postForEntity("http://localhost:8080/avion/getAviones",null, List.class);
+    public ResponseEntity getAviones(String codigoAerolinea){
+        return restTemplate.postForEntity("http://localhost:8080/avion/getAviones",codigoAerolinea, List.class);
     }
 
 

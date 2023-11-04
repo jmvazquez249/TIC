@@ -112,7 +112,7 @@ public class IniciarSesionController {
                 } else if (tipoUsuario.equals("ADMINAEROLINEA")) {
                     redireccion(event, "AdminAerolinea.fxml", usu.getCodigoAerolinea());
                 } else if (tipoUsuario.equals("CHECK IN")) {
-                    redireccion(event, "CheckIn.fxml", null);
+                    redireccion(event, "BuscarVuelo.fxml", null);
                 } else if (tipoUsuario.equals("OFICINA")) {
                     cargarAgregarVuelo(event, "UsuarioAerolinea.fxml", usu.getCodigoAerolinea());
                 } else if (tipoUsuario.equals("MALETERIA")) {
@@ -1198,7 +1198,7 @@ public class IniciarSesionController {
         ResponseEntity response1 = aeropuertoRestService.getAeropuertos();
         List listaAeropuertos = (List) response1.getBody();
 
-        ResponseEntity response2 = avionRestService.getAviones();
+        ResponseEntity response2 = avionRestService.getAviones(codigoAerolinea);
         List listaAviones = (List) response2.getBody();
 
 
@@ -1215,13 +1215,9 @@ public class IniciarSesionController {
             matriculaBox.getItems().addAll((String) avion.get("matricula"));
         }
 
-
-
         stage.setScene(scene);
         stage.show();
     }
-
-
 
 
     private void showAlert(String title, String contextText) {
@@ -1329,4 +1325,29 @@ public class IniciarSesionController {
         }
     }
 
+    @FXML
+    private TableView<String> tableCheckIn;
+
+    @FXML
+    private TableColumn<String,String> columnaPasaporte;
+
+    @FXML
+    void buscarVuelo(ActionEvent event) throws IOException {
+
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setControllerFactory(Main.getContext()::getBean);
+
+        Parent root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream("CheckInVuelo.fxml"));
+        Scene scene = new Scene(root);
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+
+
+
+
+
+        stage.show();
+
+
+    }
 }
