@@ -182,6 +182,21 @@ public class VueloRestService {
         puertaRepository.save(puerta);
     }
 
+    @PostMapping("/getPasaportes")
+    public List<Long> getVuelo(@RequestBody String codigoVuelo){
+        Vuelo vuelo = vueloRepository.findByCodigoVuelo(codigoVuelo);
+        List<Asiento> pasajeros = vuelo.getAsientos();
+        List<Long> pasaportes = new ArrayList<>();
+        for (int i=0; i< pasajeros.size(); i++){
+            Long pas = pasajeros.get(i).getPasaporte();
+            System.out.println(pas);
+            if(pas!=0){
+                pasaportes.add(pas);
+            }
+        }
+        return pasaportes;
+    }
+
 
 
 

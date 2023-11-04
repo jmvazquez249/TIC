@@ -8,6 +8,8 @@ import um.edu.uy.AgregarPasajeroDTO;
 import um.edu.uy.ReservaDTO;
 import um.edu.uy.VueloDTO;
 
+import java.util.List;
+
 @Component
 public class VueloRestService {
     private RestTemplate restTemplate;
@@ -36,6 +38,10 @@ public class VueloRestService {
     }
     public ResponseEntity agregarPasajero(AgregarPasajeroDTO pasajeroDTO){
         return restTemplate.postForEntity("http://localhost:8080/vuelo/agregarPasajero", pasajeroDTO,null);
+    }
+
+    public ResponseEntity getPasaportes(String codigoVuelo){
+        return restTemplate.postForEntity("http://localhost:8080/vuelo/getPasaportes",codigoVuelo, List.class);
     }
 
 }

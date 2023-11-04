@@ -1,5 +1,6 @@
 package um.edu.uy.ui;
 
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.jsf.FacesContextUtils;
 import um.edu.uy.*;
+import um.edu.uy.Objetcts.Pasaporte;
 import um.edu.uy.service.AerolineaRestService;
 import um.edu.uy.service.AeropuertoRestService;
 import um.edu.uy.service.AvionRestService;
@@ -1326,10 +1328,13 @@ public class IniciarSesionController {
     }
 
     @FXML
-    private TableView<String> tableCheckIn;
+    private TableView<Pasaporte> tablaCheckIn;
 
     @FXML
-    private TableColumn<String,String> columnaPasaporte;
+    private TableColumn<Pasaporte,Long> columnaPasaporte;
+
+    @FXML
+    private TextField codigoVuelo;
 
     @FXML
     void buscarVuelo(ActionEvent event) throws IOException {
@@ -1342,10 +1347,20 @@ public class IniciarSesionController {
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
 
+        String codVuelo = codigoVuelo.getText();
 
 
-
-
+        ResponseEntity response = vueloRestService.getPasaportes(codVuelo);
+        List<Long> list = (List<Long>) response.getBody();
+        List<Pasaporte> listaPasaportes = new ArrayList<>();
+        System.out.println(list);
+        for(int i=0;i<list.size();i++){
+            Pasaporte pas = new Pasaporte(Long.parseLong(String.valueOf(list.get(i))));
+            listaPasaportes.add(pas);
+        }
+        ObservableList<Pasaporte> pasaportes = FXCollections.observableArrayList(listaPasaportes);
+        columnaPasaporte.setCellValueFactory(new PropertyValueFactory<>("valor"));
+        tablaCheckIn.setItems(pasaportes);
         stage.show();
 
 
