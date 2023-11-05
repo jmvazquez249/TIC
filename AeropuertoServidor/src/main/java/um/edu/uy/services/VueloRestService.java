@@ -2,6 +2,8 @@ package um.edu.uy.services;
 
 import org.hibernate.annotations.ManyToAny;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import um.edu.uy.AgregarPasajeroDTO;
 import um.edu.uy.ReservaDTO;
@@ -92,20 +94,23 @@ public class VueloRestService {
     }
     @Transactional
     @PostMapping("/agregarPasajero")
-    public void agregarPasajero(@RequestBody AgregarPasajeroDTO pasajeroDTO){
+    public ResponseEntity<String> agregarPasajero(@RequestBody AgregarPasajeroDTO pasajeroDTO){
         Vuelo vuelo = vueloRepository.findByCodigoVuelo(pasajeroDTO.getCodigoVuelo());
         List<Asiento> asientos = vuelo.getAsientos();
-        for(int i=0; i<asientos.size();i++){
-            Asiento asiento = asientos.get(i);
-            if(asiento.getPasaporte()==0){
+
+        for (Asiento asiento : asientos) {
+            if (asiento.getPasaporte() == 0) {
                 asiento.setPasaporte(pasajeroDTO.getPasaporte());
                 asientoRepository.save(asiento);
-                break;
+                vueloRepository.save(vuelo);
+                return ResponseEntity.ok("Pasajero agregado con éxito");
             }
         }
 
-        vueloRepository.save(vuelo);
+        // Si llegamos a este punto, significa que no hay asientos disponibles
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("No hay asientos disponibles en este vuelo");
     }
+
 
     @Transactional
     @PostMapping("/agregar")

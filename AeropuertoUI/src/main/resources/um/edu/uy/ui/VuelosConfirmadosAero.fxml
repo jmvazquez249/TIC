@@ -22,6 +22,6 @@
             <TableColumn fx:id="matriculaAvionConfirmadoAero" prefWidth="75.0" text="Avion" />
         </columns>
       </TableView>
-      <Button layoutX="482.0" layoutY="337.0" mnemonicParsing="false" text="Regresar" onAction="#backToUsuarioAerolinea" />
+      <Button layoutX="482.0" layoutY="337.0" mnemonicParsing="false" onAction="#backToUsuarioAerolinea" text="Regresar" />
    </children>
 </Pane>
