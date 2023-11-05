@@ -1357,7 +1357,6 @@ public class IniciarSesionController {
         ResponseEntity response = vueloRestService.getPasaportes(codVuelo);
         List<Long> list = (List<Long>) response.getBody();
         List<Pasaporte> listaPasaportes = new ArrayList<>();
-        System.out.println(list);
         for(int i=0;i<list.size();i++){
             Pasaporte pas = new Pasaporte(Long.parseLong(String.valueOf(list.get(i))));
             listaPasaportes.add(pas);
@@ -1365,8 +1364,62 @@ public class IniciarSesionController {
         ObservableList<Pasaporte> pasaportes = FXCollections.observableArrayList(listaPasaportes);
         columnaPasaporte.setCellValueFactory(new PropertyValueFactory<>("valor"));
         tablaCheckIn.setItems(pasaportes);
+        addButtonToTablePasaportes(tablaCheckIn);
         stage.show();
 
+
+    }
+
+    private void addButtonToTablePasaportes(TableView t) {
+        TableColumn<Data, Void> colBtn = new TableColumn("");
+        colBtn.setMinWidth(126);
+
+        Callback<TableColumn<Data, Void>, TableCell<Data, Void>> cellFactory = new Callback<>() {
+            @Override
+            public TableCell<Data, Void> call(final TableColumn<Data, Void> param) {
+                final TableCell<Data, Void> cell = new TableCell<>() {
+                    private final Button btn = new Button("Check In");
+
+
+                    {
+                        btn.setOnAction((ActionEvent event) -> {
+                            FXMLLoader fxmlLoader = new FXMLLoader();
+                            fxmlLoader.setControllerFactory(Main.getContext()::getBean);
+
+                            Parent root = null;
+                            try {
+                                root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream("MaletasCheckIn.fxml"));
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                            Scene scene = new Scene(root);
+                            Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                            stage.setScene(scene);
+                            stage.show();
+
+                        });
+                    }
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(btn);
+                        }
+                    }
+                };
+                return cell;
+
+            }
+        };
+
+
+
+        colBtn.setCellFactory(cellFactory);
+
+        t.getColumns().add(colBtn);
 
     }
 }

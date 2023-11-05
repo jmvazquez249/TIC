@@ -193,9 +193,10 @@ public class VueloRestService {
         List<Asiento> pasajeros = vuelo.getAsientos();
         List<Long> pasaportes = new ArrayList<>();
         for (int i=0; i< pasajeros.size(); i++){
-            Long pas = pasajeros.get(i).getPasaporte();
-            System.out.println(pas);
-            if(pas!=0){
+            Asiento pasajero = pasajeros.get(i);
+            Long pas = pasajero.getPasaporte();
+            boolean check = pasajero.isCheckIn();
+            if(pas!=0 && check==false){
                 pasaportes.add(pas);
             }
         }

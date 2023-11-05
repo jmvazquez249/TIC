@@ -64,4 +64,20 @@ public class Asiento {
     public void setPasaporte(long pasaporte) {
         Pasaporte = pasaporte;
     }
+
+    public boolean isCheckIn() {
+        return checkIn;
+    }
+
+    public void setCheckIn(boolean checkIn) {
+        this.checkIn = checkIn;
+    }
+
+    public boolean isBoarded() {
+        return boarded;
+    }
+
+    public void setBoarded(boolean boarded) {
+        this.boarded = boarded;
+    }
 }
