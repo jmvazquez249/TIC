@@ -284,7 +284,7 @@ public class IniciarSesionController {
                 showAlert(
                         "Aeropuerto ya registrado",
                         "El aeropuerto ingresado ya esta registrado");
-            }else if (codigoIATAAero.matches("^[A-Za-z]{2}$")){
+            }else if (!codigoIATAAero.matches("^[A-Za-z]{2}$")){
                 showAlert(
                         "Error en el codigo IATA",
                         "El codigo IATA ingresado no es valido");
