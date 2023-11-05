@@ -1122,13 +1122,17 @@ public class IniciarSesionController {
     //boton que agrega un pasajero al vuelo y le determian automaticamente un numero de asiento
     @FXML
     void agregarPasajero(ActionEvent event){
-        String codigoVuelo = (String) ((Stage) ((Node) event.getSource()).getScene().getWindow()).getUserData();
-        AgregarPasajeroDTO agregarPasajeroDTO = new AgregarPasajeroDTO();
-        agregarPasajeroDTO.setCodigoVuelo(codigoVuelo);
-        agregarPasajeroDTO.setPasaporte(Long.parseLong(pasaportePasajero.getText()));
-        ResponseEntity response = vueloRestService.agregarPasajero(agregarPasajeroDTO);
-        if (response.getStatusCode()==HttpStatus.OK){
-            showAlert("Exito!","Se agrego el pasajero al vuelo");
+        try {
+            String codigoVuelo = (String) ((Stage) ((Node) event.getSource()).getScene().getWindow()).getUserData();
+            AgregarPasajeroDTO agregarPasajeroDTO = new AgregarPasajeroDTO();
+            agregarPasajeroDTO.setCodigoVuelo(codigoVuelo);
+            agregarPasajeroDTO.setPasaporte(Long.parseLong(pasaportePasajero.getText()));
+            ResponseEntity response = vueloRestService.agregarPasajero(agregarPasajeroDTO);
+            if (response.getStatusCode() == HttpStatus.OK) {
+                showAlert("Exito!", "Se agrego el pasajero al vuelo");
+            }
+        }catch (Exception e){
+            showAlert("Error!", "No se pudo agregar el pasajero al vuelo");
         }
     }
 
