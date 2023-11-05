@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import um.edu.uy.AgregarPasajeroDTO;
+import um.edu.uy.MaletasDTO;
 import um.edu.uy.ReservaDTO;
 import um.edu.uy.VueloDTO;
 import um.edu.uy.business.VueloMapper;
@@ -28,8 +29,10 @@ public class VueloRestService {
     private ReservaRepository reservaRepository;
     private AvionRepository avionRepository;
     private AsientoRepository asientoRepository;
+
+    private MaletaRepository maletaRepository;
     @Autowired
-    public VueloRestService(VueloMapper vueMapp, VueloRepository vueRepo, AeropuertoRepository aeroRepo, AerolineaRepository aerolRepo, PuertaRepository pueRepo, ReservaRepository resRepo, AvionRepository avionRepo, AsientoRepository asientoRepo){
+    public VueloRestService(VueloMapper vueMapp, VueloRepository vueRepo, AeropuertoRepository aeroRepo, AerolineaRepository aerolRepo, PuertaRepository pueRepo, ReservaRepository resRepo, AvionRepository avionRepo, AsientoRepository asientoRepo, MaletaRepository malRepo){
         this.vueloMapper=vueMapp;
         this.vueloRepository=vueRepo;
         this.aeropuertoRepository=aeroRepo;
@@ -38,6 +41,7 @@ public class VueloRestService {
         this.reservaRepository=resRepo;
         this.avionRepository=avionRepo;
         this.asientoRepository=asientoRepo;
+        this.maletaRepository=malRepo;
     }
 
     @PostMapping("/getListaVuelosLlegada")
@@ -201,6 +205,28 @@ public class VueloRestService {
             }
         }
         return pasaportes;
+    }
+
+    @Transactional
+    @PostMapping("/agregarMaletas")
+    public void agregarMaletas(@RequestBody MaletasDTO maletasDTO){
+        Vuelo vuelo = vueloRepository.findByCodigoVuelo(maletasDTO.getCodigoVuelo());
+        List<Asiento> asientos = vuelo.getAsientos();
+        List<Maleta> maletas =  new ArrayList<>();
+        for(int j=0;j< maletasDTO.getCantidadMaletas();j++){
+            Maleta maleta = new Maleta();
+            maletaRepository.save(maleta);
+            maletas.add(maleta);
+        }
+
+        for(int i=0;i<asientos.size();i++){
+            Asiento asiento = asientos.get(i);
+            if (asiento.getPasaporte()== maletasDTO.getPasaporte()){
+                asiento.setCheckIn(true);
+                asiento.setMaletas(maletas);
+                asientoRepository.save(asiento);
+            }
+        }
     }
 
 

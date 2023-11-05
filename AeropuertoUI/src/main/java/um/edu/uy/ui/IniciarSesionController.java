@@ -1351,7 +1351,12 @@ public class IniciarSesionController {
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
 
+
         String codVuelo = codigoVuelo.getText();
+
+        MaletasDTO maletasDTO = new MaletasDTO();
+        maletasDTO.setCodigoVuelo(codVuelo);
+        stage.setUserData(maletasDTO);
 
 
         ResponseEntity response = vueloRestService.getPasaportes(codVuelo);
@@ -1370,9 +1375,12 @@ public class IniciarSesionController {
 
     }
 
+    @FXML
+    private TextField cantidadMaletas;
+
     private void addButtonToTablePasaportes(TableView t) {
         TableColumn<Data, Void> colBtn = new TableColumn("");
-        colBtn.setMinWidth(126);
+        colBtn.setMinWidth(127);
 
         Callback<TableColumn<Data, Void>, TableCell<Data, Void>> cellFactory = new Callback<>() {
             @Override
@@ -1395,6 +1403,14 @@ public class IniciarSesionController {
                             Scene scene = new Scene(root);
                             Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                             stage.setScene(scene);
+
+                            Pasaporte pas = (Pasaporte) getTableView().getItems().get(getIndex());
+
+
+                            MaletasDTO maletasDTO = (MaletasDTO) stage.getUserData();
+                            maletasDTO.setPasaporte(pas.getValor());
+                            stage.setUserData(maletasDTO);
+
                             stage.show();
 
                         });
@@ -1420,6 +1436,26 @@ public class IniciarSesionController {
         colBtn.setCellFactory(cellFactory);
 
         t.getColumns().add(colBtn);
+
+    }
+
+    @FXML
+    private void agregarMeletas(ActionEvent event) throws IOException {
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        MaletasDTO maletasDTO = (MaletasDTO) stage.getUserData();
+        long cantMaletas = Long.parseLong(cantidadMaletas.getText());
+        maletasDTO.setCantidadMaletas(cantMaletas);
+
+        ResponseEntity response = vueloRestService.agregarMaletas(maletasDTO);
+
+        if(response.getStatusCode()==HttpStatus.OK){
+            showAlert("Check In","Pasaporte procesado");
+        }
+
+        buscarVuelo(event);
+
+
+
 
     }
 }

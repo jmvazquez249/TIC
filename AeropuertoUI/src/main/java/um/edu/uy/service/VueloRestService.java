@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import um.edu.uy.AgregarPasajeroDTO;
+import um.edu.uy.MaletasDTO;
 import um.edu.uy.ReservaDTO;
 import um.edu.uy.VueloDTO;
 
@@ -42,6 +43,9 @@ public class VueloRestService {
 
     public ResponseEntity getPasaportes(String codigoVuelo){
         return restTemplate.postForEntity("http://localhost:8080/vuelo/getPasaportes",codigoVuelo, List.class);
+    }
+    public ResponseEntity agregarMaletas(MaletasDTO maletasDTO){
+        return restTemplate.postForEntity("http://localhost:8080/vuelo/agregarMaletas",maletasDTO,null);
     }
 
 }
