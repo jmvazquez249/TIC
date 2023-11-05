@@ -19,6 +19,6 @@
             <Font size="41.0" />
          </font>
       </Text>
-      <Button layoutX="237.0" layoutY="561.0" mnemonicParsing="false" text="Back" />
+      <Button layoutX="237.0" layoutY="561.0" mnemonicParsing="false" text="Back" onAction="#backBuscarVuelo" />
    </children>
 </Pane>

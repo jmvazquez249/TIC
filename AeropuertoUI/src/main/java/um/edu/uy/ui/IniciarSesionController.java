@@ -1012,8 +1012,15 @@ public class IniciarSesionController {
     @FXML
     void cargarVuelosConfirmadosAero2(ActionEvent event) throws IOException {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        String codigoAeropuerto = (String) stage.getUserData();
-        cargarVuelosConfirmadosAero(event,codigoAeropuerto);
+        String codigoAerolinea = (String) stage.getUserData();
+        cargarVuelosConfirmadosAero(event,codigoAerolinea);
+    }
+
+    @FXML
+    void backToVuelosConfirmados(ActionEvent event) throws IOException {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        List list = (List) stage.getUserData();
+        cargarVuelosConfirmadosAero(event, (String) list.get(0));
     }
     //funcion que me regrese a la pagina anterior, en este caso a Usuario Aerolinea y que siga manteniendo el codigo de aerolinea
     @FXML
@@ -1028,10 +1035,8 @@ public class IniciarSesionController {
             throw new RuntimeException(e);
         }
         Scene scene = new Scene(root);
-
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
-        stage.setUserData(stage.getUserData());
         stage.show();
     }
     //funcion que me regrese a la pagina anterior, en este caso a VuelosConfirmadosAero, vuelosConfirmadosAero tiene una tableview por lo tanto cuando vuelva necesito que las cosas que aparecen ahi sigan estando ahi
@@ -1087,11 +1092,14 @@ public class IniciarSesionController {
                     {
                         btn.setOnAction((ActionEvent event) -> {
                             VueloDTO vuelo = (VueloDTO) getTableView().getItems().get(getIndex());
-                            String codigoVuelo = vuelo.getCodigoVuelo();
                             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                            stage.setUserData(codigoVuelo);
+                            List list = new ArrayList();
+                            list.add(stage.getUserData());
+                            String codigoVuelo = vuelo.getCodigoVuelo();
+                            list.add(codigoVuelo);
+                            stage.setUserData(list);
                             try {
-                                redireccion(event,"AgregarPasajero.fxml",codigoVuelo);
+                                redireccion2(event,"AgregarPasajero.fxml",list);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -1184,6 +1192,21 @@ public class IniciarSesionController {
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         if(codigoAerolinea != null){
             stage.setUserData(codigoAerolinea);
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML
+    void redireccion2(ActionEvent event, String fxml, List lista) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setControllerFactory(Main.getContext()::getBean);
+
+        Parent root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream(fxml));
+        Scene scene = new Scene(root);
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        if(lista != null){
+            stage.setUserData(lista);
         }
         stage.setScene(scene);
         stage.show();
@@ -1453,9 +1476,10 @@ public class IniciarSesionController {
         }
 
         buscarVuelo(event);
+    }
 
-
-
-
+    @FXML
+    public void backBuscarVuelo(ActionEvent event) throws IOException {
+        redireccion(event, "BuscarVuelo.fxml", null);
     }
 }
