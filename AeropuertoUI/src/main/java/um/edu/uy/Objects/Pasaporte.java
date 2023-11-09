@@ -1,4 +1,4 @@
-package um.edu.uy.Objetcts;
+package um.edu.uy.Objects;
 
 public class Pasaporte {
     private long valor;

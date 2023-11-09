@@ -1,6 +1,5 @@
 package um.edu.uy.ui;
 
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,16 +12,14 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.jsf.FacesContextUtils;
 import um.edu.uy.*;
-import um.edu.uy.Objetcts.Oficina;
-import um.edu.uy.Objetcts.Pasaporte;
+import um.edu.uy.Objects.Oficina;
+import um.edu.uy.Objects.Pasaporte;
 import um.edu.uy.service.AerolineaRestService;
 import um.edu.uy.service.AeropuertoRestService;
 import um.edu.uy.service.AvionRestService;
@@ -1307,16 +1304,12 @@ public class IniciarSesionController {
             LocalTime timeEDT = LocalTime.of(horaIntEDT,minutoIntEDT);
             LocalDate fecEDT = fechaEDT.getValue();
 
-
             LocalDateTime localDateTimeEDT = LocalDateTime.of(fecEDT,timeEDT);
-
-
 
             String matriculaAvion = matriculaBox.getValue();
             String codigoIATAAeropDest = codigoIATAeropuertoDestino.getValue();
             String codigoIATAAeropOri = codigoIATAeropuertoOrigen.getValue();
             Long codigoIATAVue = Long.parseLong(codigoIATAAvuelo.getText());
-
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Oficina oficina = (Oficina) stage.getUserData();
@@ -1324,7 +1317,6 @@ public class IniciarSesionController {
             if (localDateTimeEDT.isAfter(localDateTimeETA)) {
                 showAlert("Datos incorrectos!", "La fecha de llegada no puede ser anterior a la de salida.");
             } else {
-
                 VueloDTO vueloDTO = new VueloDTO();
                 vueloDTO.setCodigoVuelo(oficina.getCodigoAerolinea() + codigoIATAVue);
                 vueloDTO.setCodigoAeropuertoDestino(codigoIATAAeropDest);
