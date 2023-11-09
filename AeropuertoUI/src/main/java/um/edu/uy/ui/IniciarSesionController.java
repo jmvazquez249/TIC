@@ -1131,17 +1131,19 @@ public class IniciarSesionController {
     @FXML
     void agregarPasajero(ActionEvent event){
         try {
-            String codigoVuelo = (String) ((Stage) ((Node) event.getSource()).getScene().getWindow()).getUserData();
+            List list = (List) ((Stage) ((Node) event.getSource()).getScene().getWindow()).getUserData();
             AgregarPasajeroDTO agregarPasajeroDTO = new AgregarPasajeroDTO();
-            agregarPasajeroDTO.setCodigoVuelo(codigoVuelo);
+            agregarPasajeroDTO.setCodigoVuelo((String) list.get(1));
             agregarPasajeroDTO.setPasaporte(Long.parseLong(pasaportePasajero.getText()));
             ResponseEntity response = vueloRestService.agregarPasajero(agregarPasajeroDTO);
             if (response.getStatusCode() == HttpStatus.OK) {
                 showAlert("Exito!", "Se agrego el pasajero al vuelo");
             }
         }catch (Exception e){
-            showAlert("Error!", "No se pudo agregar el pasajero al vuelo");
+            showAlert("Error","No se pudo agregar pasajero");
         }
+
+
     }
 
 
