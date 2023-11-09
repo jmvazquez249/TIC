@@ -84,6 +84,7 @@ public class VueloRestService {
         return vueloDTOs;
     }
 
+
     @PostMapping("/getListaVuelosSinConfirmarLlegada")
     public List<VueloDTO> getListaVuelosSinConfirmarLlegada(@RequestBody String codigoAeropuerto){
         Aeropuerto aeropuerto = aeropuertoRepository.findAeropuertoByCodigoIATAAeropuerto(codigoAeropuerto);
@@ -217,6 +218,35 @@ public class VueloRestService {
         }
         return pasaportes;
     }
+    @PostMapping("/getPasaportesBoarding")
+    public List<Long> getPasaportesBoarding(@RequestBody String codigoVuelo){
+        Vuelo vuelo = vueloRepository.findByCodigoVuelo(codigoVuelo);
+        List<Asiento> pasajeros = vuelo.getAsientos();
+        List<Long> pasaportes = new ArrayList<>();
+        for (int i=0; i< pasajeros.size(); i++){
+            Asiento pasajero = pasajeros.get(i);
+            Long pas = pasajero.getPasaporte();
+            boolean check = pasajero.isCheckIn();
+            if(pas!=0 && check==true && pasajero.isBoarded()==false){
+                pasaportes.add(pas);
+            }
+        }
+        return pasaportes;
+    }
+    @Transactional
+    @PostMapping("/Boarding")
+    public void Boarding(@RequestBody AgregarPasajeroDTO pasajeroDTO) {
+        Vuelo vuelo = vueloRepository.findByCodigoVuelo(pasajeroDTO.getCodigoVuelo());
+        List<Asiento> asiento = vuelo.getAsientos();
+        for (int i = 0; i < asiento.size(); i++) {
+            Asiento asientos = asiento.get(i);
+            if (asientos.getPasaporte() == pasajeroDTO.getPasaporte()) {
+                asientos.setBoarded(true);
+                asientoRepository.save(asientos);
+            }
+        }
+    }
+
 
     @Transactional
     @PostMapping("/agregarMaletas")
