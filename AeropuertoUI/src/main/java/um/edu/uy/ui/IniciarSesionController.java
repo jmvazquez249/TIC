@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.jsf.FacesContextUtils;
 import um.edu.uy.*;
+import um.edu.uy.Objetcts.Oficina;
 import um.edu.uy.Objetcts.Pasaporte;
 import um.edu.uy.service.AerolineaRestService;
 import um.edu.uy.service.AeropuertoRestService;
@@ -116,7 +117,9 @@ public class IniciarSesionController {
                 } else if (tipoUsuario.equals("CHECK IN")) {
                     redireccion(event, "BuscarVuelo.fxml", null);
                 } else if (tipoUsuario.equals("OFICINA")) {
-                    cargarAgregarVuelo(event, "UsuarioAerolinea.fxml", usu.getCodigoAerolinea());
+                    Oficina oficina = new Oficina();
+                    oficina.setCodigoAerolinea(usu.getCodigoAerolinea());
+                    cargarAgregarVuelo(event, "UsuarioAerolinea.fxml", oficina);
                 } else if (tipoUsuario.equals("MALETERIA")) {
                     redireccion(event, "Maletero.fxml", null);
                 } else if (tipoUsuario.equals("BOARDING")) {
@@ -1012,32 +1015,22 @@ public class IniciarSesionController {
     @FXML
     void cargarVuelosConfirmadosAero2(ActionEvent event) throws IOException {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        String codigoAerolinea = (String) stage.getUserData();
-        cargarVuelosConfirmadosAero(event,codigoAerolinea);
+        Oficina oficina = (Oficina) stage.getUserData();
+        cargarVuelosConfirmadosAero(event, oficina.getCodigoAerolinea());
     }
 
     @FXML
     void backToVuelosConfirmados(ActionEvent event) throws IOException {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        List list = (List) stage.getUserData();
-        cargarVuelosConfirmadosAero(event, (String) list.get(0));
+        Oficina oficina = (Oficina) stage.getUserData();
+        cargarVuelosConfirmadosAero(event, oficina.getCodigoAerolinea());
     }
     //funcion que me regrese a la pagina anterior, en este caso a Usuario Aerolinea y que siga manteniendo el codigo de aerolinea
     @FXML
     void backToUsuarioAerolinea(ActionEvent event) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setControllerFactory(Main.getContext()::getBean);
-
-        Parent root;
-        try {
-            root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream("UsuarioAerolinea.fxml"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        Scene scene = new Scene(root);
-        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Oficina oficina = (Oficina) stage.getUserData();
+        cargarAgregarVuelo(event,"UsuarioAerolinea.fxml",oficina);
     }
     //funcion que me regrese a la pagina anterior, en este caso a VuelosConfirmadosAero, vuelosConfirmadosAero tiene una tableview por lo tanto cuando vuelva necesito que las cosas que aparecen ahi sigan estando ahi
 
@@ -1093,13 +1086,12 @@ public class IniciarSesionController {
                         btn.setOnAction((ActionEvent event) -> {
                             VueloDTO vuelo = (VueloDTO) getTableView().getItems().get(getIndex());
                             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                            List list = new ArrayList();
-                            list.add(stage.getUserData());
+                            Oficina oficina = (Oficina) stage.getUserData();
                             String codigoVuelo = vuelo.getCodigoVuelo();
-                            list.add(codigoVuelo);
-                            stage.setUserData(list);
+                            oficina.setCodigoVuelo(codigoVuelo);
+                            stage.setUserData(oficina);
                             try {
-                                redireccion2(event,"AgregarPasajero.fxml",list);
+                                redireccion2(event,"AgregarPasajero.fxml",oficina);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -1131,9 +1123,9 @@ public class IniciarSesionController {
     @FXML
     void agregarPasajero(ActionEvent event){
         try {
-            List list = (List) ((Stage) ((Node) event.getSource()).getScene().getWindow()).getUserData();
+            Oficina oficina = (Oficina) ((Stage) ((Node) event.getSource()).getScene().getWindow()).getUserData();
             AgregarPasajeroDTO agregarPasajeroDTO = new AgregarPasajeroDTO();
-            agregarPasajeroDTO.setCodigoVuelo((String) list.get(1));
+            agregarPasajeroDTO.setCodigoVuelo(oficina.getCodigoVuelo());
             agregarPasajeroDTO.setPasaporte(Long.parseLong(pasaportePasajero.getText()));
             ResponseEntity response = vueloRestService.agregarPasajero(agregarPasajeroDTO);
             if (response.getStatusCode() == HttpStatus.OK) {
@@ -1180,6 +1172,7 @@ public class IniciarSesionController {
         Parent root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream("IniciarSesion.fxml"));
         Scene scene = new Scene(root);
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        stage.setUserData(null);
         stage.setScene(scene);
         stage.show();
     }
@@ -1200,36 +1193,36 @@ public class IniciarSesionController {
     }
 
     @FXML
-    void redireccion2(ActionEvent event, String fxml, List lista) throws IOException {
+    void redireccion2(ActionEvent event, String fxml, Oficina oficina) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setControllerFactory(Main.getContext()::getBean);
 
         Parent root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream(fxml));
         Scene scene = new Scene(root);
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-        if(lista != null){
-            stage.setUserData(lista);
+        if(oficina != null){
+            stage.setUserData(oficina);
         }
         stage.setScene(scene);
         stage.show();
     }
 
     @FXML
-    void cargarAgregarVuelo(ActionEvent event, String fxml, String codigoAerolinea) throws IOException {
+    void cargarAgregarVuelo(ActionEvent event, String fxml, Oficina oficina) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setControllerFactory(Main.getContext()::getBean);
 
         Parent root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream(fxml));
         Scene scene = new Scene(root);
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-        if(codigoAerolinea != null){
-            stage.setUserData(codigoAerolinea);
+        if(oficina != null){
+            stage.setUserData(oficina);
         }
 
         ResponseEntity response1 = aeropuertoRestService.getAeropuertos();
         List listaAeropuertos = (List) response1.getBody();
 
-        ResponseEntity response2 = avionRestService.getAviones(codigoAerolinea);
+        ResponseEntity response2 = avionRestService.getAviones(oficina.getCodigoAerolinea());
         List listaAviones = (List) response2.getBody();
 
 
@@ -1326,18 +1319,18 @@ public class IniciarSesionController {
 
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            String codAerol = (String) stage.getUserData();
+            Oficina oficina = (Oficina) stage.getUserData();
 
             if (localDateTimeEDT.isAfter(localDateTimeETA)) {
                 showAlert("Datos incorrectos!", "La fecha de llegada no puede ser anterior a la de salida.");
             } else {
 
                 VueloDTO vueloDTO = new VueloDTO();
-                vueloDTO.setCodigoVuelo(codAerol + codigoIATAVue);
+                vueloDTO.setCodigoVuelo(oficina.getCodigoAerolinea() + codigoIATAVue);
                 vueloDTO.setCodigoAeropuertoDestino(codigoIATAAeropDest);
                 vueloDTO.setCodigoAeropuertoOrigen(codigoIATAAeropOri);
                 vueloDTO.setMatriculaAvion(matriculaAvion);
-                vueloDTO.setCodigoAerolinea(codAerol);
+                vueloDTO.setCodigoAerolinea(oficina.getCodigoAerolinea());
                 vueloDTO.setAceptadoOrigen(false);
                 vueloDTO.setAcepradoDestino(false);
                 vueloDTO.setRechadado(false);
@@ -1415,6 +1408,7 @@ public class IniciarSesionController {
 
 
                     {
+
                         btn.setOnAction((ActionEvent event) -> {
                             FXMLLoader fxmlLoader = new FXMLLoader();
                             fxmlLoader.setControllerFactory(Main.getContext()::getBean);
