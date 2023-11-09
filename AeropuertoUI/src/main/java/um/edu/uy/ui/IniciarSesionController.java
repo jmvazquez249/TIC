@@ -322,6 +322,13 @@ public class IniciarSesionController {
             String matriculaAv = matricula.getText();
             int capacidadAv = Integer.parseInt(capacidad.getText());
             int capacidadBultoAv = Integer.parseInt(capacidadBulto.getText());
+            //la capacidad de asintos no puede ser mayor a 1000 y cantidad de bulto mayor a 10000 pero que se rompa y no lo agregue
+            if (capacidadAv > 1000 || capacidadBultoAv > 10000) {
+                showAlert(
+                        "Error en la capacidad",
+                        "La capacidad de asientos no puede ser mayor a 1000 y la capacidad de bultos no puede ser mayor a 10000");
+            }
+            else{
 
             ResponseEntity response1 = avionRestService.getAvion(matriculaAv);
             AvionDTO avionDTOMatricula = (AvionDTO) response1.getBody();
@@ -346,6 +353,7 @@ public class IniciarSesionController {
                 if (response.getStatusCode() == HttpStatus.OK) {
                     showAlert("Avion agregado", "Se agrego con exito el avion!");
                 }
+            }
 
 
             }
@@ -1560,15 +1568,22 @@ public class IniciarSesionController {
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         MaletasDTO maletasDTO = (MaletasDTO) stage.getUserData();
         long cantMaletas = Long.parseLong(cantidadMaletas.getText());
-        maletasDTO.setCantidadMaletas(cantMaletas);
-
-        ResponseEntity response = vueloRestService.agregarMaletas(maletasDTO);
-
-        if(response.getStatusCode()==HttpStatus.OK){
-            showAlert("Check In","Pasaporte procesado");
+        //no puedeen haber mas de 5 maletas por persona
+        if (cantMaletas>5){
+            showAlert("Error","No puede haber mas de 5 maletas por persona");
+            return;
         }
+        else {
+            maletasDTO.setCantidadMaletas(cantMaletas);
 
-        buscarVuelo(event);
+            ResponseEntity response = vueloRestService.agregarMaletas(maletasDTO);
+
+            if (response.getStatusCode() == HttpStatus.OK) {
+                showAlert("Check In", "Pasaporte procesado");
+            }
+
+            buscarVuelo(event);
+        }
     }
 
     @FXML
