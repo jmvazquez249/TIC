@@ -14,6 +14,7 @@ import um.edu.uy.business.entities.*;
 import um.edu.uy.persistence.*;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +51,9 @@ public class VueloRestService {
         List<Vuelo> vuelos = vueloRepository.findAllByAeropuertoDestinoAndAceptadoOrigenAndAceptadoDestinoAndRechadado(aeropuero,true,true,false);
         List<VueloDTO> vueloDTOs = new ArrayList<>();
         for(int i=0; i<vuelos.size();i++){
-            vueloDTOs.add(vueloMapper.toVueloDTO(vuelos.get(i)));
+            if(vuelos.get(i).getETA().isAfter(LocalDateTime.now())){
+                vueloDTOs.add(vueloMapper.toVueloDTO(vuelos.get(i)));
+            }
         }
         return vueloDTOs;
     }
@@ -60,7 +63,10 @@ public class VueloRestService {
         List<Vuelo> vuelos = vueloRepository.findAllByAeropuertoOrigenAndAceptadoOrigenAndAceptadoDestinoAndRechadado(aeropuero,true,true,false);
         List<VueloDTO> vueloDTOs = new ArrayList<>();
         for(int i=0; i<vuelos.size();i++){
-            vueloDTOs.add(vueloMapper.toVueloDTO(vuelos.get(i)));
+            if(vuelos.get(i).getEDT().isAfter(LocalDateTime.now())){
+                vueloDTOs.add(vueloMapper.toVueloDTO(vuelos.get(i)));
+            }
+
         }
         return vueloDTOs;
     }
@@ -70,7 +76,10 @@ public class VueloRestService {
         List<Vuelo> vuelos = vueloRepository.findAllByAerolineaAndAceptadoOrigenAndAceptadoDestinoAndRechadado(aerolinea,true,true,false);
         List<VueloDTO> vueloDTOs = new ArrayList<>();
         for(int i=0; i<vuelos.size();i++){
-            vueloDTOs.add(vueloMapper.toVueloDTO(vuelos.get(i)));
+            //que solo aparezcan vuelos que su EDT es despues de hoy
+            if(vuelos.get(i).getEDT().isAfter(LocalDateTime.now())){
+                vueloDTOs.add(vueloMapper.toVueloDTO(vuelos.get(i)));
+            }
         }
         return vueloDTOs;
     }
@@ -81,7 +90,9 @@ public class VueloRestService {
         List<Vuelo> vuelos = vueloRepository.findAllByAeropuertoDestinoAndAceptadoDestinoAndRechadado(aeropuerto,false,false);
         List<VueloDTO> vueloDTOs = new ArrayList<>();
         for(int i=0; i<vuelos.size();i++){
-            vueloDTOs.add(vueloMapper.toVueloDTO(vuelos.get(i)));
+            if(vuelos.get(i).getEDT().isAfter(LocalDateTime.now())){
+                vueloDTOs.add(vueloMapper.toVueloDTO(vuelos.get(i)));
+            }
         }
         return vueloDTOs;
     }
@@ -92,7 +103,10 @@ public class VueloRestService {
         List<Vuelo> vuelos = vueloRepository.findAllByAeropuertoOrigenAndAceptadoOrigenAndRechadado(aeropuerto,false,false);
         List<VueloDTO> vueloDTOs = new ArrayList<>();
         for(int i=0; i<vuelos.size();i++){
-            vueloDTOs.add(vueloMapper.toVueloDTO(vuelos.get(i)));
+            if(vuelos.get(i).getEDT().isAfter(LocalDateTime.now())){
+                vueloDTOs.add(vueloMapper.toVueloDTO(vuelos.get(i)));
+            }
+
         }
         return vueloDTOs;
     }
@@ -101,18 +115,15 @@ public class VueloRestService {
     public ResponseEntity<String> agregarPasajero(@RequestBody AgregarPasajeroDTO pasajeroDTO){
         Vuelo vuelo = vueloRepository.findByCodigoVuelo(pasajeroDTO.getCodigoVuelo());
         List<Asiento> asientos = vuelo.getAsientos();
-
-        for (Asiento asiento : asientos) {
-            if (asiento.getPasaporte() == 0) {
+        for(int i=0;i<asientos.size();i++){
+            Asiento asiento = asientos.get(i);
+            if (asiento.getPasaporte()==0){
                 asiento.setPasaporte(pasajeroDTO.getPasaporte());
                 asientoRepository.save(asiento);
-                vueloRepository.save(vuelo);
-                return ResponseEntity.ok("Pasajero agregado con éxito");
+                return new ResponseEntity<>("Pasajero agregado", HttpStatus.OK);
             }
         }
-
-        // Si llegamos a este punto, significa que no hay asientos disponibles
-        return ResponseEntity.status(HttpStatus.CONFLICT).body("No hay asientos disponibles en este vuelo");
+        return new ResponseEntity<>("No hay asientos disponibles", HttpStatus.BAD_REQUEST);
     }
 
 
