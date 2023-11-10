@@ -1,12 +1,13 @@
 package um.edu.uy;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class ReservaDTO {
-    private LocalDateTime localDateTimeIniPuerta;
-    private LocalDateTime localDateTimeFinPuerta;
-    private LocalDateTime localDateTimeIniPista;
-    private LocalDateTime localDateTimeFinPista;
+    private LocalTime localTimeIniPuerta;
+    private LocalTime localTimeFinPuerta;
+    private LocalTime localTimeIniPista;
+    private LocalTime localTimeFinPista;
 
     private String codigoVuelo;
 
@@ -22,36 +23,36 @@ public class ReservaDTO {
         this.numeroPuerta = numeroPuerta;
     }
 
-    public LocalDateTime getLocalDateTimeIniPuerta() {
-        return localDateTimeIniPuerta;
+    public LocalTime getLocalTimeIniPuerta() {
+        return localTimeIniPuerta;
     }
 
-    public void setLocalDateTimeIniPuerta(LocalDateTime localDateTimeIniPuerta) {
-        this.localDateTimeIniPuerta = localDateTimeIniPuerta;
+    public void setLocalTimeIniPuerta(LocalTime localTimeIniPuerta) {
+        this.localTimeIniPuerta = localTimeIniPuerta;
     }
 
-    public LocalDateTime getLocalDateTimeFinPuerta() {
-        return localDateTimeFinPuerta;
+    public LocalTime getLocalTimeFinPuerta() {
+        return localTimeFinPuerta;
     }
 
-    public void setLocalDateTimeFinPuerta(LocalDateTime localDateTimeFinPuerta) {
-        this.localDateTimeFinPuerta = localDateTimeFinPuerta;
+    public void setLocalTimeFinPuerta(LocalTime localTimeFinPuerta) {
+        this.localTimeFinPuerta = localTimeFinPuerta;
     }
 
-    public LocalDateTime getLocalDateTimeIniPista() {
-        return localDateTimeIniPista;
+    public LocalTime getLocalTimeIniPista() {
+        return localTimeIniPista;
     }
 
-    public void setLocalDateTimeIniPista(LocalDateTime localDateTimeIniPista) {
-        this.localDateTimeIniPista = localDateTimeIniPista;
+    public void setLocalTimeIniPista(LocalTime localTimeIniPista) {
+        this.localTimeIniPista = localTimeIniPista;
     }
 
-    public LocalDateTime getLocalDateTimeFinPista() {
-        return localDateTimeFinPista;
+    public LocalTime getLocalTimeFinPista() {
+        return localTimeFinPista;
     }
 
-    public void setLocalDateTimeFinPista(LocalDateTime localDateTimeFinPista) {
-        this.localDateTimeFinPista = localDateTimeFinPista;
+    public void setLocalTimeFinPista(LocalTime localTimeFinPista) {
+        this.localTimeFinPista = localTimeFinPista;
     }
 
     public String getCodigoVuelo() {

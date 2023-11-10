@@ -419,6 +419,8 @@ public class IniciarSesionController {
             String contrasenaUsu = contrasena.getText();
             String apellidoUsu = apellido.getText();
 
+
+            //tienen que estar en el servidor
             ResponseEntity response3 = aerolineaRestService.getAerolinea(codigoIATAAerol);
             AerolineaDTO aerolineaDTOCodigo = (AerolineaDTO) response3.getBody();
 
@@ -732,7 +734,6 @@ public class IniciarSesionController {
         EDTllegada.setCellValueFactory(new PropertyValueFactory<>("EDT"));
         tablaLlegada.setItems(vuelosLlegada);
         addButtonToTable(tablaLlegada,true);
-        addButtonToTableRechazar(tablaLlegada,codigoAeropuerto);
 
         codigoVueloSalida.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
         aeropuertoDestino.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoDestino"));
@@ -741,7 +742,6 @@ public class IniciarSesionController {
         EDTsalida.setCellValueFactory(new PropertyValueFactory<>("EDT"));
         tablaSalida.setItems(vuelosSalida);
         addButtonToTable(tablaSalida,false);
-        addButtonToTableRechazar(tablaSalida,codigoAeropuerto);
 
         stage.show();
     }
@@ -749,31 +749,36 @@ public class IniciarSesionController {
     @FXML
     private ComboBox<Long> puerta;
 
+    @FXML
+    private Label labelHora;
+
     private void addButtonToTable(TableView t, boolean llegada) {
-        TableColumn<Data, Void> colBtn = new TableColumn("Aceptar");
+        TableColumn<Data, Void> colBtn = new TableColumn("");
 
         Callback<TableColumn<Data, Void>, TableCell<Data, Void>> cellFactory = new Callback<>() {
             @Override
             public TableCell<Data, Void> call(final TableColumn<Data, Void> param) {
                 final TableCell<Data, Void> cell = new TableCell<>() {
 
-                    private final Button btn = new Button("Aceptar");
+                    private final Button btn = new Button("Seleccionar");
 
                     {
                         btn.setOnAction((ActionEvent event) -> {
 
                             VueloDTO vuelo = (VueloDTO) getTableView().getItems().get(getIndex());
 
-
-                            String codigoAeropuerto=null;
+                            String hora;
+                            String codigoAeropuerto;
+                            String fxml;
                             if (llegada==true) {
                                 codigoAeropuerto = vuelo.getCodigoAeropuertoDestino();
+                                fxml="ReservaPuertaPistaLlegada.fxml";
+                                hora= String.valueOf(vuelo.getETA());
                             }else{
                                 codigoAeropuerto = vuelo.getCodigoAeropuertoOrigen();
+                                fxml="ReservaPuertaPistaSalida.fxml";
+                                hora= String.valueOf(vuelo.getEDT());
                             }
-
-
-
                             ResponseEntity response = aeropuertoRestService.getAeropuerto(codigoAeropuerto);
 
                             AeropuertoDTO aeroOrigen = (AeropuertoDTO) response.getBody();
@@ -785,7 +790,7 @@ public class IniciarSesionController {
 
                             Parent root;
                             try {
-                                root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream("ReservaPuertaPista.fxml"));
+                                root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream(fxml));
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
                             }
@@ -801,6 +806,8 @@ public class IniciarSesionController {
                             stage.setUserData(arrayList);
 
                             puerta.getItems().addAll(codigoPuertas);
+
+                            labelHora.setText(hora);
 
                             stage.show();
 
@@ -828,65 +835,42 @@ public class IniciarSesionController {
     }
 
     @FXML
-    private TextField horaInicioPuerta;
+    void backAdminVuelos(ActionEvent event) throws IOException {
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        List list = (List) stage.getUserData();
+        cargarAdministradorVuelos(event, (String) list.get(2));
+    }
+
     @FXML
-    private TextField minutoInicioPuerta;
+    private TextField horaFinalizacionPuerta;
     @FXML
-    private TextField horaFInalizacionPuerta;
-    @FXML
-    private TextField minutoFInalizacionPuerta;
-    @FXML
-    private TextField horaInicioPista;
-    @FXML
-    private TextField minutoInicioPista;
+    private TextField minutoFinalizacionPuerta;
     @FXML
     private TextField horaFinalizacionPista;
     @FXML
     private TextField minutoFinalizacionPista;
-    @FXML
-    private DatePicker fechaPuerta;
-    @FXML
-    private DatePicker fechaPista;
-
 
     @FXML
-    private void confirmarReservas(ActionEvent event) throws IOException {
+    private void confirmarReservasLlegada(ActionEvent event) throws IOException {
 
         Long numeroPuerta = puerta.getValue();
 
-        int horaIniPuerta = Integer.parseInt(horaInicioPuerta.getText());
-        int minIniPuerta = Integer.parseInt(minutoInicioPuerta.getText());
-        LocalTime timeIniPuerta = LocalTime.of(horaIniPuerta,minIniPuerta);
-
-        int horaFinPuerta = Integer.parseInt(horaFInalizacionPuerta.getText());
-        int minFinPuerta = Integer.parseInt(minutoFInalizacionPuerta.getText());
+        int horaFinPuerta = Integer.parseInt(horaFinalizacionPuerta.getText());
+        int minFinPuerta = Integer.parseInt(minutoFinalizacionPuerta.getText());
         LocalTime timeFinPuerta = LocalTime.of(horaFinPuerta,minFinPuerta);
-
-        int horaIniPista = Integer.parseInt(horaInicioPista.getText());
-        int minIniPista = Integer.parseInt(minutoInicioPista.getText());
-        LocalTime timeIniPista = LocalTime.of(horaIniPista,minIniPista);
 
         int horaFinPista = Integer.parseInt(horaFinalizacionPista.getText());
         int minFinPista = Integer.parseInt(minutoFinalizacionPista.getText());
         LocalTime timeFinPista = LocalTime.of(horaFinPista,minFinPista);
 
-        LocalDate fecPuerta = fechaPuerta.getValue();
-        LocalDate fecPista = fechaPista.getValue();
-
-        LocalDateTime localDateTimeIniPuerta = LocalDateTime.of(fecPuerta,timeIniPuerta);
-        LocalDateTime localDateTimeFinPuerta = LocalDateTime.of(fecPuerta,timeFinPuerta);
-        LocalDateTime localDateTimeIniPista = LocalDateTime.of(fecPista,timeIniPista);
-        LocalDateTime localDateTimeFinPista = LocalDateTime.of(fecPista,timeFinPista);
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         List list = (List) stage.getUserData();
 
         ReservaDTO reservaDTO = new ReservaDTO();
         reservaDTO.setNumeroPuerta(numeroPuerta);
-        reservaDTO.setLocalDateTimeFinPista(localDateTimeFinPista);
-        reservaDTO.setLocalDateTimeIniPista(localDateTimeIniPista);
-        reservaDTO.setLocalDateTimeIniPuerta(localDateTimeIniPuerta);
-        reservaDTO.setLocalDateTimeFinPuerta(localDateTimeFinPuerta);
+        reservaDTO.setLocalTimeFinPista(timeFinPista);
+        reservaDTO.setLocalTimeFinPuerta(timeFinPuerta);
         reservaDTO.setLlegada((boolean) list.get(1));
         reservaDTO.setCodigoVuelo((String) list.get(0));
 
@@ -902,99 +886,20 @@ public class IniciarSesionController {
 
     }
 
+    @FXML
+    private void rechazarVuelo(ActionEvent event) throws IOException {
 
 
-    private void addButtonToTableRechazar(TableView t,String codigoAeropuerto) {
-        TableColumn<Data, Void> colBtn = new TableColumn("Rechazar");
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        List list = (List) stage.getUserData();
 
-        Callback<TableColumn<Data, Void>, TableCell<Data, Void>> cellFactory = new Callback<>() {
-            @Override
-            public TableCell<Data, Void> call(final TableColumn<Data, Void> param) {
-                final TableCell<Data, Void> cell = new TableCell<>() {
+        ResponseEntity response = vueloRestService.rechazarVuelo((String) list.get(0));
+        if(response.getStatusCode()==HttpStatus.OK){
+            showAlert("Vuelo Rechazado","El vuelo fue rechazado con exito");
+        }
 
-                    private final Button btn = new Button("Rechazar");
-
-                    {
-                        btn.setOnAction((ActionEvent event) -> {
-                            VueloDTO vuelo = (VueloDTO) getTableView().getItems().get(getIndex());
-                            String codigoVuelo = vuelo.getCodigoVuelo();
-                            ResponseEntity response = vueloRestService.rechazarVuelo(codigoVuelo);
-
-
-                            ResponseEntity response1 = aeropuertoRestService.getListaVuelosSinConfirmarLlegada(codigoAeropuerto);
-                            ResponseEntity response2 = aeropuertoRestService.getListaVuelosSinConfirmarSalida(codigoAeropuerto);
-
-                            List vueloDTOS = (List) response1.getBody();
-                            List<VueloDTO> vuelosLle = new ArrayList<>();
-
-                            List vueloDTOS2 = (List) response2.getBody();
-                            List<VueloDTO> vuelosSal = new ArrayList<>();
-
-
-                            for (int i=0;i<vueloDTOS.size();i++){
-                                VueloDTO vueloDTO = new VueloDTO();
-                                LinkedHashMap hashMap = (LinkedHashMap) vueloDTOS.get(i);
-                                vueloDTO.setCodigoVuelo((String) hashMap.get("codigoVuelo"));
-                                vueloDTO.setCodigoAeropuertoOrigen((String) hashMap.get("codigoAeropuertoOrigen"));
-                                vueloDTO.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
-                                vueloDTO.setEDT(LocalDateTime.parse((String) hashMap.get("edt")));
-                                vueloDTO.setETA(LocalDateTime.parse((String) hashMap.get("eta")));
-                                vuelosLle.add(vueloDTO);
-                            }
-
-                            for (int i=0;i<vueloDTOS2.size();i++){
-                                VueloDTO vueloDTO = new VueloDTO();
-                                LinkedHashMap hashMap = (LinkedHashMap) vueloDTOS2.get(i);
-                                vueloDTO.setCodigoVuelo((String) hashMap.get("codigoVuelo"));
-                                vueloDTO.setCodigoAeropuertoDestino((String) hashMap.get("codigoAeropuertoOrigen"));
-                                vueloDTO.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
-                                vueloDTO.setEDT(LocalDateTime.parse((String) hashMap.get("edt")));
-                                vueloDTO.setETA(LocalDateTime.parse((String) hashMap.get("eta")));
-                                vuelosSal.add(vueloDTO);
-                            }
-
-                            ObservableList<VueloDTO> vuelosLlegada = FXCollections.observableArrayList(vuelosLle);
-                            ObservableList<VueloDTO> vuelosSalida = FXCollections.observableArrayList(vuelosSal);
-
-
-                            matriculaAvionLlegada.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
-                            matriculaAvionLlegada.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoOrigen"));
-                            matriculaAvionLlegada.setCellValueFactory(new PropertyValueFactory<>("matriculaAvion"));
-                            ETAllegada.setCellValueFactory(new PropertyValueFactory<>("ETA"));
-                            EDTllegada.setCellValueFactory(new PropertyValueFactory<>("EDT"));
-                            tablaLlegada.setItems(vuelosLlegada);
-
-                            matriculaAvionSalida.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
-                            matriculaAvionSalida.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoDestino"));
-                            matriculaAvionSalida.setCellValueFactory(new PropertyValueFactory<>("matriculaAvion"));
-                            ETAsalida.setCellValueFactory(new PropertyValueFactory<>("ETA"));
-                            EDTsalida.setCellValueFactory(new PropertyValueFactory<>("EDT"));
-                            tablaSalida.setItems(vuelosSalida);
-
-
-
-
-
-                        });
-                    }
-
-                    @Override
-                    public void updateItem(Void item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                        } else {
-                            setGraphic(btn);
-                        }
-                    }
-                };
-                return cell;
-            }
-        };
-
-        colBtn.setCellFactory(cellFactory);
-
-        t.getColumns().add(colBtn);
+        stage.setUserData(list.get(2));
+        cargarAdministradorVuelos(event, (String) list.get(2));
 
     }
 
