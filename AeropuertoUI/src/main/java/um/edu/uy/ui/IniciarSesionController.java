@@ -322,6 +322,13 @@ public class IniciarSesionController {
             String matriculaAv = matricula.getText();
             int capacidadAv = Integer.parseInt(capacidad.getText());
             int capacidadBultoAv = Integer.parseInt(capacidadBulto.getText());
+            //la capacidad de asintos no puede ser mayor a 1000 y cantidad de bulto mayor a 10000 pero que se rompa y no lo agregue
+            if (capacidadAv > 1000 || capacidadBultoAv > 10000) {
+                showAlert(
+                        "Error en la capacidad",
+                        "La capacidad de asientos no puede ser mayor a 1000 y la capacidad de bultos no puede ser mayor a 10000");
+            }
+            else{
 
             ResponseEntity response1 = avionRestService.getAvion(matriculaAv);
             AvionDTO avionDTOMatricula = (AvionDTO) response1.getBody();
@@ -346,6 +353,7 @@ public class IniciarSesionController {
                 if (response.getStatusCode() == HttpStatus.OK) {
                     showAlert("Avion agregado", "Se agrego con exito el avion!");
                 }
+            }
 
 
             }
@@ -1354,21 +1362,133 @@ public class IniciarSesionController {
         t.getColumns().add(colBtn);
 
     }
+    @FXML
+    private TableView<Pasaporte> tablaBoarding;
+    @FXML
+    private TableColumn<Pasaporte,Long> columnaPasaporteBoarding;
+    @FXML
+    private TextField codigoVueloBoarding;
+
+    @FXML
+    void buscarVueloBoarding(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setControllerFactory(Main.getContext()::getBean);
+
+        Parent root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream("BoardingVuelo.fxml"));
+        Scene scene = new Scene(root);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+
+        String codVuelo = codigoVueloBoarding.getText();
+
+        ResponseEntity response = vueloRestService.getPasaportesBoarding(codVuelo);
+        List<Long> list = (List<Long>) response.getBody();
+        List<Pasaporte> listaPasaportes = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            Pasaporte pas = new Pasaporte(Long.parseLong(String.valueOf(list.get(i))));
+            listaPasaportes.add(pas);
+        }
+        ObservableList<Pasaporte> pasaportes = FXCollections.observableArrayList(listaPasaportes);
+        columnaPasaporteBoarding.setCellValueFactory(new PropertyValueFactory<>("valor"));
+        tablaBoarding.setItems(pasaportes);
+
+        stage.setUserData(codVuelo);
+
+        addButtonToTableBoarding(tablaBoarding);
+
+        stage.show();
+
+    }
+
+    private void addButtonToTableBoarding(TableView<Pasaporte> t) {
+        TableColumn<Pasaporte, Void> colBtn = new TableColumn("");
+        colBtn.setMinWidth(127);
+
+        Callback<TableColumn<Pasaporte, Void>, TableCell<Pasaporte, Void>> cellFactory = new Callback<>() {
+            @Override
+            public TableCell<Pasaporte, Void> call(final TableColumn<Pasaporte, Void> param) {
+                final TableCell<Pasaporte, Void> cell = new TableCell<>() {
+                    private final Button btn = new Button("Boarding");
+
+                    //boton que use la funcion Boarding del vuelo rest service
+                    {
+                        btn.setOnAction((ActionEvent event) -> {
+                            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                            String codVuelo = (String) stage.getUserData();
+                            Pasaporte pas = (Pasaporte) getTableView().getItems().get(getIndex());
+                            AgregarPasajeroDTO agregarPasajeroDTO = new AgregarPasajeroDTO();
+                            agregarPasajeroDTO.setCodigoVuelo(codVuelo);
+                            agregarPasajeroDTO.setPasaporte(pas.getValor());
+                            ResponseEntity response = vueloRestService.Boarding(agregarPasajeroDTO);
+                            if (response.getStatusCode()==HttpStatus.OK){
+                                showAlert("Boarding","Pasaporte procesado");
+                            }
+                            try {
+                                buscarVueloBoarding(event);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                        });
+
+                    }
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+
+                        } else {
+                            setGraphic(btn);
+                        }
+                    }
+
+                };
+                return cell;
+            }
+        };
+
+        colBtn.setCellFactory(cellFactory);
+
+        t.getColumns().add(colBtn);
+
+    }
+    //funcion que vuelva a la pagina anterior, en este caso Boarding.fxml
+    @FXML
+    void backToBoarding(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setControllerFactory(Main.getContext()::getBean);
+        Parent root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream("Boarding.fxml"));
+        Scene scene = new Scene(root);
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+    }
+
+
+
 
     @FXML
     private void agregarMeletas(ActionEvent event) throws IOException {
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         MaletasDTO maletasDTO = (MaletasDTO) stage.getUserData();
         long cantMaletas = Long.parseLong(cantidadMaletas.getText());
-        maletasDTO.setCantidadMaletas(cantMaletas);
-
-        ResponseEntity response = vueloRestService.agregarMaletas(maletasDTO);
-
-        if(response.getStatusCode()==HttpStatus.OK){
-            showAlert("Check In","Pasaporte procesado");
+        //no puedeen haber mas de 5 maletas por persona
+        if (cantMaletas>5){
+            showAlert("Error","No puede haber mas de 5 maletas por persona");
+            return;
         }
+        else {
+            maletasDTO.setCantidadMaletas(cantMaletas);
 
-        buscarVuelo(event);
+            ResponseEntity response = vueloRestService.agregarMaletas(maletasDTO);
+
+            if (response.getStatusCode() == HttpStatus.OK) {
+                showAlert("Check In", "Pasaporte procesado");
+            }
+
+            buscarVuelo(event);
+        }
     }
 
     @FXML

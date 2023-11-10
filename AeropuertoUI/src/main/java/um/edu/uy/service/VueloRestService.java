@@ -47,5 +47,11 @@ public class VueloRestService {
     public ResponseEntity agregarMaletas(MaletasDTO maletasDTO){
         return restTemplate.postForEntity("http://localhost:8080/vuelo/agregarMaletas",maletasDTO,null);
     }
+    public ResponseEntity getPasaportesBoarding(String codigoVuelo){
+        return restTemplate.postForEntity("http://localhost:8080/vuelo/getPasaportesBoarding",codigoVuelo, List.class);
+    }
+    public ResponseEntity Boarding(AgregarPasajeroDTO pasajeroDTO){
+        return restTemplate.postForEntity("http://localhost:8080/vuelo/Boarding",pasajeroDTO,null);
+    }
 
 }
