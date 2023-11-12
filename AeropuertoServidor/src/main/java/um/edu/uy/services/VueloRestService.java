@@ -282,20 +282,18 @@ public class VueloRestService {
         Aeropuerto aeropuerto = aeropuertoRepository.findAeropuertoByCodigoIATAAeropuerto(reservaDTO.getCodigoAeropuerto());
         List<Vuelo> vuelos = vueloRepository.findAllByFechaETAAndAeropuertoDestinoAndAceptadoDestinoAndAceptadoOrigen(reservaDTO.getFecha(),aeropuerto,true,true);
         List<VueloReservaDTO> reservaDTOS = new ArrayList<>();
-        if(reservaDTO.isLlegada()){
-            for (int i=0; i< vuelos.size(); i++){
-                VueloReservaDTO vueloReservaDTO = new VueloReservaDTO();
-                Vuelo vuelo = vuelos.get(i);
-                Reserva reservaLlegada = vuelo.getReservaLlegada();
+        for (int i=0; i< vuelos.size(); i++){
+            VueloReservaDTO vueloReservaDTO = new VueloReservaDTO();
+            Vuelo vuelo = vuelos.get(i);
+            Reserva reservaLlegada = vuelo.getReservaLlegada();
 
-                vueloReservaDTO.setCodigoVuelo(vuelo.getCodigoVuelo());
-                vueloReservaDTO.setNumeroPuerta(reservaLlegada.getPuerta().getIdPuerta());
-                vueloReservaDTO.setHoraFinPista(reservaLlegada.getHoraFinalizacionPista());
-                vueloReservaDTO.setHoraInicioPista(reservaLlegada.getHoraInicioPista());
-                vueloReservaDTO.setHoraFinPuerta(reservaLlegada.getHoraFinalizacionPuerta());
-                vueloReservaDTO.setHoraInicioPuerta(reservaLlegada.getHoraInicioPuerta());
-                reservaDTOS.add(vueloReservaDTO);
-            }
+            vueloReservaDTO.setCodigoVuelo(vuelo.getCodigoVuelo());
+            vueloReservaDTO.setNumeroPuerta(reservaLlegada.getPuerta().getIdPuerta());
+            vueloReservaDTO.setHoraFinPista(reservaLlegada.getHoraFinalizacionPista());
+            vueloReservaDTO.setHoraInicioPista(reservaLlegada.getHoraInicioPista());
+            vueloReservaDTO.setHoraFinPuerta(reservaLlegada.getHoraFinalizacionPuerta());
+            vueloReservaDTO.setHoraInicioPuerta(reservaLlegada.getHoraInicioPuerta());
+            reservaDTOS.add(vueloReservaDTO);
         }
         return reservaDTOS;
     }

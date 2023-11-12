@@ -45,14 +45,14 @@
       </Text>
       <Button layoutX="534.0" layoutY="424.0" mnemonicParsing="false" onAction="#backAdminVuelos" text="Back" />
       <Button layoutX="391.0" layoutY="424.0" mnemonicParsing="false" onAction="#confirmarReservasLlegada" text="Aceptar" />
-      <TableView layoutX="14.0" layoutY="70.0" prefHeight="218.0" prefWidth="572.0">
+      <TableView fx:id="tablaVuelosReserva" layoutX="14.0" layoutY="70.0" prefHeight="218.0" prefWidth="572.0">
          <columns>
-            <TableColumn prefWidth="89.33331298828125" text="Codigo Vuelo" />
-            <TableColumn prefWidth="49.333343505859375" text="Puerta" />
-            <TableColumn prefWidth="110.66665649414062" text="Hora Inicio Puerta" />
-            <TableColumn prefWidth="93.3333740234375" text="Hora Fin Puerta" />
-            <TableColumn prefWidth="103.33331298828125" text="Hora Inicio Pista" />
-            <TableColumn prefWidth="94.0" text="Hora Fin Pista" />
+            <TableColumn fx:id="codVuelo" prefWidth="89.33331298828125" text="Codigo Vuelo" />
+            <TableColumn fx:id="numeroPuerta" prefWidth="49.333343505859375" text="Puerta" />
+            <TableColumn fx:id="horaIniPuerta" prefWidth="110.66665649414062" text="Hora Inicio Puerta" />
+            <TableColumn fx:id="horaFinPuerta" prefWidth="93.3333740234375" text="Hora Fin Puerta" />
+            <TableColumn fx:id="horaIniPista" prefWidth="103.33331298828125" text="Hora Inicio Pista" />
+            <TableColumn fx:id="horaFinPista" prefWidth="94.0" text="Hora Fin Pista" />
          </columns></TableView>
       <Text layoutX="300.0" layoutY="314.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Datos Vuelo">
          <font>

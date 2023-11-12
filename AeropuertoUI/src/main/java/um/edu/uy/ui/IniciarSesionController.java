@@ -762,6 +762,23 @@ public class IniciarSesionController {
     @FXML
     private Label labelHora;
 
+    @FXML
+    private TableView<VueloReservaDTO> tablaVuelosReserva;
+    @FXML
+    private TableColumn<VueloReservaDTO,String> codVuelo;
+    @FXML
+    private TableColumn<VueloReservaDTO,String> numeroPuerta;
+    @FXML
+    private TableColumn<VueloReservaDTO,String> horaIniPuerta;
+    @FXML
+    private TableColumn<VueloReservaDTO,String> horaFinPuerta;
+    @FXML
+    private TableColumn<VueloReservaDTO,String> horaIniPista;
+    @FXML
+    private TableColumn<VueloReservaDTO,String> horaFinPista;
+
+
+
     private void addButtonToTable(TableView t, boolean llegada) {
         TableColumn<Data, Void> colBtn = new TableColumn("");
 
@@ -786,32 +803,15 @@ public class IniciarSesionController {
                                 fxml="ReservaPuertaPistaLlegada.fxml";
                                 hora= String.valueOf(vuelo.getETA());
                                 reservaDTO.setFecha(vuelo.getFechaETA());
-                                reservaDTO.setLlegada(true);
                                 reservaDTO.setCodigoAeropuerto(codigoAeropuerto);
                             }else{
                                 codigoAeropuerto = vuelo.getCodigoAeropuertoOrigen();
                                 fxml="ReservaPuertaPistaSalida.fxml";
                                 hora= String.valueOf(vuelo.getEDT());
                                 reservaDTO.setFecha(vuelo.getFechaEDT());
-                                reservaDTO.setLlegada(false);
                                 reservaDTO.setCodigoAeropuerto(codigoAeropuerto);
                             }
                             ResponseEntity response = aeropuertoRestService.getAeropuerto(codigoAeropuerto);
-                            ResponseEntity response1 = vueloRestService.getVueloReserva(reservaDTO);
-
-                            List reservaVuelos = (List) response1.getBody();
-                            List<VueloReservaDTO> resVuelos = new ArrayList<>();
-
-
-
-                            for (int i=0;i<reservaVuelos.size();i++){
-                                VueloReservaDTO resVuelo = new VueloReservaDTO();
-                                LinkedHashMap hashMap = (LinkedHashMap) reservaVuelos.get(i);
-                                resVuelo.setCodigoVuelo((String) hashMap.get("codigoVuelo"));
-                                resVuelo.setHoraFinPuerta(LocalTime.parse((String) hashMap.get("horaFinPuerta")));
-                                resVuelo.setHoraInicioPuerta(LocalTime.parse((String) hashMap.get("horaInicioPuerta")));
-                                resVuelos.add(resVuelo);
-                            }
 
 
                             AeropuertoDTO aeroOrigen = (AeropuertoDTO) response.getBody();
@@ -841,6 +841,34 @@ public class IniciarSesionController {
                             puerta.getItems().addAll(codigoPuertas);
 
                             labelHora.setText(hora);
+
+                            ResponseEntity response1 = vueloRestService.getVueloReserva(reservaDTO);
+
+                            List reservaVuelos = (List) response1.getBody();
+                            List<VueloReservaDTO> resVuelos = new ArrayList<>();
+
+                            for (int i=0;i<reservaVuelos.size();i++){
+                                VueloReservaDTO resVuelo = new VueloReservaDTO();
+                                LinkedHashMap hashMap = (LinkedHashMap) reservaVuelos.get(i);
+                                resVuelo.setCodigoVuelo((String) hashMap.get("codigoVuelo"));
+                                resVuelo.setNumeroPuerta(Long.valueOf(String.valueOf(hashMap.get("numeroPuerta"))));
+                                resVuelo.setHoraFinPuerta(LocalTime.parse((String) hashMap.get("horaFinPuerta")));
+                                resVuelo.setHoraInicioPuerta(LocalTime.parse((String) hashMap.get("horaInicioPuerta")));
+                                resVuelo.setHoraInicioPista(LocalTime.parse((String) hashMap.get("horaInicioPista")));
+                                resVuelo.setHoraFinPista(LocalTime.parse((String)hashMap.get("horaFinPista")));
+                                resVuelos.add(resVuelo);
+                            }
+
+                            ObservableList<VueloReservaDTO> vuelosRes = FXCollections.observableArrayList(resVuelos);
+
+
+                            codVuelo.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
+                            numeroPuerta.setCellValueFactory(new PropertyValueFactory<>("numeroPuerta"));
+                            horaIniPuerta.setCellValueFactory(new PropertyValueFactory<>("horaInicioPuerta"));
+                            horaFinPuerta.setCellValueFactory(new PropertyValueFactory<>("horaFinPuerta"));
+                            horaIniPista.setCellValueFactory(new PropertyValueFactory<>("horaInicioPista"));
+                            horaFinPista.setCellValueFactory(new PropertyValueFactory<>("horaFinPista"));
+                            tablaVuelosReserva.setItems(vuelosRes);
 
                             stage.show();
 
