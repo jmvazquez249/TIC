@@ -12,6 +12,8 @@ import um.edu.uy.persistence.AeropuertoRepository;
 import um.edu.uy.persistence.AvionRepository;
 import um.edu.uy.persistence.VueloRepository;
 
+import java.time.LocalDateTime;
+
 
 @Component
 public class VueloMapper {
@@ -32,7 +34,7 @@ public class VueloMapper {
         Aeropuerto aeropuertoOrigen = aeropuertoRepository.findAeropuertoByCodigoIATAAeropuerto(vueloDTO.getCodigoAeropuertoOrigen());
         Avion avion = avionRepository.findByMatricula(vueloDTO.getMatriculaAvion());
         Aerolinea aerolinea = aerolineaRepository.findAerolineaByCodigoIATAAerolinea(vueloDTO.getCodigoAerolinea());
-        Vuelo vuelo = new Vuelo(vueloDTO.getCodigoVuelo(),aeropuertoDestino,aeropuertoOrigen,avion,aerolinea, vueloDTO.isAceptadoOrigen(), vueloDTO.isAcepradoDestino(),vueloDTO.getEDT(),vueloDTO.getETA());
+        Vuelo vuelo = new Vuelo(vueloDTO.getCodigoVuelo(),aeropuertoDestino,aeropuertoOrigen,avion,aerolinea, vueloDTO.isAceptadoOrigen(), vueloDTO.isAcepradoDestino(),vueloDTO.getFechaETA(),vueloDTO.getHoraETA(),vueloDTO.getFechaEDT(),vueloDTO.getHoraEDT());
         return vuelo;
     }
 
@@ -45,8 +47,12 @@ public class VueloMapper {
         vueloDTO.setCodigoAerolinea(vuelo.getAerolinea());
         vueloDTO.setAcepradoDestino(vuelo.isAceptadoDestino());
         vueloDTO.setAceptadoOrigen(vuelo.isAceptadoOrigen());
-        vueloDTO.setEDT(vuelo.getEDT());
-        vueloDTO.setETA(vuelo.getETA());
+        vueloDTO.setFechaEDT(vuelo.getFechaEDT());
+        vueloDTO.setHoraEDT(vuelo.getHoraEDT());
+        vueloDTO.setFechaETA(vuelo.getFechaETA());
+        vueloDTO.setHoraETA(vuelo.getHoraETA());
+        vueloDTO.setEDT(LocalDateTime.of(vuelo.getFechaEDT(),vuelo.getHoraEDT()));
+        vueloDTO.setETA(LocalDateTime.of(vuelo.getFechaETA(),vuelo.getHoraETA()));
         return vueloDTO;
     }
 

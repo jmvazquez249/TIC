@@ -708,6 +708,7 @@ public class IniciarSesionController {
         List vueloDTOS2 = (List) response2.getBody();
         List<VueloDTO> vuelosSal = new ArrayList<>();
 
+
         for (int i=0;i<vueloDTOS.size();i++){
             VueloDTO vueloDTO = new VueloDTO();
             LinkedHashMap hashMap = (LinkedHashMap) vueloDTOS.get(i);
@@ -731,6 +732,9 @@ public class IniciarSesionController {
             vueloDTO.setETA(LocalDateTime.parse((String) hashMap.get("eta")));
             vuelosSal.add(vueloDTO);
         }
+
+        System.out.println(vuelosLle);
+        System.out.println(vuelosSal);
 
         ObservableList<VueloDTO> vuelosLlegada = FXCollections.observableArrayList(vuelosLle);
         ObservableList<VueloDTO> vuelosSalida = FXCollections.observableArrayList(vuelosSal);
@@ -1208,6 +1212,7 @@ public class IniciarSesionController {
             int minutoIntETA = Integer.parseInt(minutoETA);
             LocalTime timeETA = LocalTime.of(horaIntETA,minutoIntETA);
             LocalDate fecETA = fechaETA.getValue();
+
             LocalDateTime localDateTimeETA = LocalDateTime.of(fecETA,timeETA);
 
             String horaEDT = HHEDT.getText();
@@ -1239,8 +1244,10 @@ public class IniciarSesionController {
                 vueloDTO.setAceptadoOrigen(false);
                 vueloDTO.setAcepradoDestino(false);
                 vueloDTO.setRechadado(false);
-                vueloDTO.setEDT(localDateTimeEDT);
-                vueloDTO.setETA(localDateTimeETA);
+                vueloDTO.setFechaEDT(fecEDT);
+                vueloDTO.setHoraEDT(timeEDT);
+                vueloDTO.setHoraETA(timeETA);
+                vueloDTO.setFechaETA(fecETA);
 
                 ResponseEntity response = vueloRestService.agregarVuelo(vueloDTO);
 

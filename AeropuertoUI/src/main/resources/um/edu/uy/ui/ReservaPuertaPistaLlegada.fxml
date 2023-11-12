@@ -35,8 +35,8 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Text>
-      <TextField fx:id="horaFInalizacionPuerta" layoutX="134.0" layoutY="330.0" prefHeight="25.0" prefWidth="43.0" promptText="HH" />
-      <TextField fx:id="minutoFInalizacionPuerta" layoutX="190.0" layoutY="330.0" prefHeight="25.0" prefWidth="43.0" promptText="mm" />
+      <TextField fx:id="horaFinalizacionPuerta" layoutX="134.0" layoutY="330.0" prefHeight="25.0" prefWidth="43.0" promptText="HH" />
+      <TextField fx:id="minutoFinalizacionPuerta" layoutX="190.0" layoutY="330.0" prefHeight="25.0" prefWidth="43.0" promptText="mm" />
       <Text layoutX="15.0" layoutY="349.0" strokeType="OUTSIDE" strokeWidth="0.0" text="FINALIZACION">
          <font>
             <Font name="System Bold" size="15.0" />

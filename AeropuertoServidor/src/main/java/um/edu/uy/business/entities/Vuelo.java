@@ -5,7 +5,9 @@ package um.edu.uy.business.entities;
 import org.apache.tomcat.jni.Local;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -51,10 +53,52 @@ public class Vuelo {
     private boolean rechadado;
 
     @Column(nullable = false)
-    private LocalDateTime EDT;
+    private LocalDate fechaETA;
 
     @Column(nullable = false)
-    private LocalDateTime ETA;
+    private LocalTime horaETA;
+
+    @Column(nullable = false)
+    private LocalDate fechaEDT;
+
+    public LocalDate getFechaETA() {
+        return fechaETA;
+    }
+
+    public void setFechaETA(LocalDate fechaETA) {
+        this.fechaETA = fechaETA;
+    }
+
+    public LocalTime getHoraETA() {
+        return horaETA;
+    }
+
+    public void setHoraETA(LocalTime horaETA) {
+        this.horaETA = horaETA;
+    }
+
+    public LocalDate getFechaEDT() {
+        return fechaEDT;
+    }
+
+    public void setFechaEDT(LocalDate fechaEDT) {
+        this.fechaEDT = fechaEDT;
+    }
+
+    public LocalTime getHoraEDT() {
+        return horaEDT;
+    }
+
+    public void setHoraEDT(LocalTime horaEDT) {
+        this.horaEDT = horaEDT;
+    }
+
+    @Column(nullable = false)
+    private LocalTime horaEDT;
+
+
+
+
 
     @OneToMany(targetEntity = Asiento.class, cascade = {CascadeType.ALL})
     @JoinTable(
@@ -103,7 +147,7 @@ public class Vuelo {
         this.aceptadoOrigen = aceptadoOrigen;
     }
 
-    public Vuelo(String codigoVuelo, Aeropuerto aeropuertoDestino, Aeropuerto aeropuertoOrigen, Avion avion, Aerolinea aerolinea, boolean aceptadoOrigen, boolean aceptadoDestino, LocalDateTime EDT, LocalDateTime ETA) {
+    public Vuelo(String codigoVuelo, Aeropuerto aeropuertoDestino, Aeropuerto aeropuertoOrigen, Avion avion, Aerolinea aerolinea, boolean aceptadoOrigen, boolean aceptadoDestino, LocalDate fechaETA, LocalTime horaETA, LocalDate fechaEDT, LocalTime horaEDT) {
         this.codigoVuelo = codigoVuelo;
         this.aeropuertoDestino = aeropuertoDestino;
         this.aeropuertoOrigen = aeropuertoOrigen;
@@ -111,8 +155,10 @@ public class Vuelo {
         this.aerolinea = aerolinea;
         this.aceptadoOrigen = aceptadoOrigen;
         this.aceptadoDestino = aceptadoDestino;
-        this.EDT = EDT;
-        this.ETA = ETA;
+        this.fechaETA = fechaETA;
+        this.horaETA = horaETA;
+        this.fechaEDT = fechaEDT;
+        this.horaEDT = horaEDT;
     }
 
     public List<Asiento> getAsientos() {
@@ -131,12 +177,15 @@ public class Vuelo {
         return aceptadoDestino;
     }
 
-    public LocalDateTime getEDT() {
-        return EDT;
+    public LocalDateTime getEDT(){
+        return LocalDateTime.of(this.getFechaEDT(),this.getHoraEDT());
     }
 
-    public LocalDateTime getETA() {
-        return ETA;
+    public LocalDateTime getETA(){
+        return LocalDateTime.of(this.getFechaETA(),this.getHoraETA());
     }
+
+
+
 
 }

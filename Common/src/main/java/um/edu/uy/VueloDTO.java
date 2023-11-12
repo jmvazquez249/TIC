@@ -1,6 +1,8 @@
 package um.edu.uy;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 public class VueloDTO {
@@ -17,10 +19,18 @@ public class VueloDTO {
 
     private String codigoAerolinea;
 
+
+    private LocalDate fechaETA;
+
+    private LocalTime horaETA;
+
+    private LocalDate fechaEDT;
+
+    private LocalTime horaEDT;
+
     private LocalDateTime ETA;
+
     private LocalDateTime EDT;
-
-
 
     public LocalDateTime getETA() {
         return ETA;
@@ -36,6 +46,38 @@ public class VueloDTO {
 
     public void setEDT(LocalDateTime EDT) {
         this.EDT = EDT;
+    }
+
+    public LocalDate getFechaETA() {
+        return fechaETA;
+    }
+
+    public void setFechaETA(LocalDate fechaETA) {
+        this.fechaETA = fechaETA;
+    }
+
+    public LocalTime getHoraETA() {
+        return horaETA;
+    }
+
+    public void setHoraETA(LocalTime horaETA) {
+        this.horaETA = horaETA;
+    }
+
+    public LocalDate getFechaEDT() {
+        return fechaEDT;
+    }
+
+    public void setFechaEDT(LocalDate fechaEDT) {
+        this.fechaEDT = fechaEDT;
+    }
+
+    public LocalTime getHoraEDT() {
+        return horaEDT;
+    }
+
+    public void setHoraEDT(LocalTime horaEDT) {
+        this.horaEDT = horaEDT;
     }
 
     public String getMatriculaAvion() {
