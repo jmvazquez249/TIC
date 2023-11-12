@@ -1,5 +1,6 @@
 package um.edu.uy;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -8,6 +9,25 @@ public class ReservaDTO {
     private LocalTime localTimeFinPuerta;
     private LocalTime localTimeIniPista;
     private LocalTime localTimeFinPista;
+    private LocalDate fecha;
+
+    public String getCodigoAeropuerto() {
+        return codigoAeropuerto;
+    }
+
+    public void setCodigoAeropuerto(String codigoAeropuerto) {
+        this.codigoAeropuerto = codigoAeropuerto;
+    }
+
+    private String codigoAeropuerto;
+
+    public LocalDate getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
+    }
 
     private String codigoVuelo;
 

@@ -9,6 +9,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ReservaRepository extends CrudRepository<Reserva,Long> {
-    List<Reserva> findAllByHorarioInicioLike(String fecha);
+
 
 }

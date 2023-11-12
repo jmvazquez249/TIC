@@ -1,5 +1,6 @@
 package um.edu.uy.service;
 
+import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -9,6 +10,7 @@ import um.edu.uy.MaletasDTO;
 import um.edu.uy.ReservaDTO;
 import um.edu.uy.VueloDTO;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Component
@@ -52,6 +54,10 @@ public class VueloRestService {
     }
     public ResponseEntity Boarding(AgregarPasajeroDTO pasajeroDTO){
         return restTemplate.postForEntity("http://localhost:8080/vuelo/Boarding",pasajeroDTO,null);
+    }
+
+    public ResponseEntity getVueloReserva(ReservaDTO reservaDTO){
+        return restTemplate.postForEntity("http://localhost:8080/vuelo/getVueloReserva",reservaDTO,List.class);
     }
 
 }

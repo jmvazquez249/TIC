@@ -717,6 +717,7 @@ public class IniciarSesionController {
             vueloDTO.setCodigoAeropuertoDestino((String) hashMap.get("codigoAeropuertoDestino"));
             vueloDTO.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
             vueloDTO.setEDT(LocalDateTime.parse((String) hashMap.get("edt")));
+            vueloDTO.setFechaETA(LocalDate.parse((String) hashMap.get("fechaETA")));
             vueloDTO.setETA(LocalDateTime.parse((String) hashMap.get("eta")));
             vuelosLle.add(vueloDTO);
         }
@@ -729,12 +730,10 @@ public class IniciarSesionController {
             vueloDTO.setCodigoAeropuertoDestino((String) hashMap.get("codigoAeropuertoDestino"));
             vueloDTO.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
             vueloDTO.setEDT(LocalDateTime.parse((String) hashMap.get("edt")));
+            vueloDTO.setFechaEDT(LocalDate.parse((String) hashMap.get("fechaEDT")));
             vueloDTO.setETA(LocalDateTime.parse((String) hashMap.get("eta")));
             vuelosSal.add(vueloDTO);
         }
-
-        System.out.println(vuelosLle);
-        System.out.println(vuelosSal);
 
         ObservableList<VueloDTO> vuelosLlegada = FXCollections.observableArrayList(vuelosLle);
         ObservableList<VueloDTO> vuelosSalida = FXCollections.observableArrayList(vuelosSal);
@@ -760,7 +759,6 @@ public class IniciarSesionController {
 
     @FXML
     private ComboBox<Long> puerta;
-
     @FXML
     private Label labelHora;
 
@@ -782,16 +780,39 @@ public class IniciarSesionController {
                             String hora;
                             String codigoAeropuerto;
                             String fxml;
-                            if (llegada==true) {
+                            ReservaDTO reservaDTO = new ReservaDTO();
+                            if (llegada==true){
                                 codigoAeropuerto = vuelo.getCodigoAeropuertoDestino();
                                 fxml="ReservaPuertaPistaLlegada.fxml";
                                 hora= String.valueOf(vuelo.getETA());
+                                reservaDTO.setFecha(vuelo.getFechaETA());
+                                reservaDTO.setLlegada(true);
+                                reservaDTO.setCodigoAeropuerto(codigoAeropuerto);
                             }else{
                                 codigoAeropuerto = vuelo.getCodigoAeropuertoOrigen();
                                 fxml="ReservaPuertaPistaSalida.fxml";
                                 hora= String.valueOf(vuelo.getEDT());
+                                reservaDTO.setFecha(vuelo.getFechaEDT());
+                                reservaDTO.setLlegada(false);
+                                reservaDTO.setCodigoAeropuerto(codigoAeropuerto);
                             }
                             ResponseEntity response = aeropuertoRestService.getAeropuerto(codigoAeropuerto);
+                            ResponseEntity response1 = vueloRestService.getVueloReserva(reservaDTO);
+
+                            List reservaVuelos = (List) response1.getBody();
+                            List<VueloReservaDTO> resVuelos = new ArrayList<>();
+
+
+
+                            for (int i=0;i<reservaVuelos.size();i++){
+                                VueloReservaDTO resVuelo = new VueloReservaDTO();
+                                LinkedHashMap hashMap = (LinkedHashMap) reservaVuelos.get(i);
+                                resVuelo.setCodigoVuelo((String) hashMap.get("codigoVuelo"));
+                                resVuelo.setHoraFinPuerta(LocalTime.parse((String) hashMap.get("horaFinPuerta")));
+                                resVuelo.setHoraInicioPuerta(LocalTime.parse((String) hashMap.get("horaInicioPuerta")));
+                                resVuelos.add(resVuelo);
+                            }
+
 
                             AeropuertoDTO aeroOrigen = (AeropuertoDTO) response.getBody();
                             List<Long> codigoPuertas = aeroOrigen.getPuertas();

@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import um.edu.uy.AgregarPasajeroDTO;
-import um.edu.uy.MaletasDTO;
-import um.edu.uy.ReservaDTO;
-import um.edu.uy.VueloDTO;
+import um.edu.uy.*;
 import um.edu.uy.business.VueloMapper;
 import um.edu.uy.business.entities.*;
 import um.edu.uy.persistence.*;
@@ -103,7 +100,6 @@ public class VueloRestService {
     public List<VueloDTO> getListaVuelosSinConfirmarSalida(@RequestBody String codigoAeropuerto){
         Aeropuerto aeropuerto = aeropuertoRepository.findAeropuertoByCodigoIATAAeropuerto(codigoAeropuerto);
         List<Vuelo> vuelos = vueloRepository.findAllByAeropuertoOrigenAndAceptadoOrigenAndRechadado(aeropuerto,false,false);
-        System.out.println(vuelos);
         List<VueloDTO> vueloDTOs = new ArrayList<>();
         for(int i=0; i<vuelos.size();i++){
             if(vuelos.get(i).getEDT().isAfter(LocalDateTime.now())){
@@ -187,43 +183,28 @@ public class VueloRestService {
         if (reservaDTO.isLlegada()){
             vuelo.setAceptadoDestino(true);
             aeropuerto = aeropuertoRepository.findAeropuertoByCodigoIATAAeropuerto(vuelo.getAeropuertoDestino());
-            Puerta puerta = puertaRepository.findByIdPuerta(reservaDTO.getNumeroPuerta());
             Pista pista = aeropuerto.getPista();
-            List<Reserva> reservasPista = pista.getReservasPista();
-            List<Reserva> reservasPuerta = puerta.getReservasPuerta();
+            Puerta puerta = puertaRepository.findByIdPuerta(reservaDTO.getNumeroPuerta());
 
             LocalDate fechaLlegada = vuelo.getFechaETA();
 
-            Reserva resPuerta = new Reserva(reservaDTO.getLocalTimeFinPista(),reservaDTO.getLocalTimeFinPuerta(),fechaLlegada,reservaDTO.getCodigoVuelo());
-            Reserva resPista = new Reserva(vuelo.getHoraETA(),reservaDTO.getLocalTimeFinPista(),fechaLlegada ,reservaDTO.getCodigoVuelo());
-            reservasPuerta.add(resPuerta);
-            reservasPista.add(resPista);
+            Reserva reservaLlegada = new Reserva(pista,puerta,fechaLlegada,reservaDTO.getLocalTimeFinPista(),reservaDTO.getLocalTimeFinPuerta(),vuelo.getHoraETA(),reservaDTO.getLocalTimeFinPista());
+
+            vuelo.setReservaLlegada(reservaLlegada);
+            reservaRepository.save(reservaLlegada);
             vueloRepository.save(vuelo);
-            reservaRepository.save(resPista);
-            reservaRepository.save(resPuerta);
-            puertaRepository.save(puerta);
-
-
         }else{
             vuelo.setAceptadoOrigen(true);
             aeropuerto = aeropuertoRepository.findAeropuertoByCodigoIATAAeropuerto(vuelo.getAeropuertoOrigen());
             Puerta puerta = puertaRepository.findByIdPuerta(reservaDTO.getNumeroPuerta());
             Pista pista = aeropuerto.getPista();
-            List<Reserva> reservasPista = pista.getReservasPista();
-            List<Reserva> reservasPuerta = puerta.getReservasPuerta();
 
             LocalDate fechaSalida = vuelo.getFechaEDT();
+            Reserva reservaSalida = new Reserva(pista,puerta,fechaSalida,reservaDTO.getLocalTimeFinPuerta(),vuelo.getHoraEDT(),vuelo.getHoraEDT(),reservaDTO.getLocalTimeFinPista());
 
-            Reserva resPuerta = new Reserva(reservaDTO.getLocalTimeFinPuerta(),vuelo.getHoraEDT(),fechaSalida,reservaDTO.getCodigoVuelo());
-            Reserva resPista = new Reserva(vuelo.getHoraEDT(),reservaDTO.getLocalTimeFinPista(),fechaSalida, reservaDTO.getCodigoVuelo());
-            reservasPuerta.add(resPuerta);
-            reservasPista.add(resPista);
+            vuelo.setReservaSalida(reservaSalida);
+            reservaRepository.save(reservaSalida);
             vueloRepository.save(vuelo);
-            reservaRepository.save(resPista);
-            reservaRepository.save(resPuerta);
-            puertaRepository.save(puerta);
-
-
         }
 
     }
@@ -294,6 +275,31 @@ public class VueloRestService {
             }
         }
     }
+
+
+    @PostMapping("/getVueloReserva")
+    public List<VueloReservaDTO> getVueloReserva(@RequestBody ReservaDTO reservaDTO){
+        Aeropuerto aeropuerto = aeropuertoRepository.findAeropuertoByCodigoIATAAeropuerto(reservaDTO.getCodigoAeropuerto());
+        List<Vuelo> vuelos = vueloRepository.findAllByFechaETAAndAeropuertoDestinoAndAceptadoDestinoAndAceptadoOrigen(reservaDTO.getFecha(),aeropuerto,true,true);
+        List<VueloReservaDTO> reservaDTOS = new ArrayList<>();
+        if(reservaDTO.isLlegada()){
+            for (int i=0; i< vuelos.size(); i++){
+                VueloReservaDTO vueloReservaDTO = new VueloReservaDTO();
+                Vuelo vuelo = vuelos.get(i);
+                Reserva reservaLlegada = vuelo.getReservaLlegada();
+
+                vueloReservaDTO.setCodigoVuelo(vuelo.getCodigoVuelo());
+                vueloReservaDTO.setNumeroPuerta(reservaLlegada.getPuerta().getIdPuerta());
+                vueloReservaDTO.setHoraFinPista(reservaLlegada.getHoraFinalizacionPista());
+                vueloReservaDTO.setHoraInicioPista(reservaLlegada.getHoraInicioPista());
+                vueloReservaDTO.setHoraFinPuerta(reservaLlegada.getHoraFinalizacionPuerta());
+                vueloReservaDTO.setHoraInicioPuerta(reservaLlegada.getHoraInicioPuerta());
+                reservaDTOS.add(vueloReservaDTO);
+            }
+        }
+        return reservaDTOS;
+    }
+
 
 
 

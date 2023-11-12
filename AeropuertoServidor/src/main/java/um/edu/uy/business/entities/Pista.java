@@ -11,39 +11,16 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(
-        name = "Pista"
-)
+@Table(name = "Pista")
 public class Pista {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.IDENTITY
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id_pista;
-    @OneToMany(
-            targetEntity = Reserva.class
-    )
-    @JoinTable(
-            name = "RelacionPistaReserva",
-            joinColumns = {@JoinColumn(
-                    name = "id_pista"
-            )},
-            inverseJoinColumns = {@JoinColumn(
-                    name = "id_reserva"
-            )}
-    )
-    private List<Reserva> reservasPista;
-
-
-
-    public List<Reserva> getReservasPista() {
-        return this.reservasPista;
-    }
 
     public Pista() {
     }
 
-    public void setReservasPista(List<Reserva> reservasPista) {
-        this.reservasPista = reservasPista;
+    public long getId_pista() {
+        return id_pista;
     }
 }

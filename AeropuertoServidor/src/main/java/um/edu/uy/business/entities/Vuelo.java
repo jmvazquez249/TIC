@@ -43,23 +43,43 @@ public class Vuelo {
     @JoinColumn(name="id_aerolinea")
     private Aerolinea aerolinea;
 
+    public Reserva getReservaLlegada() {
+        return reservaLlegada;
+    }
+
+    public void setReservaLlegada(Reserva reservaLlegada) {
+        this.reservaLlegada = reservaLlegada;
+    }
+
+    public Reserva getReservaSalida() {
+        return reservaSalida;
+    }
+
+    public void setReservaSalida(Reserva reservaSalida) {
+        this.reservaSalida = reservaSalida;
+    }
+
     @Column(nullable = false)
     private boolean aceptadoOrigen;
-
     @Column(nullable = false)
     private boolean aceptadoDestino;
-
     @Column(nullable = false)
     private boolean rechadado;
-
     @Column(nullable = false)
     private LocalDate fechaETA;
-
     @Column(nullable = false)
     private LocalTime horaETA;
-
     @Column(nullable = false)
     private LocalDate fechaEDT;
+    @OneToOne(targetEntity = Reserva.class)
+    @JoinColumn(name = "id_reserva_llegada")
+    private Reserva reservaLlegada;
+
+    @OneToOne(targetEntity = Reserva.class)
+    @JoinColumn(name = "id_reserva_salida")
+    private Reserva reservaSalida;
+
+
 
     public LocalDate getFechaETA() {
         return fechaETA;
