@@ -280,11 +280,12 @@ public class VueloRestService {
     @PostMapping("/getVueloReserva")
     public List<VueloReservaDTO> getVueloReserva(@RequestBody ReservaDTO reservaDTO){
         Aeropuerto aeropuerto = aeropuertoRepository.findAeropuertoByCodigoIATAAeropuerto(reservaDTO.getCodigoAeropuerto());
-        List<Vuelo> vuelos = vueloRepository.findAllByFechaETAAndAeropuertoDestinoAndAceptadoDestinoAndAceptadoOrigen(reservaDTO.getFecha(),aeropuerto,true,true);
+        List<Vuelo> vuelosLlegada = vueloRepository.findAllByFechaETAAndAeropuertoDestinoAndAceptadoDestinoAndAceptadoOrigen(reservaDTO.getFecha(),aeropuerto,true,true);
+        List<Vuelo> vuelosSalida = vueloRepository.findAllByFechaETAAndAeropuertoOrigenAndAceptadoDestinoAndAceptadoOrigen(reservaDTO.getFecha(),aeropuerto,true,true);
         List<VueloReservaDTO> reservaDTOS = new ArrayList<>();
-        for (int i=0; i< vuelos.size(); i++){
+        for (int i=0; i< vuelosLlegada.size(); i++){
             VueloReservaDTO vueloReservaDTO = new VueloReservaDTO();
-            Vuelo vuelo = vuelos.get(i);
+            Vuelo vuelo = vuelosLlegada.get(i);
             Reserva reservaLlegada = vuelo.getReservaLlegada();
 
             vueloReservaDTO.setCodigoVuelo(vuelo.getCodigoVuelo());
@@ -293,6 +294,19 @@ public class VueloRestService {
             vueloReservaDTO.setHoraInicioPista(reservaLlegada.getHoraInicioPista());
             vueloReservaDTO.setHoraFinPuerta(reservaLlegada.getHoraFinalizacionPuerta());
             vueloReservaDTO.setHoraInicioPuerta(reservaLlegada.getHoraInicioPuerta());
+            reservaDTOS.add(vueloReservaDTO);
+        }
+        for (int j=0; j< vuelosSalida.size(); j++){
+            VueloReservaDTO vueloReservaDTO = new VueloReservaDTO();
+            Vuelo vuelo = vuelosSalida.get(j);
+            Reserva reservaSalida = vuelo.getReservaSalida();
+
+            vueloReservaDTO.setCodigoVuelo(vuelo.getCodigoVuelo());
+            vueloReservaDTO.setNumeroPuerta(reservaSalida.getPuerta().getIdPuerta());
+            vueloReservaDTO.setHoraFinPista(reservaSalida.getHoraFinalizacionPista());
+            vueloReservaDTO.setHoraInicioPista(reservaSalida.getHoraInicioPista());
+            vueloReservaDTO.setHoraFinPuerta(reservaSalida.getHoraFinalizacionPuerta());
+            vueloReservaDTO.setHoraInicioPuerta(reservaSalida.getHoraInicioPuerta());
             reservaDTOS.add(vueloReservaDTO);
         }
         return reservaDTOS;
