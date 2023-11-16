@@ -59,5 +59,8 @@ public class VueloRestService {
     public ResponseEntity getVueloMaletero(AgregarMaletasDTO agregarMaletasDTO){
         return restTemplate.postForEntity("http://localhost:8080/vuelo/getVueloMaletero",agregarMaletasDTO,List.class);
     }
+    public ResponseEntity subirBajarMaleta(AgregarMaletasDTO agregarMaletasDTO){
+        return restTemplate.postForEntity("http://localhost:8080/vuelo/subirBajarMaletas",agregarMaletasDTO,null);
+    }
 
 }

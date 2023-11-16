@@ -14,8 +14,8 @@
          </font>
       </Text>
       <Button layoutX="459.0" layoutY="328.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
-      <TextField layoutX="205.0" layoutY="157.0" />
-      <Button layoutX="385.0" layoutY="158.0" mnemonicParsing="false" text="Buscar" />
+      <TextField fx:id="codigoVueloMaletas" layoutX="205.0" layoutY="157.0" />
+      <Button layoutX="385.0" layoutY="158.0" mnemonicParsing="false" text="Buscar" onAction="#buscarVueloMaletero" />
       <Text layoutX="124.0" layoutY="176.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Codigo Avion" />
    </children>
 </Pane>

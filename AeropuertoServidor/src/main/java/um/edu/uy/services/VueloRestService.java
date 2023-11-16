@@ -257,7 +257,7 @@ public class VueloRestService {
     //funcion que te de la lista de maletas de un vuelo y que se fije si el vuelo esta llegando o saliendo, si esta saliendo que te de las maletas de los pasajeros que estan en el vuelo y si esta llegando que te de las maletas que tienen true el atributo subido al avion
     @Transactional
     @PostMapping("/getVueloMaletero")
-    public List<MaletasDTO> getVueloMaletero(@RequestBody AgregarMaletasDTO agregarMaletasDTO) {
+    public List<MaletasDTO> getVueloMaletero(@RequestBody AgregarMaletasDTO agregarMaletasDTO) throws  ConflictoCodgoVuelo {
         Vuelo vuelo = vueloRepository.findByCodigoVuelo(agregarMaletasDTO.getCodigoVueloMaletero());
         Aeropuerto aeropuerto = aeropuertoRepository.findAeropuertoByCodigoIATAAeropuerto(agregarMaletasDTO.getCodigoAeropuertoMaletero());
 
@@ -294,12 +294,47 @@ public class VueloRestService {
                 }
             }
         else{
-
-
+            throw new ConflictoCodgoVuelo();
         }
 
         return maletasDTOs;
     }
+    @Transactional
+    @PostMapping("/subirBajarMaletas")
+    public void subirBajarMaletas(@RequestBody AgregarMaletasDTO agregarMaletasDTO) {
+        Vuelo vuelo = vueloRepository.findByCodigoVuelo(agregarMaletasDTO.getCodigoVueloMaletero());
+        Aeropuerto aeropuerto = aeropuertoRepository.findAeropuertoByCodigoIATAAeropuerto(agregarMaletasDTO.getCodigoAeropuertoMaletero());
+        List<Asiento> asientos = vuelo.getAsientos();
+        for (int i = 0; i < asientos.size(); i++) {
+            Asiento asiento = asientos.get(i);
+            if (vuelo.getAeropuertoDestino().equals(aeropuerto.getCodigoIATAAeropuerto())) {
+                if (asiento.isCheckIn() == true) {
+                    List<Maleta> maletas = asiento.getMaletas();
+                    for (int j = 0; j < maletas.size(); j++) {
+                        Maleta maleta = maletas.get(j);
+                        if (maleta.isSubidoAvion() == true) {
+                            if (maleta.getIdMaleta() == agregarMaletasDTO.getIdMaleta()) {
+                                maleta.setEntregadoCliente(true);
+                                maletaRepository.save(maleta);
+                            }
+                        }
+                    }
+                }
+            } else if (vuelo.getAeropuertoOrigen().equals(aeropuerto.getCodigoIATAAeropuerto())) {
+                if (asiento.isCheckIn() == true) {
+                    List<Maleta> maletas = asiento.getMaletas();
+                    for (int j = 0; j < maletas.size(); j++) {
+                        Maleta maleta = maletas.get(j);
+                        if (maleta.getIdMaleta() == agregarMaletasDTO.getIdMaleta()) {
+                            maleta.setSubidoAvion(true);
+                            maletaRepository.save(maleta);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
     @Transactional
     @PostMapping("/Boarding")
