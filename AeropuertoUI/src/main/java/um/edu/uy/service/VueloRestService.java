@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import um.edu.uy.AgregarPasajeroDTO;
-import um.edu.uy.MaletasDTO;
-import um.edu.uy.ReservaDTO;
-import um.edu.uy.VueloDTO;
+import um.edu.uy.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -43,14 +40,14 @@ public class VueloRestService {
         return restTemplate.postForEntity("http://localhost:8080/vuelo/agregarPasajero", pasajeroDTO,null);
     }
 
-    public ResponseEntity getPasaportes(String codigoVuelo){
-        return restTemplate.postForEntity("http://localhost:8080/vuelo/getPasaportes",codigoVuelo, List.class);
+    public ResponseEntity getPasaportes(CheckInDTO checkInDTO){
+        return restTemplate.postForEntity("http://localhost:8080/vuelo/getPasaportes",checkInDTO, List.class);
     }
     public ResponseEntity agregarMaletas(MaletasDTO maletasDTO){
         return restTemplate.postForEntity("http://localhost:8080/vuelo/agregarMaletas",maletasDTO,null);
     }
-    public ResponseEntity getPasaportesBoarding(String codigoVuelo){
-        return restTemplate.postForEntity("http://localhost:8080/vuelo/getPasaportesBoarding",codigoVuelo, List.class);
+    public ResponseEntity getPasaportesBoarding(BoardingDTO boardingDTO){
+        return restTemplate.postForEntity("http://localhost:8080/vuelo/getPasaportesBoarding",boardingDTO, List.class);
     }
     public ResponseEntity Boarding(AgregarPasajeroDTO pasajeroDTO){
         return restTemplate.postForEntity("http://localhost:8080/vuelo/Boarding",pasajeroDTO,null);

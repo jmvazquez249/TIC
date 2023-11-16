@@ -1,11 +1,12 @@
 package um.edu.uy.services;
 
-import org.hibernate.annotations.ManyToAny;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import um.edu.uy.*;
+import um.edu.uy.business.Exceptions.ConflictoCodgoVuelo;
+import um.edu.uy.business.Exceptions.NoExisteVuelo;
 import um.edu.uy.business.VueloMapper;
 import um.edu.uy.business.entities.*;
 import um.edu.uy.persistence.*;
@@ -210,8 +211,15 @@ public class VueloRestService {
     }
 
     @PostMapping("/getPasaportes")
-    public List<Long> getVuelo(@RequestBody String codigoVuelo){
-        Vuelo vuelo = vueloRepository.findByCodigoVuelo(codigoVuelo);
+    public List<Long> getVuelo(@RequestBody CheckInDTO checkInDTO) throws ConflictoCodgoVuelo, NoExisteVuelo {
+
+        Vuelo vuelo = vueloRepository.findByCodigoVuelo(checkInDTO.getCodigoVuelo());
+        if(vuelo==null){
+            throw new NoExisteVuelo();
+        }
+        if(!vuelo.getAerolinea().equals(checkInDTO.getCodigoAerolinea())){
+            throw new ConflictoCodgoVuelo();
+        }
         List<Asiento> pasajeros = vuelo.getAsientos();
         List<Long> pasaportes = new ArrayList<>();
         for (int i=0; i< pasajeros.size(); i++){
@@ -223,10 +231,17 @@ public class VueloRestService {
             }
         }
         return pasaportes;
+
     }
     @PostMapping("/getPasaportesBoarding")
-    public List<Long> getPasaportesBoarding(@RequestBody String codigoVuelo){
-        Vuelo vuelo = vueloRepository.findByCodigoVuelo(codigoVuelo);
+    public List<Long> getPasaportesBoarding(@RequestBody BoardingDTO boardingDTO) throws NoExisteVuelo, ConflictoCodgoVuelo {
+        Vuelo vuelo = vueloRepository.findByCodigoVuelo(boardingDTO.getCodigoVuelo());
+        if(vuelo==null){
+            throw new NoExisteVuelo();
+        }
+        if(!vuelo.getAeropuertoOrigen().equals(boardingDTO.getCodigoAeropuerto())){
+            throw new ConflictoCodgoVuelo();
+        }
         List<Asiento> pasajeros = vuelo.getAsientos();
         List<Long> pasaportes = new ArrayList<>();
         for (int i=0; i< pasajeros.size(); i++){

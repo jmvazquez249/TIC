@@ -55,7 +55,7 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <Text layoutX="355.0" layoutY="348.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hora Llegada:">
+      <Text layoutX="355.0" layoutY="348.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hora Salida:">
          <font>
             <Font size="15.0" />
          </font>
