@@ -116,7 +116,7 @@ public class IniciarSesionController {
                 } else if (tipoUsuario.equals("OFICINA")) {
                     Oficina oficina = new Oficina();
                     oficina.setCodigoAerolinea(usu.getCodigoAerolinea());
-                    cargarAgregarVuelo(event, "UsuarioAerolinea.fxml", oficina);
+                    cargarAgregarVuelo(event, "Oficinista.fxml", oficina);
                 } else if (tipoUsuario.equals("MALETERIA")) {
                     redireccion(event, "Maletero.fxml", null);
                 } else if (tipoUsuario.equals("BOARDING")) {
@@ -976,65 +976,18 @@ public class IniciarSesionController {
     private TableColumn<VueloDTO,String> matriculaAvionConfirmadoAero;
 
     @FXML
-    void cargarVuelosConfirmadosAero2(ActionEvent event) throws IOException {
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Oficina oficina = (Oficina) stage.getUserData();
-        cargarVuelosConfirmadosAero(event, oficina.getCodigoAerolinea());
-    }
-
-    @FXML
     void backToVuelosConfirmados(ActionEvent event) throws IOException {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Oficina oficina = (Oficina) stage.getUserData();
-        cargarVuelosConfirmadosAero(event, oficina.getCodigoAerolinea());
+        cargarAgregarVuelo(event,"Oficinista.fxml" ,oficina);
     }
-    //funcion que me regrese a la pagina anterior, en este caso a Usuario Aerolinea y que siga manteniendo el codigo de aerolinea
     @FXML
     void backToUsuarioAerolinea(ActionEvent event) throws IOException {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Oficina oficina = (Oficina) stage.getUserData();
         cargarAgregarVuelo(event,"UsuarioAerolinea.fxml",oficina);
     }
-    //funcion que me regrese a la pagina anterior, en este caso a VuelosConfirmadosAero, vuelosConfirmadosAero tiene una tableview por lo tanto cuando vuelva necesito que las cosas que aparecen ahi sigan estando ahi
 
-
-
-    @FXML
-    void cargarVuelosConfirmadosAero(ActionEvent event, String codigoAerolinea) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setControllerFactory(Main.getContext()::getBean);
-
-        Parent root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream("VuelosConfirmadosAero.fxml"));
-        Scene scene = new Scene(root);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-
-        ResponseEntity response = aerolineaRestService.getListaVuelosConfirmadosAero(codigoAerolinea);
-
-        List vueloDTOS = (List) response.getBody();
-        List<VueloDTO> vuelos = new ArrayList<>();
-
-        for (int i=0;i<vueloDTOS.size();i++){
-            VueloDTO vueloDTO = new VueloDTO();
-            LinkedHashMap hashMap = (LinkedHashMap) vueloDTOS.get(i);
-            vueloDTO.setCodigoVuelo((String) hashMap.get("codigoVuelo"));
-            vueloDTO.setCodigoAeropuertoOrigen((String) hashMap.get("codigoAeropuertoOrigen"));
-            vueloDTO.setCodigoAeropuertoDestino((String) hashMap.get("codigoAeropuertoDestino"));
-            vueloDTO.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
-            vuelos.add(vueloDTO);
-        }
-        ObservableList<VueloDTO> vuelosConfirmados = FXCollections.observableArrayList(vuelos);
-
-        codigoVueloConfirmadoAero.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
-        aeropuertoOrigenConfirmadoAero.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoOrigen"));
-        aeropuertoDestinoConfirmadoAero.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoDestino"));
-        matriculaAvionConfirmadoAero.setCellValueFactory(new PropertyValueFactory<>("matriculaAvion"));
-        tablaVuelosConfirmadosAero.setItems(vuelosConfirmados);
-        addButtonToTablePasajeros(tablaVuelosConfirmadosAero);
-
-        stage.show();
-    }
-    //boton que te redireccione a una nueva pagina para egregar pasajeros al vuelo a traves de su pasaporte
     private void addButtonToTablePasajeros(TableView t) {
         TableColumn<Data, Void> colBtn = new TableColumn("Agregar Pasajero");
 
@@ -1201,6 +1154,29 @@ public class IniciarSesionController {
             LinkedHashMap avion = (LinkedHashMap) listaAviones.get(j);
             matriculaBox.getItems().addAll((String) avion.get("matricula"));
         }
+
+        ResponseEntity response = aerolineaRestService.getListaVuelosConfirmadosAero(oficina.getCodigoAerolinea());
+
+        List vueloDTOS = (List) response.getBody();
+        List<VueloDTO> vuelos = new ArrayList<>();
+
+        for (int i=0;i<vueloDTOS.size();i++){
+            VueloDTO vueloDTO = new VueloDTO();
+            LinkedHashMap hashMap = (LinkedHashMap) vueloDTOS.get(i);
+            vueloDTO.setCodigoVuelo((String) hashMap.get("codigoVuelo"));
+            vueloDTO.setCodigoAeropuertoOrigen((String) hashMap.get("codigoAeropuertoOrigen"));
+            vueloDTO.setCodigoAeropuertoDestino((String) hashMap.get("codigoAeropuertoDestino"));
+            vueloDTO.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
+            vuelos.add(vueloDTO);
+        }
+        ObservableList<VueloDTO> vuelosConfirmados = FXCollections.observableArrayList(vuelos);
+
+        codigoVueloConfirmadoAero.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
+        aeropuertoOrigenConfirmadoAero.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoOrigen"));
+        aeropuertoDestinoConfirmadoAero.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoDestino"));
+        matriculaAvionConfirmadoAero.setCellValueFactory(new PropertyValueFactory<>("matriculaAvion"));
+        tablaVuelosConfirmadosAero.setItems(vuelosConfirmados);
+        addButtonToTablePasajeros(tablaVuelosConfirmadosAero);
 
         stage.setScene(scene);
         stage.show();
