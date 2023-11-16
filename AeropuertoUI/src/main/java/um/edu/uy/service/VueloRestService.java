@@ -40,14 +40,14 @@ public class VueloRestService {
         return restTemplate.postForEntity("http://localhost:8080/vuelo/agregarPasajero", pasajeroDTO,null);
     }
 
-    public ResponseEntity getPasaportes(String codigoVuelo){
-        return restTemplate.postForEntity("http://localhost:8080/vuelo/getPasaportes",codigoVuelo, List.class);
+    public ResponseEntity getPasaportes(CheckInDTO checkInDTO){
+        return restTemplate.postForEntity("http://localhost:8080/vuelo/getPasaportes",checkInDTO, List.class);
     }
     public ResponseEntity agregarMaletas(MaletasDTO maletasDTO){
         return restTemplate.postForEntity("http://localhost:8080/vuelo/agregarMaletas",maletasDTO,null);
     }
-    public ResponseEntity getPasaportesBoarding(String codigoVuelo){
-        return restTemplate.postForEntity("http://localhost:8080/vuelo/getPasaportesBoarding",codigoVuelo, List.class);
+    public ResponseEntity getPasaportesBoarding(BoardingDTO boardingDTO){
+        return restTemplate.postForEntity("http://localhost:8080/vuelo/getPasaportesBoarding",boardingDTO, List.class);
     }
     public ResponseEntity Boarding(AgregarPasajeroDTO pasajeroDTO){
         return restTemplate.postForEntity("http://localhost:8080/vuelo/Boarding",pasajeroDTO,null);

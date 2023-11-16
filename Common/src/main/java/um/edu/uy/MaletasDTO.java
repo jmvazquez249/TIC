@@ -14,6 +14,16 @@ public class MaletasDTO {
         this.idMaleta = idMaleta;
     }
 
+    private String codigoAerolinea;
+
+    public String getCodigoAerolinea() {
+        return codigoAerolinea;
+    }
+
+    public void setCodigoAerolinea(String codigoAerolinea) {
+        this.codigoAerolinea = codigoAerolinea;
+    }
+
     public long getPasaporte() {
         return pasaporte;
     }

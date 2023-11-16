@@ -113,7 +113,7 @@ public class IniciarSesionController {
                 } else if (tipoUsuario.equals("ADMINAEROLINEA")) {
                     redireccion(event, "AdminAerolinea.fxml", usu.getCodigoAerolinea());
                 } else if (tipoUsuario.equals("CHECK IN")) {
-                    redireccion(event, "BuscarVuelo.fxml", null);
+                    redireccion(event, "BuscarVuelo.fxml", usu.getCodigoAerolinea());
                 } else if (tipoUsuario.equals("OFICINA")) {
                     Oficina oficina = new Oficina();
                     oficina.setCodigoAerolinea(usu.getCodigoAerolinea());
@@ -121,7 +121,7 @@ public class IniciarSesionController {
                 } else if (tipoUsuario.equals("MALETERIA")) {
                     redireccion(event, "Maletero.fxml", usu.getCodigoAeropuerto());
                 } else if (tipoUsuario.equals("BOARDING")) {
-                    redireccion(event, "Boarding.fxml", null);
+                    redireccion(event, "Boarding.fxml", usu.getCodigoAeropuerto());
                 } else if (tipoUsuario.equals("ADMINVUELOS")) {
                     cargarAdministradorVuelos(event, usu.getCodigoAeropuerto());
                 }
@@ -144,8 +144,6 @@ public class IniciarSesionController {
 
             ResponseEntity response1 = aeropuertoRestService.getAeropuerto(codigoAeropuertoAdAero);
             AeropuertoDTO aeropuertoDTO = (AeropuertoDTO) response1.getBody();
-
-
 
             if (aeropuertoDTO == null) {
                 showAlert(
@@ -1237,34 +1235,63 @@ public class IniciarSesionController {
     @FXML
     void buscarVuelo(ActionEvent event) throws IOException {
 
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setControllerFactory(Main.getContext()::getBean);
+            Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
 
-        Parent root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream("CheckInVuelo.fxml"));
-        Scene scene = new Scene(root);
-        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
+            String codigoAerolinea = (String) stage.getUserData();
 
 
-        String codVuelo = codigoVuelo.getText();
-
-        MaletasDTO maletasDTO = new MaletasDTO();
-        maletasDTO.setCodigoVuelo(codVuelo);
-        stage.setUserData(maletasDTO);
+            String codVuelo = codigoVuelo.getText();
 
 
-        ResponseEntity response = vueloRestService.getPasaportes(codVuelo);
-        List<Long> list = (List<Long>) response.getBody();
-        List<Pasaporte> listaPasaportes = new ArrayList<>();
-        for(int i=0;i<list.size();i++){
-            Pasaporte pas = new Pasaporte(Long.parseLong(String.valueOf(list.get(i))));
-            listaPasaportes.add(pas);
-        }
-        ObservableList<Pasaporte> pasaportes = FXCollections.observableArrayList(listaPasaportes);
-        columnaPasaporte.setCellValueFactory(new PropertyValueFactory<>("valor"));
-        tablaCheckIn.setItems(pasaportes);
-        addButtonToTablePasaportes(tablaCheckIn);
-        stage.show();
+
+            if(codVuelo.equals("")||codVuelo==null){
+
+                showAlert("Error","Error en los datos ingresados");
+
+            }else{
+
+                CheckInDTO checkInDTO = new CheckInDTO();
+                checkInDTO.setCodigoVuelo(codVuelo);
+                checkInDTO.setCodigoAerolinea(codigoAerolinea);
+
+
+
+                try {
+                    ResponseEntity response = vueloRestService.getPasaportes(checkInDTO);
+                    if (response.getStatusCode() == HttpStatus.OK) {
+                        FXMLLoader fxmlLoader = new FXMLLoader();
+                        fxmlLoader.setControllerFactory(Main.getContext()::getBean);
+
+                        Parent root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream("CheckInVuelo.fxml"));
+                        Scene scene = new Scene(root);
+                        stage.setScene(scene);
+
+                        MaletasDTO maletasDTO = new MaletasDTO();
+                        maletasDTO.setCodigoVuelo(codVuelo);
+                        maletasDTO.setCodigoAerolinea(codigoAerolinea);
+                        stage.setUserData(maletasDTO);
+
+                        List<Long> list = (List<Long>) response.getBody();
+                        List<Pasaporte> listaPasaportes = new ArrayList<>();
+                        for (int i = 0; i < list.size(); i++) {
+                            Pasaporte pas = new Pasaporte(Long.parseLong(String.valueOf(list.get(i))));
+                            listaPasaportes.add(pas);
+                        }
+                        ObservableList<Pasaporte> pasaportes = FXCollections.observableArrayList(listaPasaportes);
+                        columnaPasaporte.setCellValueFactory(new PropertyValueFactory<>("valor"));
+                        tablaCheckIn.setItems(pasaportes);
+                        addButtonToTablePasaportes(tablaCheckIn);
+                        stage.show();
+                    }
+                } catch (HttpClientErrorException error) {
+                    if (error.getStatusCode() == HttpStatus.BAD_REQUEST) {
+                        showAlert("Error", "El vuelo no fue creado por tu aerolinea");
+                    } else if (error.getStatusCode()==HttpStatus.CONFLICT) {
+                        showAlert("Error", "No existe vuelo");
+
+                    }
+                }
+            }
 
 
     }
@@ -1342,32 +1369,53 @@ public class IniciarSesionController {
 
     @FXML
     void buscarVueloBoarding(ActionEvent event) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setControllerFactory(Main.getContext()::getBean);
-
-        Parent root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream("BoardingVuelo.fxml"));
-        Scene scene = new Scene(root);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
 
         String codVuelo = codigoVueloBoarding.getText();
+        String codigoAeropuerto = stage.getUserData().toString();
 
-        ResponseEntity response = vueloRestService.getPasaportesBoarding(codVuelo);
-        List<Long> list = (List<Long>) response.getBody();
-        List<Pasaporte> listaPasaportes = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++) {
-            Pasaporte pas = new Pasaporte(Long.parseLong(String.valueOf(list.get(i))));
-            listaPasaportes.add(pas);
+        if(codVuelo.equals("")||codVuelo==null){
+            showAlert("Error","Error en los datos ingresados");
+        }else {
+
+            BoardingDTO boardingDTO = new BoardingDTO();
+            boardingDTO.setCodigoVuelo(codVuelo);
+            boardingDTO.setCodigoAeropuerto(codigoAeropuerto);
+
+            try {
+                ResponseEntity response = vueloRestService.getPasaportesBoarding(boardingDTO);
+                if(response.getStatusCode()==HttpStatus.OK) {
+
+                    FXMLLoader fxmlLoader = new FXMLLoader();
+                    fxmlLoader.setControllerFactory(Main.getContext()::getBean);
+
+                    Parent root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream("BoardingVuelo.fxml"));
+                    Scene scene = new Scene(root);
+                    stage.setScene(scene);
+
+                    List<Long> list = (List<Long>) response.getBody();
+                    List<Pasaporte> listaPasaportes = new ArrayList<>();
+                    for (int i = 0; i < list.size(); i++) {
+                        Pasaporte pas = new Pasaporte(Long.parseLong(String.valueOf(list.get(i))));
+                        listaPasaportes.add(pas);
+                    }
+                    stage.setUserData(codigoAeropuerto);
+                    ObservableList<Pasaporte> pasaportes = FXCollections.observableArrayList(listaPasaportes);
+                    columnaPasaporteBoarding.setCellValueFactory(new PropertyValueFactory<>("valor"));
+                    tablaBoarding.setItems(pasaportes);
+                    stage.setUserData(boardingDTO);
+                    addButtonToTableBoarding(tablaBoarding);
+                    stage.show();
+                }
+            }catch (HttpClientErrorException error){
+                if (error.getStatusCode() == HttpStatus.BAD_REQUEST) {
+                    showAlert("Error", "El vuelo no sale del aeropuerto");
+                } else if (error.getStatusCode()==HttpStatus.CONFLICT) {
+                    showAlert("Error", "No existe vuelo");
+
+                }
+            }
         }
-        ObservableList<Pasaporte> pasaportes = FXCollections.observableArrayList(listaPasaportes);
-        columnaPasaporteBoarding.setCellValueFactory(new PropertyValueFactory<>("valor"));
-        tablaBoarding.setItems(pasaportes);
-
-        stage.setUserData(codVuelo);
-
-        addButtonToTableBoarding(tablaBoarding);
-
-        stage.show();
 
     }
 
@@ -1385,10 +1433,10 @@ public class IniciarSesionController {
                     {
                         btn.setOnAction((ActionEvent event) -> {
                             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                            String codVuelo = (String) stage.getUserData();
-                            Pasaporte pas = (Pasaporte) getTableView().getItems().get(getIndex());
+                            BoardingDTO boardingDTO = (BoardingDTO) stage.getUserData();
+                            Pasaporte pas = getTableView().getItems().get(getIndex());
                             AgregarPasajeroDTO agregarPasajeroDTO = new AgregarPasajeroDTO();
-                            agregarPasajeroDTO.setCodigoVuelo(codVuelo);
+                            agregarPasajeroDTO.setCodigoVuelo(boardingDTO.getCodigoVuelo());
                             agregarPasajeroDTO.setPasaporte(pas.getValor());
                             ResponseEntity response = vueloRestService.Boarding(agregarPasajeroDTO);
                             if (response.getStatusCode()==HttpStatus.OK){
@@ -1432,6 +1480,9 @@ public class IniciarSesionController {
         Parent root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream("Boarding.fxml"));
         Scene scene = new Scene(root);
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+
+        BoardingDTO boardingDTO = (BoardingDTO) stage.getUserData();
+        stage.setUserData(boardingDTO.getCodigoAeropuerto());
         stage.setScene(scene);
         stage.show();
     }
@@ -1464,6 +1515,9 @@ public class IniciarSesionController {
 
     @FXML
     public void backBuscarVuelo(ActionEvent event) throws IOException {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        MaletasDTO maletasDTO = (MaletasDTO) stage.getUserData();
+        stage.setUserData(maletasDTO.getCodigoAerolinea());
         redireccion(event, "BuscarVuelo.fxml", null);
     }
     //funcion que redireccione a SubirBajarMaletas
