@@ -80,25 +80,6 @@ public class AgregarUsuarioAeropuertoController implements Initializable {
 
 
 
-            ResponseEntity response4 = usuarioGeneralRestService.getUsuarioGeneralPasaporte(pasaporteAdAero);
-            UsuarioGeneralDTO usuarioGeneralDTOPasaporte = (UsuarioGeneralDTO) response4.getBody();
-
-            ResponseEntity response5 = usuarioGeneralRestService.getUsuarioGeneralEmail(emailAdAero);
-            UsuarioGeneralDTO usuarioGeneralDTOEmail = (UsuarioGeneralDTO) response5.getBody();
-
-
-
-             if (usuarioGeneralDTOPasaporte != null) {
-                showAlert(
-                        "Pasaporte ya registrado",
-                        "El pasaporte ingresado ya esta registrado");
-            } else if (usuarioGeneralDTOEmail != null) {
-                showAlert(
-                        "Email ya registrado",
-                        "El email ingresado ya esta registrado");
-            } else {
-
-
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 String codigoAeropuero = (String) stage.getUserData();
 
@@ -117,7 +98,7 @@ public class AgregarUsuarioAeropuertoController implements Initializable {
                 if (response.getStatusCode() == HttpStatus.OK) {
                     showAlert("Usuario agregado", "Se agrego con exito el usuario!");
                 }
-            }
+
 
         }catch (Exception e){
             showAlert("Datos incorrectos","Los datos ingresados no son correctos");

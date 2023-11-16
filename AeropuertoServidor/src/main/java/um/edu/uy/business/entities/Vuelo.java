@@ -116,10 +116,6 @@ public class Vuelo {
     @Column(nullable = false)
     private LocalTime horaEDT;
 
-
-
-
-
     @OneToMany(targetEntity = Asiento.class, cascade = {CascadeType.ALL})
     @JoinTable(
             name = "RelacionAsientoVuelo",

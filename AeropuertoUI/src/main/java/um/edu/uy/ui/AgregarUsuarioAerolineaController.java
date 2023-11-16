@@ -64,24 +64,7 @@ public class AgregarUsuarioAerolineaController implements Initializable {
         String contrasenaUsuAero = contrasena.getText();
         String tipoUsuAero = registroUsuarioBox.getValue().toUpperCase();
 
-            ResponseEntity response4 = usuarioGeneralRestService.getUsuarioGeneralPasaporte(pasaporteUsuAero);
-            UsuarioGeneralDTO usuarioGeneralDTOPasaporte = (UsuarioGeneralDTO) response4.getBody();
 
-            ResponseEntity response5 = usuarioGeneralRestService.getUsuarioGeneralEmail(emailUsuAero);
-            UsuarioGeneralDTO usuarioGeneralDTOEmail = (UsuarioGeneralDTO) response5.getBody();
-
-
-
-            if (usuarioGeneralDTOPasaporte != null) {
-                showAlert(
-                        "Pasaporte ya registrado",
-                        "El pasaporte ingresado ya esta registrado");
-            } else if (usuarioGeneralDTOEmail != null) {
-                showAlert(
-                        "Email ya registrado",
-                        "El email ingresado ya esta registrado");
-            }
-            else {
 
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 String codigoAerolinea = (String) stage.getUserData();
@@ -104,9 +87,8 @@ public class AgregarUsuarioAerolineaController implements Initializable {
 
                     showAlert("Usuario agregado", "Se agrego con exito el usuario!");
 
-
                 }
-            }
+
 
         }catch (Exception e){
             showAlert("Datos incorrectos", "Los datos ingresados no son correctos");
