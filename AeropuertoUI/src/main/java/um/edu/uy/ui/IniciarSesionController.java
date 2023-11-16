@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import um.edu.uy.*;
+import um.edu.uy.Objects.Maleta;
 import um.edu.uy.Objects.Oficina;
 import um.edu.uy.Objects.Pasaporte;
 import um.edu.uy.service.AerolineaRestService;
@@ -118,7 +119,7 @@ public class IniciarSesionController {
                     oficina.setCodigoAerolinea(usu.getCodigoAerolinea());
                     cargarAgregarVuelo(event, "Oficinista.fxml", oficina);
                 } else if (tipoUsuario.equals("MALETERIA")) {
-                    redireccion(event, "Maletero.fxml", null);
+                    redireccion(event, "Maletero.fxml", usu.getCodigoAeropuerto());
                 } else if (tipoUsuario.equals("BOARDING")) {
                     redireccion(event, "Boarding.fxml", null);
                 } else if (tipoUsuario.equals("ADMINVUELOS")) {
@@ -153,6 +154,7 @@ public class IniciarSesionController {
 
 
             }
+
 
             else {
                 UsuarioGeneralDTO usuarioGeneralDTO = new UsuarioGeneralDTO();
@@ -1059,6 +1061,7 @@ public class IniciarSesionController {
         stage.show();
     }
 
+
     @FXML
     void cargarAgregarVuelo(ActionEvent event, String fxml, Oficina oficina) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
@@ -1462,5 +1465,47 @@ public class IniciarSesionController {
     @FXML
     public void backBuscarVuelo(ActionEvent event) throws IOException {
         redireccion(event, "BuscarVuelo.fxml", null);
+    }
+    //funcion que redireccione a SubirBajarMaletas
+
+
+    @FXML
+    private TableView<Maleta> tablaMaletas;
+    @FXML
+    private TableColumn<Maleta,Long> columnaPasaporteMaletas;
+    @FXML
+    private TextField codigoVueloMaletas;
+    @FXML
+    void buscarVueloMaletero(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setControllerFactory(Main.getContext()::getBean);
+        Parent root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream("SubirBajarMaletas.fxml"));
+        Scene scene = new Scene(root);
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+
+        String codigoAeropuerto = (String) stage.getUserData();
+        String codVuelo = codigoVueloMaletas.getText();
+
+        AgregarMaletasDTO agregarMaletasDTO = new AgregarMaletasDTO();
+        agregarMaletasDTO.setCodigoVueloMaletero(codVuelo);
+        agregarMaletasDTO.setCodigoAeropuertoMaletero(codigoAeropuerto);
+
+        ResponseEntity response = vueloRestService.getVueloMaletero(agregarMaletasDTO);
+
+        List<Long> list = (List<Long>) response.getBody();
+        List<Maleta> listaMaletas = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            Maleta maleta = new Maleta();
+            maleta.setIdMaleta(list.get(i));
+            listaMaletas.add(maleta);
+        }
+        ObservableList<Maleta> maletas = FXCollections.observableArrayList(listaMaletas);
+        columnaPasaporteMaletas.setCellValueFactory(new PropertyValueFactory<>("idMaleta"));
+        tablaMaletas.setItems(maletas);
+
+
+
+        stage.show();
     }
 }

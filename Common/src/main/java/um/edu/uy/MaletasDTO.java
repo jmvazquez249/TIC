@@ -1,10 +1,18 @@
 package um.edu.uy;
 
 public class MaletasDTO {
+    private long idMaleta;
     private long cantidadMaletas;
     private String codigoVuelo;
 
     private long pasaporte;
+
+    public long getIdMaleta() {
+        return idMaleta;
+    }
+    public void setIdMaleta(long idMaleta) {
+        this.idMaleta = idMaleta;
+    }
 
     public long getPasaporte() {
         return pasaporte;

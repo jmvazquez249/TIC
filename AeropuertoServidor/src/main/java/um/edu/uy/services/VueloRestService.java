@@ -239,6 +239,53 @@ public class VueloRestService {
         }
         return pasaportes;
     }
+    //funcion que te de la lista de maletas de un vuelo y que se fije si el vuelo esta llegando o saliendo, si esta saliendo que te de las maletas de los pasajeros que estan en el vuelo y si esta llegando que te de las maletas que tienen true el atributo subido al avion
+    @Transactional
+    @PostMapping("/getVueloMaletero")
+    public List<MaletasDTO> getVueloMaletero(@RequestBody AgregarMaletasDTO agregarMaletasDTO) {
+        Vuelo vuelo = vueloRepository.findByCodigoVuelo(agregarMaletasDTO.getCodigoVueloMaletero());
+        Aeropuerto aeropuerto = aeropuertoRepository.findAeropuertoByCodigoIATAAeropuerto(agregarMaletasDTO.getCodigoAeropuertoMaletero());
+
+        List<Asiento> asientos = vuelo.getAsientos();
+        List<MaletasDTO> maletasDTOs = new ArrayList<>();
+        if (vuelo.getAeropuertoDestino().equals(aeropuerto.getCodigoIATAAeropuerto())) {
+            for (int i = 0; i < asientos.size(); i++) {
+                Asiento asiento = asientos.get(i);
+                if (asiento.isCheckIn() == true) {
+                    List<Maleta> maletas = asiento.getMaletas();
+                    for (int j = 0; j < maletas.size(); j++) {
+                        Maleta maleta = maletas.get(j);
+                        if (maleta.isSubidoAvion() == true) {
+                            MaletasDTO maletasDTO = new MaletasDTO();
+                            maletasDTO.setIdMaleta(maleta.getIdMaleta());
+                            maletasDTOs.add(maletasDTO);
+                        }
+                    }
+                }
+            }
+        }
+        else if(vuelo.getAeropuertoOrigen().equals(aeropuerto.getCodigoIATAAeropuerto())){
+            for (int i = 0; i < asientos.size(); i++) {
+                Asiento asiento = asientos.get(i);
+                if (asiento.isCheckIn() == true) {
+                    List<Maleta> maletas = asiento.getMaletas();
+                    for (int j = 0; j < maletas.size(); j++) {
+                        Maleta maleta = maletas.get(j);
+                            MaletasDTO maletasDTO = new MaletasDTO();
+                            maletasDTO.setIdMaleta(maleta.getIdMaleta());
+                            maletasDTOs.add(maletasDTO);
+                        }
+                    }
+                }
+            }
+        else{
+
+
+        }
+
+        return maletasDTOs;
+    }
+
     @Transactional
     @PostMapping("/Boarding")
     public void Boarding(@RequestBody AgregarPasajeroDTO pasajeroDTO) {

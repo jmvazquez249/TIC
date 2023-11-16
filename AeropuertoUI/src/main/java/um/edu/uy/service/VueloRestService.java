@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import um.edu.uy.AgregarPasajeroDTO;
-import um.edu.uy.MaletasDTO;
-import um.edu.uy.ReservaDTO;
-import um.edu.uy.VueloDTO;
+import um.edu.uy.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -58,6 +55,9 @@ public class VueloRestService {
 
     public ResponseEntity getVueloReserva(ReservaDTO reservaDTO){
         return restTemplate.postForEntity("http://localhost:8080/vuelo/getVueloReserva",reservaDTO,List.class);
+    }
+    public ResponseEntity getVueloMaletero(AgregarMaletasDTO agregarMaletasDTO){
+        return restTemplate.postForEntity("http://localhost:8080/vuelo/getVueloMaletero",agregarMaletasDTO,List.class);
     }
 
 }
