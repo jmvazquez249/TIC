@@ -194,27 +194,29 @@ public class VueloRestService {
             LocalDate fechaLlegada = vuelo.getFechaETA();
             List<Vuelo> vuelosLlegada = vueloRepository.findAllByFechaETAAndAeropuertoDestinoAndAceptadoDestinoAndAceptadoOrigen(fechaLlegada,aeropuerto,true,true);
             System.out.println(vuelosLlegada);
-            for(int i=0;i< vuelosLlegada.size();i++){
-                Vuelo vue = vuelosLlegada.get(i);
-                Reserva resLle = vue.getReservaLlegada();
-                if(resLle.getPuerta().getIdPuerta()==reservaDTO.getNumeroPuerta()){
-                    if(reservaDTO.getLocalTimeFinPista().isBefore(resLle.getHoraFinalizacionPuerta()) && reservaDTO.getLocalTimeFinPuerta().isAfter(resLle.getHoraFinalizacionPuerta())){
+            if(!vuelosLlegada.isEmpty()) {
+                for (int i = 0; i < vuelosLlegada.size(); i++) {
+                    Vuelo vue = vuelosLlegada.get(i);
+                    Reserva resLle = vue.getReservaLlegada();
+                    if (resLle.getPuerta().getIdPuerta() == reservaDTO.getNumeroPuerta()) {
+                        if (reservaDTO.getLocalTimeFinPista().isBefore(resLle.getHoraFinalizacionPuerta()) && reservaDTO.getLocalTimeFinPuerta().isAfter(resLle.getHoraFinalizacionPuerta())) {
+                            throw new ErrorReservaVuelo();
+                        } else if (reservaDTO.getLocalTimeFinPuerta().isBefore(resLle.getHoraFinalizacionPuerta()) && reservaDTO.getLocalTimeFinPista().isAfter(resLle.getHoraInicioPuerta())) {
+                            throw new ErrorReservaVuelo();
+                        } else if (reservaDTO.getLocalTimeFinPuerta().isAfter(resLle.getHoraInicioPuerta()) && reservaDTO.getLocalTimeFinPista().isBefore(resLle.getHoraInicioPuerta())) {
+                            throw new ErrorReservaVuelo();
+                        } else if (reservaDTO.getLocalTimeFinPuerta().isAfter(resLle.getHoraFinalizacionPuerta()) && reservaDTO.getLocalTimeFinPista().isBefore(resLle.getHoraInicioPuerta())) {
+                            throw new ErrorReservaVuelo();
+                        }
+                    } else if (reservaDTO.getLocalTimeFinPista().isAfter(resLle.getHoraFinalizacionPista()) && vuelo.getHoraETA().isBefore(resLle.getHoraFinalizacionPista())) {
                         throw new ErrorReservaVuelo();
-                    } else if (reservaDTO.getLocalTimeFinPuerta().isBefore(resLle.getHoraFinalizacionPuerta()) && reservaDTO.getLocalTimeFinPista().isAfter(resLle.getHoraInicioPuerta())) {
+                    } else if (reservaDTO.getLocalTimeFinPista().isBefore(resLle.getHoraFinalizacionPista()) && vuelo.getHoraETA().isAfter(resLle.getHoraInicioPista())) {
                         throw new ErrorReservaVuelo();
-                    } else if (reservaDTO.getLocalTimeFinPuerta().isAfter(resLle.getHoraInicioPuerta())&&reservaDTO.getLocalTimeFinPista().isBefore(resLle.getHoraInicioPuerta())) {
+                    } else if (reservaDTO.getLocalTimeFinPista().isAfter(resLle.getHoraInicioPista()) && vuelo.getHoraETA().isBefore(resLle.getHoraInicioPista())) {
                         throw new ErrorReservaVuelo();
-                    } else if (reservaDTO.getLocalTimeFinPuerta().isAfter(resLle.getHoraFinalizacionPuerta())&&reservaDTO.getLocalTimeFinPista().isBefore(resLle.getHoraInicioPuerta())) {
+                    } else if (reservaDTO.getLocalTimeFinPista().isAfter(resLle.getHoraFinalizacionPista()) && vuelo.getHoraETA().isBefore(resLle.getHoraInicioPista())) {
                         throw new ErrorReservaVuelo();
                     }
-                } else if (reservaDTO.getLocalTimeFinPista().isAfter(resLle.getHoraFinalizacionPista())&&vuelo.getHoraETA().isBefore(resLle.getHoraFinalizacionPista())) {
-                    throw new ErrorReservaVuelo();
-                } else if (reservaDTO.getLocalTimeFinPista().isBefore(resLle.getHoraFinalizacionPista())&&vuelo.getHoraETA().isAfter(resLle.getHoraInicioPista())) {
-                    throw new ErrorReservaVuelo();
-                } else if (reservaDTO.getLocalTimeFinPista().isAfter(resLle.getHoraInicioPista())&&vuelo.getHoraETA().isBefore(resLle.getHoraInicioPista())) {
-                    throw new ErrorReservaVuelo();
-                } else if (reservaDTO.getLocalTimeFinPista().isAfter(resLle.getHoraFinalizacionPista())&&vuelo.getHoraETA().isBefore(resLle.getHoraInicioPista())) {
-                    throw new ErrorReservaVuelo();
                 }
             }
 
