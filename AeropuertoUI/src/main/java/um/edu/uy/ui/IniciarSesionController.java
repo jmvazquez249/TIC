@@ -1546,11 +1546,12 @@ public class IniciarSesionController {
 
             ResponseEntity response = vueloRestService.getVueloMaletero(agregarMaletasDTO);
 
-            List<Long> list = (List<Long>) response.getBody();
+            List list = (List) response.getBody();
             List<Maleta> listaMaletas = new ArrayList<>();
             for (int i = 0; i < list.size(); i++) {
                 Maleta maleta = new Maleta();
-                maleta.setIdMaleta(list.get(i));
+                LinkedHashMap hashMap = (LinkedHashMap) list.get(i);
+                maleta.setIdMaleta(Long.parseLong(hashMap.get("idMaleta").toString()));
                 listaMaletas.add(maleta);
             }
             ObservableList<Maleta> maletas = FXCollections.observableArrayList(listaMaletas);

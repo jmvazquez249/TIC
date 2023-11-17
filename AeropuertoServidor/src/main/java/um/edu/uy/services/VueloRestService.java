@@ -190,7 +190,6 @@ public class VueloRestService {
             Puerta puerta = puertaRepository.findByIdPuerta(reservaDTO.getNumeroPuerta());
 
 
-
             LocalDate fechaLlegada = vuelo.getFechaETA();
             List<Vuelo> vuelosLlegada = vueloRepository.findAllByFechaETAAndAeropuertoDestinoAndAceptadoDestinoAndAceptadoOrigen(fechaLlegada,aeropuerto,true,true);
             System.out.println(vuelosLlegada);
@@ -219,7 +218,6 @@ public class VueloRestService {
                     }
                 }
             }
-
 
             Reserva reservaLlegada = new Reserva(pista,puerta,fechaLlegada,reservaDTO.getLocalTimeFinPista(),reservaDTO.getLocalTimeFinPuerta(),vuelo.getHoraETA(),reservaDTO.getLocalTimeFinPista());
 
