@@ -868,14 +868,20 @@ public class IniciarSesionController {
         reservaDTO.setLlegada((boolean) list.get(1));
         reservaDTO.setCodigoVuelo((String) list.get(0));
 
-
-        ResponseEntity response = vueloRestService.aceptarYReservar(reservaDTO);
-        if (response.getStatusCode() == HttpStatus.OK) {
-            showAlert("Confirmacion Reserva", "La reserva fue exitosa");
-
+        try {
+            ResponseEntity response = vueloRestService.aceptarYReservar(reservaDTO);
+            if (response.getStatusCode() == HttpStatus.OK) {
+                stage.setUserData(list.get(2));
+                cargarAdministradorVuelos(event, (String) list.get(2));
+                showAlert("Confirmacion Reserva", "La reserva fue exitosa");
+            }
+        }catch (HttpClientErrorException error){
+            if(error.getStatusCode()==HttpStatus.CONFLICT){
+                showAlert("Error","No es posible realizar reserva");
+            }
         }
-        stage.setUserData(list.get(2));
-        cargarAdministradorVuelos(event, (String) list.get(2));
+
+
 
 
     }
@@ -1468,8 +1474,6 @@ public class IniciarSesionController {
         t.getColumns().add(colBtn);
 
     }
-
-    //funcion que vuelva a la pagina anterior, en este caso Boarding.fxml
     @FXML
     void backToBoarding(ActionEvent event) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
@@ -1514,7 +1518,6 @@ public class IniciarSesionController {
         stage.setUserData(maletasDTO.getCodigoAerolinea());
         redireccion(event, "BuscarVuelo.fxml", null);
     }
-    //funcion que redireccione a SubirBajarMaletas
 
 
     @FXML

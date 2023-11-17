@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import um.edu.uy.*;
 import um.edu.uy.business.Exceptions.ConflictoCodgoVuelo;
+import um.edu.uy.business.Exceptions.ErrorReservaVuelo;
 import um.edu.uy.business.Exceptions.NoExisteVuelo;
 import um.edu.uy.business.VueloMapper;
 import um.edu.uy.business.entities.*;
@@ -178,16 +179,45 @@ public class VueloRestService {
 
     @Transactional
     @PostMapping("/aceptarYReservar")
-    public void aceptarYReservar(@RequestBody ReservaDTO reservaDTO){
+    public void aceptarYReservar(@RequestBody ReservaDTO reservaDTO) throws ErrorReservaVuelo {
         Vuelo vuelo = vueloRepository.findByCodigoVuelo(reservaDTO.getCodigoVuelo());
         Aeropuerto aeropuerto;
         if (reservaDTO.isLlegada()){
             vuelo.setAceptadoDestino(true);
+
             aeropuerto = aeropuertoRepository.findAeropuertoByCodigoIATAAeropuerto(vuelo.getAeropuertoDestino());
             Pista pista = aeropuerto.getPista();
             Puerta puerta = puertaRepository.findByIdPuerta(reservaDTO.getNumeroPuerta());
 
+
+
             LocalDate fechaLlegada = vuelo.getFechaETA();
+            List<Vuelo> vuelosLlegada = vueloRepository.findAllByFechaETAAndAeropuertoDestinoAndAceptadoDestinoAndAceptadoOrigen(fechaLlegada,aeropuerto,true,true);
+            System.out.println(vuelosLlegada);
+            for(int i=0;i< vuelosLlegada.size();i++){
+                Vuelo vue = vuelosLlegada.get(i);
+                Reserva resLle = vue.getReservaLlegada();
+                if(resLle.getPuerta().getIdPuerta()==reservaDTO.getNumeroPuerta()){
+                    if(reservaDTO.getLocalTimeFinPista().isBefore(resLle.getHoraFinalizacionPuerta()) && reservaDTO.getLocalTimeFinPuerta().isAfter(resLle.getHoraFinalizacionPuerta())){
+                        throw new ErrorReservaVuelo();
+                    } else if (reservaDTO.getLocalTimeFinPuerta().isBefore(resLle.getHoraFinalizacionPuerta()) && reservaDTO.getLocalTimeFinPista().isAfter(resLle.getHoraInicioPuerta())) {
+                        throw new ErrorReservaVuelo();
+                    } else if (reservaDTO.getLocalTimeFinPuerta().isAfter(resLle.getHoraInicioPuerta())&&reservaDTO.getLocalTimeFinPista().isBefore(resLle.getHoraInicioPuerta())) {
+                        throw new ErrorReservaVuelo();
+                    } else if (reservaDTO.getLocalTimeFinPuerta().isAfter(resLle.getHoraFinalizacionPuerta())&&reservaDTO.getLocalTimeFinPista().isBefore(resLle.getHoraInicioPuerta())) {
+                        throw new ErrorReservaVuelo();
+                    }
+                } else if (reservaDTO.getLocalTimeFinPista().isAfter(resLle.getHoraFinalizacionPista())&&vuelo.getHoraETA().isBefore(resLle.getHoraFinalizacionPista())) {
+                    throw new ErrorReservaVuelo();
+                } else if (reservaDTO.getLocalTimeFinPista().isBefore(resLle.getHoraFinalizacionPista())&&vuelo.getHoraETA().isAfter(resLle.getHoraInicioPista())) {
+                    throw new ErrorReservaVuelo();
+                } else if (reservaDTO.getLocalTimeFinPista().isAfter(resLle.getHoraInicioPista())&&vuelo.getHoraETA().isBefore(resLle.getHoraInicioPista())) {
+                    throw new ErrorReservaVuelo();
+                } else if (reservaDTO.getLocalTimeFinPista().isAfter(resLle.getHoraFinalizacionPista())&&vuelo.getHoraETA().isBefore(resLle.getHoraInicioPista())) {
+                    throw new ErrorReservaVuelo();
+                }
+            }
+
 
             Reserva reservaLlegada = new Reserva(pista,puerta,fechaLlegada,reservaDTO.getLocalTimeFinPista(),reservaDTO.getLocalTimeFinPuerta(),vuelo.getHoraETA(),reservaDTO.getLocalTimeFinPista());
 
@@ -378,7 +408,7 @@ public class VueloRestService {
     public List<VueloReservaDTO> getVueloReserva(@RequestBody ReservaDTO reservaDTO){
         Aeropuerto aeropuerto = aeropuertoRepository.findAeropuertoByCodigoIATAAeropuerto(reservaDTO.getCodigoAeropuerto());
         List<Vuelo> vuelosLlegada = vueloRepository.findAllByFechaETAAndAeropuertoDestinoAndAceptadoDestinoAndAceptadoOrigen(reservaDTO.getFecha(),aeropuerto,true,true);
-        List<Vuelo> vuelosSalida = vueloRepository.findAllByFechaETAAndAeropuertoOrigenAndAceptadoDestinoAndAceptadoOrigen(reservaDTO.getFecha(),aeropuerto,true,true);
+        List<Vuelo> vuelosSalida = vueloRepository.findAllByFechaEDTAndAeropuertoOrigenAndAceptadoDestinoAndAceptadoOrigen(reservaDTO.getFecha(),aeropuerto,true,true);
         List<VueloReservaDTO> reservaDTOS = new ArrayList<>();
         for (int i=0; i< vuelosLlegada.size(); i++){
             VueloReservaDTO vueloReservaDTO = new VueloReservaDTO();
