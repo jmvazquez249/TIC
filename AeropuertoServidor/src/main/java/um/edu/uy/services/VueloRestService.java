@@ -192,7 +192,6 @@ public class VueloRestService {
 
             LocalDate fechaLlegada = vuelo.getFechaETA();
             List<Vuelo> vuelosLlegada = vueloRepository.findAllByFechaETAAndAeropuertoDestinoAndAceptadoDestinoAndAceptadoOrigen(fechaLlegada,aeropuerto,true,true);
-            System.out.println(vuelosLlegada);
             if(!vuelosLlegada.isEmpty()) {
                 for (int i = 0; i < vuelosLlegada.size(); i++) {
                     Vuelo vue = vuelosLlegada.get(i);
@@ -231,6 +230,19 @@ public class VueloRestService {
             Pista pista = aeropuerto.getPista();
 
             LocalDate fechaSalida = vuelo.getFechaEDT();
+            List<Vuelo> vuelosSalida = vueloRepository.findAllByFechaEDTAndAeropuertoOrigenAndAceptadoDestinoAndAceptadoOrigen(fechaSalida,aeropuerto,true,true);
+            for (int i=0;i< vuelosSalida.size();i++){
+                Vuelo vue = vuelosSalida.get(i);
+                Reserva resSal = vue.getReservaSalida();
+                if(resSal.getPuerta().getIdPuerta()==reservaDTO.getNumeroPuerta()){
+                    if(true){
+
+                    }
+                }
+            }
+
+
+
             Reserva reservaSalida = new Reserva(pista,puerta,fechaSalida,reservaDTO.getLocalTimeFinPuerta(),vuelo.getHoraEDT(),vuelo.getHoraEDT(),reservaDTO.getLocalTimeFinPista());
 
             vuelo.setReservaSalida(reservaSalida);
@@ -284,7 +296,6 @@ public class VueloRestService {
         }
         return pasaportes;
     }
-    //funcion que te de la lista de maletas de un vuelo y que se fije si el vuelo esta llegando o saliendo, si esta saliendo que te de las maletas de los pasajeros que estan en el vuelo y si esta llegando que te de las maletas que tienen true el atributo subido al avion
     @Transactional
     @PostMapping("/getVueloMaletero")
     public List<MaletasDTO> getVueloMaletero(@RequestBody AgregarMaletasDTO agregarMaletasDTO) throws  ConflictoCodgoVuelo {
