@@ -78,8 +78,12 @@ public class AgregarUsuarioAeropuertoController implements Initializable {
             String contrasenaAdAero = contrasena.getText();
             String tipoUsuAerop = registroUsuarioBox.getValue().toUpperCase();
 
+            if(pasaporteAdAero==0 || nombreAdAero.equals("") || apellidoAdAero.equals("") || emailAdAero.equals("") || contrasenaAdAero.equals("") || tipoUsuAerop.equals("")){
+                showAlert("Datos incorrectos","Los datos ingresados no son correctos");
+            }
 
 
+            else {
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 String codigoAeropuero = (String) stage.getUserData();
 
@@ -98,6 +102,7 @@ public class AgregarUsuarioAeropuertoController implements Initializable {
                 if (response.getStatusCode() == HttpStatus.OK) {
                     showAlert("Usuario agregado", "Se agrego con exito el usuario!");
                 }
+            }
 
 
         }catch (Exception e){
