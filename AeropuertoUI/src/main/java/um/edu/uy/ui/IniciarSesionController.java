@@ -149,6 +149,10 @@ public class IniciarSesionController {
                 showAlert(
                         "Aeropuerto No existe",
                         "El aeropuerto ingresado no existe");
+            }
+
+            else if(pasaporteAdAero == 0 || nombreAdAero.equals("") || apellidoAdAero.equals("") || emailAdAero.equals("") || contrasenaAdAero.equals("") || codigoAeropuertoAdAero.equals("")){
+                showAlert("Datos incorrectos", "Los datos ingresados no son correctos");
 
 
             } else {
@@ -186,6 +190,10 @@ public class IniciarSesionController {
             String contrasenaUsu = contrasena.getText();
             String emailUsu = email.getText();
             long pasaporteUsu = Long.parseLong(pasaporte.getText());
+            if (pasaporteUsu == 0 || nombreUsu.equals("") || apellidoUsu.equals("") || emailUsu.equals("") || contrasenaUsu.equals("")) {
+                showAlert("Datos incorrectos", "Los datos ingresados no son correctos");
+            }
+            else {
 
 
             UsuarioGeneralDTO usuarioGeneralDTO = new UsuarioGeneralDTO();
@@ -222,6 +230,7 @@ public class IniciarSesionController {
                             "Se recibio el siguiente codigo de error: " + error.getStatusCode());
                 }
             }
+        }
 
 
         } catch (Exception e) {
@@ -230,6 +239,7 @@ public class IniciarSesionController {
                     "ERROR!",
                     "No se ingresaron los datos necesarios para completar el ingreso o algun dato es incorrecto");
         }
+
     }
 
     @FXML
@@ -250,6 +260,8 @@ public class IniciarSesionController {
                 showAlert(
                         "Error en el codigo IATA",
                         "El codigo IATA ingresado no es valido");
+            } else if (cantidadPuertas == 0 || nombreAero.equals("") || codigoIATAAero.equals("") || ciudadAero.equals("") || paisAero.equals("")) {
+                showAlert("Datos incorrectos", "Los datos ingresados no son correctos");
             } else {
 
                 AeropuertoDTO aeropuertoDTO = new AeropuertoDTO();
@@ -290,7 +302,11 @@ public class IniciarSesionController {
                 showAlert(
                         "Error en la capacidad",
                         "La capacidad de asientos no puede ser mayor a 1000 y la capacidad de bultos no puede ser mayor a 10000");
-            } else {
+            } else if(modeloAv.equals("") || matriculaAv.equals("") || capacidadAv == 0 || capacidadBultoAv == 0){
+                showAlert("Datos incorrectos", "Los datos ingresados no son correctos");
+            }
+
+            else {
 
 
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -337,7 +353,11 @@ public class IniciarSesionController {
                 showAlert(
                         "Error en el codigo IATA o ICAO",
                         "El codigo IATA o ICAO ingresado no es valido");
-            } else {
+
+            } else if (nombreAero.equals("") || codigoIATAAerol.equals("") || paisAerolinea.equals("") || codigoICAOAero.equals("")) {
+                showAlert("Datos incorrectos", "Los datos ingresados no son correctos");
+            }
+            else {
                 AerolineaDTO aerolineaDTO = new AerolineaDTO();
                 aerolineaDTO.setCodigoIATAAerolinea(codigoIATAAerol);
                 aerolineaDTO.setNombre(nombreAero);
@@ -381,7 +401,11 @@ public class IniciarSesionController {
                 showAlert(
                         "Aerolinea no registrada",
                         "La aerolinea ingresada no esta registrada");
-            } else {
+
+            }else if(pasaporteUsu == 0 || nombreUsu.equals("") || apellidoUsu.equals("") || emailUsu.equals("") || contrasenaUsu.equals("") || codigoIATAAerol.equals("")){
+                showAlert("Datos incorrectos", "Los datos ingresados no son correctos");
+            }
+            else {
 
                 UsuarioGeneralDTO usuarioGeneralDTO = new UsuarioGeneralDTO();
                 usuarioGeneralDTO.setPasaporte(pasaporteUsu);
@@ -1539,29 +1563,33 @@ public class IniciarSesionController {
 
             String codigoAeropuerto = (String) stage.getUserData();
             String codVuelo = codigoVueloMaletas.getText();
-
-            AgregarMaletasDTO agregarMaletasDTO = new AgregarMaletasDTO();
-            agregarMaletasDTO.setCodigoVueloMaletero(codVuelo);
-            agregarMaletasDTO.setCodigoAeropuertoMaletero(codigoAeropuerto);
-
-            ResponseEntity response = vueloRestService.getVueloMaletero(agregarMaletasDTO);
-
-            List list = (List) response.getBody();
-            List<Maleta> listaMaletas = new ArrayList<>();
-            for (int i = 0; i < list.size(); i++) {
-                Maleta maleta = new Maleta();
-                LinkedHashMap hashMap = (LinkedHashMap) list.get(i);
-                maleta.setIdMaleta(Long.parseLong(hashMap.get("idMaleta").toString()));
-                listaMaletas.add(maleta);
+            if (codVuelo.equals("") || codVuelo == null) {
+                showAlert("Error", "Error en los datos ingresados");
             }
-            ObservableList<Maleta> maletas = FXCollections.observableArrayList(listaMaletas);
-            columnaPasaporteMaletas.setCellValueFactory(new PropertyValueFactory<>("idMaleta"));
-            tablaMaletas.setItems(maletas);
+            else {
+                AgregarMaletasDTO agregarMaletasDTO = new AgregarMaletasDTO();
+                agregarMaletasDTO.setCodigoVueloMaletero(codVuelo);
+                agregarMaletasDTO.setCodigoAeropuertoMaletero(codigoAeropuerto);
 
-            addButtonToTableMaletas(tablaMaletas);
+                ResponseEntity response = vueloRestService.getVueloMaletero(agregarMaletasDTO);
+
+                List list = (List) response.getBody();
+                List<Maleta> listaMaletas = new ArrayList<>();
+                for (int i = 0; i < list.size(); i++) {
+                    Maleta maleta = new Maleta();
+                    LinkedHashMap hashMap = (LinkedHashMap) list.get(i);
+                    maleta.setIdMaleta(Long.parseLong(hashMap.get("idMaleta").toString()));
+                    listaMaletas.add(maleta);
+                }
+                ObservableList<Maleta> maletas = FXCollections.observableArrayList(listaMaletas);
+                columnaPasaporteMaletas.setCellValueFactory(new PropertyValueFactory<>("idMaleta"));
+                tablaMaletas.setItems(maletas);
+
+                addButtonToTableMaletas(tablaMaletas);
 
 
-            stage.show();
+                stage.show();
+            }
         } catch (HttpClientErrorException error) {
             if (error.getStatusCode() == HttpStatus.BAD_REQUEST) {
                 showAlert("Error", "El vuelo no sale del aeropuerto");

@@ -64,29 +64,34 @@ public class AgregarUsuarioAerolineaController implements Initializable {
         String contrasenaUsuAero = contrasena.getText();
         String tipoUsuAero = registroUsuarioBox.getValue().toUpperCase();
 
+                if (pasaporteUsuAero == 0 || nombreUsuAero.equals("") || apellidoUsuAero.equals("") || emailUsuAero.equals("") || contrasenaUsuAero.equals("") || tipoUsuAero.equals("")) {
+                    showAlert("Datos incorrectos", "Los datos ingresados no son correctos");
+                }
 
 
-                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                String codigoAerolinea = (String) stage.getUserData();
+                else {
+                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    String codigoAerolinea = (String) stage.getUserData();
 
 
-                UsuarioGeneralDTO usuarioGeneralDTO = new UsuarioGeneralDTO();
-                usuarioGeneralDTO.setPasaporte(pasaporteUsuAero);
-                usuarioGeneralDTO.setEmail(emailUsuAero);
-                usuarioGeneralDTO.setContrasena(contrasenaUsuAero);
-                usuarioGeneralDTO.setNombre(nombreUsuAero);
-                usuarioGeneralDTO.setApellido(apellidoUsuAero);
-                usuarioGeneralDTO.setTipo(tipoUsuAero);
-                usuarioGeneralDTO.setCodigoAerolinea(codigoAerolinea);
-                usuarioGeneralDTO.setCodigoAeropuerto(null);
+                    UsuarioGeneralDTO usuarioGeneralDTO = new UsuarioGeneralDTO();
+                    usuarioGeneralDTO.setPasaporte(pasaporteUsuAero);
+                    usuarioGeneralDTO.setEmail(emailUsuAero);
+                    usuarioGeneralDTO.setContrasena(contrasenaUsuAero);
+                    usuarioGeneralDTO.setNombre(nombreUsuAero);
+                    usuarioGeneralDTO.setApellido(apellidoUsuAero);
+                    usuarioGeneralDTO.setTipo(tipoUsuAero);
+                    usuarioGeneralDTO.setCodigoAerolinea(codigoAerolinea);
+                    usuarioGeneralDTO.setCodigoAeropuerto(null);
 
 
-                ResponseEntity response = usuarioGeneralRestService.agregarUsuarioGeneral(usuarioGeneralDTO);
+                    ResponseEntity response = usuarioGeneralRestService.agregarUsuarioGeneral(usuarioGeneralDTO);
 
-                if (response.getStatusCode() == HttpStatus.OK) {
+                    if (response.getStatusCode() == HttpStatus.OK) {
 
-                    showAlert("Usuario agregado", "Se agrego con exito el usuario!");
+                        showAlert("Usuario agregado", "Se agrego con exito el usuario!");
 
+                    }
                 }
 
 
