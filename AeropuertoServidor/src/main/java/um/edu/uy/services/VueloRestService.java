@@ -342,7 +342,7 @@ public class VueloRestService {
                     List<Maleta> maletas = asiento.getMaletas();
                     for (int j = 0; j < maletas.size(); j++) {
                         Maleta maleta = maletas.get(j);
-                        if (maleta.isSubidoAvion() == true) {
+                        if (maleta.isSubidoAvion() && !maleta.isEntregadoCliente()) {
                             MaletasDTO maletasDTO = new MaletasDTO();
                             maletasDTO.setIdMaleta(maleta.getIdMaleta());
                             maletasDTOs.add(maletasDTO);
@@ -358,9 +358,11 @@ public class VueloRestService {
                     List<Maleta> maletas = asiento.getMaletas();
                     for (int j = 0; j < maletas.size(); j++) {
                         Maleta maleta = maletas.get(j);
+                        if(!maleta.isSubidoAvion()) {
                             MaletasDTO maletasDTO = new MaletasDTO();
                             maletasDTO.setIdMaleta(maleta.getIdMaleta());
                             maletasDTOs.add(maletasDTO);
+                        }
                         }
                     }
                 }
