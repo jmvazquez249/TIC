@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="um.edu.uy.ui.IniciarSesionController">
+   <children>
+      <Text layoutX="73.0" layoutY="57.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Agregar Pasajero al Vuelo">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Text>
+      <Text layoutX="73.0" layoutY="142.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pasaporte Pasajero">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Text>
+      <TextField fx:id="pasaportePasajero" layoutX="220.0" layoutY="125.0" />
+      <Button layoutX="432.0" layoutY="336.0" mnemonicParsing="false" onAction="#agregarPasajero" text="Agregar" />
+      <Button layoutX="505.0" layoutY="336.0" mnemonicParsing="false" onAction="#backToVuelosConfirmados" text="Salir" />
+   </children>
+</Pane>

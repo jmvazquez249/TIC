@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="463.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="um.edu.uy.ui.IniciarSesionController">
+   <children>
+      <ComboBox fx:id="puerta" layoutX="74.0" layoutY="296.0" prefWidth="150.0" />
+      <Text layoutX="14.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Reserva Pista - Puerta Salida">
+         <font>
+            <Font size="39.0" />
+         </font>
+      </Text>
+      <Text layoutX="14.0" layoutY="315.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Puerta">
+         <font>
+            <Font name="System Italic" size="15.0" />
+         </font>
+      </Text>
+      <Text layoutX="14.0" layoutY="266.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <Text layoutX="15.0" layoutY="393.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pista">
+         <font>
+            <Font name="System Italic" size="15.0" />
+         </font>
+      </Text>
+      <TextField fx:id="horaFinalizacionPista" layoutX="134.0" layoutY="411.0" prefHeight="25.0" prefWidth="43.0" promptText="HH" />
+      <TextField fx:id="minutoFinalizacionPista" layoutX="189.0" layoutY="411.0" prefHeight="25.0" prefWidth="43.0" promptText="mm" />
+      <Text layoutX="16.0" layoutY="429.0" strokeType="OUTSIDE" strokeWidth="0.0" text="FINALIZACION">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Text>
+      <TextField fx:id="horaFinalizacionPuerta" layoutX="85.0" layoutY="331.0" prefHeight="25.0" prefWidth="43.0" promptText="HH" />
+      <TextField fx:id="minutoFinalizacionPuerta" layoutX="141.0" layoutY="331.0" prefHeight="25.0" prefWidth="43.0" promptText="mm" />
+      <Text layoutX="15.0" layoutY="349.0" strokeType="OUTSIDE" strokeWidth="0.0" text="INICIO">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Text>
+      <Button layoutX="534.0" layoutY="424.0" mnemonicParsing="false" onAction="#backAdminVuelos" text="Back" />
+      <Button layoutX="379.0" layoutY="424.0" mnemonicParsing="false" onAction="#confirmarReservasLlegada" text="Aceptar" />
+      <Text layoutX="310.0" layoutY="324.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Datos Vuelo">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Text>
+      <Label fx:id="labelHora" layoutX="455.0" layoutY="333.0" prefHeight="21.0" prefWidth="125.0" text="Label">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Text layoutX="355.0" layoutY="348.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hora Salida:">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Text>
+      <Button layoutX="455.0" layoutY="424.0" mnemonicParsing="false" onAction="#rechazarVuelo" text="Rechazar" />
+      <TableView fx:id="tablaVuelosReserva" layoutX="14.0" layoutY="66.0" prefHeight="218.0" prefWidth="572.0">
+         <columns>
+            <TableColumn fx:id="codVuelo" prefWidth="89.33331298828125" text="Codigo Vuelo" />
+            <TableColumn fx:id="numeroPuerta" prefWidth="49.333343505859375" text="Puerta" />
+            <TableColumn fx:id="horaIniPuerta" prefWidth="110.66665649414062" text="Hora Inicio Puerta" />
+            <TableColumn fx:id="horaFinPuerta" prefWidth="93.3333740234375" text="Hora Fin Puerta" />
+            <TableColumn fx:id="horaIniPista" prefWidth="103.33331298828125" text="Hora Inicio Pista" />
+            <TableColumn fx:id="horaFinPista" prefWidth="94.0" text="Hora Fin Pista" />
+         </columns>
+      </TableView>
+   </children>
+</Pane>
