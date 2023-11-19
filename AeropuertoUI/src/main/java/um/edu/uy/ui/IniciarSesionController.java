@@ -1126,6 +1126,29 @@ public class IniciarSesionController {
         stage.show();
     }
 
+    @FXML
+    private TableView<VueloDTO> vuelAerolinea;
+
+    @FXML
+    private TableColumn<VueloDTO,String> codigoVueloAerolinea;
+
+    @FXML
+    private TableColumn<VueloDTO,String> origenAerolinea;
+    @FXML
+    private TableColumn<VueloDTO,String> destinoAerolinea;
+    @FXML
+    private TableColumn<VueloDTO,String> avionAerolinea;
+    @FXML
+    private TableColumn<VueloDTO,String> ETAAerolinea;
+    @FXML
+    private TableColumn<VueloDTO,String> EDTAerolinea;
+
+    @FXML
+    private TableColumn<VueloDTO,String> estado;
+
+
+
+
 
     @FXML
     void cargarAgregarVuelo(ActionEvent event, String fxml, Oficina oficina) throws IOException {
@@ -1179,6 +1202,37 @@ public class IniciarSesionController {
         matriculaAvionConfirmadoAero.setCellValueFactory(new PropertyValueFactory<>("matriculaAvion"));
         tablaVuelosConfirmadosAero.setItems(vuelosConfirmados);
         addButtonToTablePasajeros(tablaVuelosConfirmadosAero);
+
+
+        ResponseEntity response3 = aerolineaRestService.getVuelosAerolinea(oficina.getCodigoAerolinea());
+        List vuelosAerol = (List) response3.getBody();
+        List<VueloDTO> vuelosAerolinea = new ArrayList<>();
+        System.out.println(vuelosAerol);
+
+        for (int k = 0; k < vuelosAerol.size(); k++) {
+            VueloDTO vueloDTO = new VueloDTO();
+            LinkedHashMap hashMap = (LinkedHashMap) vuelosAerol.get(k);
+            vueloDTO.setCodigoVuelo((String) hashMap.get("codigoVuelo"));
+            vueloDTO.setCodigoAeropuertoOrigen((String) hashMap.get("codigoAeropuertoOrigen"));
+            vueloDTO.setCodigoAeropuertoDestino((String) hashMap.get("codigoAeropuertoDestino"));
+            vueloDTO.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
+            vueloDTO.setEDT(LocalDateTime.parse((String) hashMap.get("edt")));
+            vueloDTO.setETA(LocalDateTime.parse((String) hashMap.get("eta")));
+            vueloDTO.setEstado((String) hashMap.get("estado"));
+            vuelosAerolinea.add(vueloDTO);
+        }
+        ObservableList<VueloDTO> vueAerolinea = FXCollections.observableArrayList(vuelosAerolinea);
+
+        codigoVueloAerolinea.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
+        origenAerolinea.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoOrigen"));
+        destinoAerolinea.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoDestino"));
+        avionAerolinea.setCellValueFactory(new PropertyValueFactory<>("matriculaAvion"));
+        ETAAerolinea.setCellValueFactory(new PropertyValueFactory<>("ETA"));
+        EDTAerolinea.setCellValueFactory(new PropertyValueFactory<>("EDT"));
+        estado.setCellValueFactory(new PropertyValueFactory<>("estado"));
+        vuelAerolinea.setItems(vueAerolinea);
+
+
 
         stage.setScene(scene);
         stage.show();
@@ -1421,6 +1475,7 @@ public class IniciarSesionController {
     @FXML
     private TextField codigoVueloBoarding;
 
+
     @FXML
     void buscarVueloBoarding(ActionEvent event) throws IOException {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -1541,10 +1596,8 @@ public class IniciarSesionController {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         MaletasDTO maletasDTO = (MaletasDTO) stage.getUserData();
         long cantMaletas = Long.parseLong(cantidadMaletas.getText());
-        //no puedeen haber mas de 5 maletas por persona
         if (cantMaletas > 5) {
             showAlert("Error", "No puede haber mas de 5 maletas por persona");
-            return;
         } else {
             maletasDTO.setCantidadMaletas(cantMaletas);
 
@@ -1560,9 +1613,6 @@ public class IniciarSesionController {
 
     @FXML
     public void backBuscarVuelo(ActionEvent event) throws IOException {
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        MaletasDTO maletasDTO = (MaletasDTO) stage.getUserData();
-        stage.setUserData(maletasDTO.getCodigoAerolinea());
         redireccion(event, "BuscarVuelo.fxml", null);
     }
 

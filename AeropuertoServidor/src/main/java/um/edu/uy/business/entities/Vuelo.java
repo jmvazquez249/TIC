@@ -202,6 +202,7 @@ public class Vuelo {
     }
 
 
-
-
+    public boolean isRechadado() {
+        return rechadado;
+    }
 }

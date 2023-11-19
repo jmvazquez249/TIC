@@ -21,4 +21,5 @@ public interface VueloRepository extends JpaRepository<Vuelo,Long> {
     List<Vuelo> findAllByFechaETAAndAeropuertoDestinoAndAceptadoDestinoAndAceptadoOrigen(LocalDate fechaLlegada, Aeropuerto aeropuerto, boolean aceptadoorigen, boolean aceptadodestino);
     List<Vuelo> findAllByFechaEDTAndAeropuertoOrigenAndAceptadoDestinoAndAceptadoOrigen(LocalDate fechaLlegada, Aeropuerto aeropuerto, boolean aceptadoorigen, boolean aceptadodestino);
     List<Vuelo> findAllByAceptadoOrigenAndAceptadoDestinoAndRechadado(boolean aceptadoorigen, boolean aceptadodestino, boolean rechazado);
+    List<Vuelo> findAllByAerolinea(Aerolinea aerolinea);
 }

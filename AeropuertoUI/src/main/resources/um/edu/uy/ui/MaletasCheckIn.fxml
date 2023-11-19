@@ -25,6 +25,7 @@
          </font>
       </Text>
       <TextField fx:id="cantidadMaletas" layoutX="20.0" layoutY="133.0" promptText="Cantidad Maletas" />
-      <Button layoutX="527.0" layoutY="361.0" mnemonicParsing="false" onAction="#agregarMeletas" text="Confirm" />
+      <Button layoutX="455.0" layoutY="361.0" mnemonicParsing="false" onAction="#agregarMeletas" text="Confirm" />
+      <Button layoutX="523.0" layoutY="361.0" mnemonicParsing="false" onAction="#buscarVuelo" text="Cancelar" />
    </children>
 </Pane>

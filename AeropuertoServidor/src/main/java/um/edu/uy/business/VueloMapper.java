@@ -53,6 +53,17 @@ public class VueloMapper {
         vueloDTO.setHoraETA(vuelo.getHoraETA());
         vueloDTO.setEDT(LocalDateTime.of(vuelo.getFechaEDT(),vuelo.getHoraEDT()));
         vueloDTO.setETA(LocalDateTime.of(vuelo.getFechaETA(),vuelo.getHoraETA()));
+        if(vuelo.isAceptadoOrigen()&& vuelo.isAceptadoDestino()){
+            vueloDTO.setEstado("CONFIRMADO");
+        } else if (vuelo.isAceptadoDestino()&& !vuelo.isAceptadoOrigen()) {
+            vueloDTO.setEstado("PENDIENTE ORIGEN");
+        }else if(vuelo.isAceptadoOrigen() && !vuelo.isAceptadoDestino()){
+            vueloDTO.setEstado("PENDIENTE DESTINO");
+        }else if(!vuelo.isAceptadoOrigen() && !vuelo.isAceptadoDestino()){
+            vueloDTO.setEstado("PENDIENTE O&D");
+        }else if(vuelo.isRechadado()) {
+            vueloDTO.setEstado("RECHAZADO");
+        }
         return vueloDTO;
     }
 
