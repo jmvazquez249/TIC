@@ -33,5 +33,8 @@ public class AerolineaRestService {
     public ResponseEntity getListaVuelosConfirmadosAero(String codigoAerolinea){
         return restTemplate.postForEntity("http://localhost:8080/vuelo/getListaVuelosConfirmadosAero",codigoAerolinea, List.class);
     }
+    public ResponseEntity getVuelosAerolinea(String codigoAerolinea){
+        return restTemplate.postForEntity("http://localhost:8080/aerolinea/getVuelosAerolinea",codigoAerolinea, List.class);
+    }
 
 }

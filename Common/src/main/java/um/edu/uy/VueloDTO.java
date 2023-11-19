@@ -31,6 +31,15 @@ public class VueloDTO {
     private LocalDateTime ETA;
 
     private LocalDateTime EDT;
+    private String estado;
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
 
     public LocalDateTime getETA() {
         return ETA;

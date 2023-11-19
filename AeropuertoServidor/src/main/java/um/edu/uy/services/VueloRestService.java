@@ -77,7 +77,6 @@ public class VueloRestService {
         List<Vuelo> vuelos = vueloRepository.findAllByAerolineaAndAceptadoOrigenAndAceptadoDestinoAndRechadado(aerolinea,true,true,false);
         List<VueloDTO> vueloDTOs = new ArrayList<>();
         for(int i=0; i<vuelos.size();i++){
-            //que solo aparezcan vuelos que su EDT es despues de hoy
             if(vuelos.get(i).getEDT().isAfter(LocalDateTime.now())){
                 vueloDTOs.add(vueloMapper.toVueloDTO(vuelos.get(i)));
             }
@@ -482,6 +481,8 @@ public class VueloRestService {
         }
         return reservaDTOS;
     }
+
+
 
 
 
