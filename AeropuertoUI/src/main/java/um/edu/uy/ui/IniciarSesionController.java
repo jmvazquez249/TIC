@@ -1475,6 +1475,7 @@ public class IniciarSesionController {
     @FXML
     private TextField codigoVueloBoarding;
 
+
     @FXML
     void buscarVueloBoarding(ActionEvent event) throws IOException {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
