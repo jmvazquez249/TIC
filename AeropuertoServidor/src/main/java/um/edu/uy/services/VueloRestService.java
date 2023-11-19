@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import um.edu.uy.*;
 import um.edu.uy.business.Exceptions.ConflictoCodgoVuelo;
+import um.edu.uy.business.Exceptions.ErrorMaleteria;
 import um.edu.uy.business.Exceptions.ErrorReservaVuelo;
 import um.edu.uy.business.Exceptions.NoExisteVuelo;
 import um.edu.uy.business.VueloMapper;
@@ -180,10 +181,15 @@ public class VueloRestService {
     @Transactional
     @PostMapping("/aceptarYReservar")
     public void aceptarYReservar(@RequestBody ReservaDTO reservaDTO) throws ErrorReservaVuelo {
+
+
         Vuelo vuelo = vueloRepository.findByCodigoVuelo(reservaDTO.getCodigoVuelo());
         Aeropuerto aeropuerto;
         if (reservaDTO.isLlegada()){
-            vuelo.setAceptadoDestino(true);
+
+            if(reservaDTO.getLocalTimeFinPista().isAfter(reservaDTO.getLocalTimeFinPuerta())||vuelo.getHoraETA().isAfter(reservaDTO.getLocalTimeFinPista())){
+                throw new ErrorReservaVuelo();
+            }
 
             aeropuerto = aeropuertoRepository.findAeropuertoByCodigoIATAAeropuerto(vuelo.getAeropuertoDestino());
             Pista pista = aeropuerto.getPista();
@@ -192,9 +198,9 @@ public class VueloRestService {
 
             LocalDate fechaLlegada = vuelo.getFechaETA();
             List<Vuelo> vuelosLlegada = vueloRepository.findAllByFechaETAAndAeropuertoDestinoAndAceptadoDestinoAndAceptadoOrigen(fechaLlegada,aeropuerto,true,true);
-            if(!vuelosLlegada.isEmpty()) {
-                for (int i = 0; i < vuelosLlegada.size(); i++) {
-                    Vuelo vue = vuelosLlegada.get(i);
+            for (int i = 0; i < vuelosLlegada.size(); i++) {
+                Vuelo vue = vuelosLlegada.get(i);
+                if(vue.getReservaLlegada()!=null){
                     Reserva resLle = vue.getReservaLlegada();
                     if (resLle.getPuerta().getIdPuerta() == reservaDTO.getNumeroPuerta()) {
                         if (reservaDTO.getLocalTimeFinPista().isBefore(resLle.getHoraFinalizacionPuerta()) && reservaDTO.getLocalTimeFinPuerta().isAfter(resLle.getHoraFinalizacionPuerta())) {
@@ -216,15 +222,18 @@ public class VueloRestService {
                         throw new ErrorReservaVuelo();
                     }
                 }
+
             }
 
             Reserva reservaLlegada = new Reserva(pista,puerta,fechaLlegada,reservaDTO.getLocalTimeFinPista(),reservaDTO.getLocalTimeFinPuerta(),vuelo.getHoraETA(),reservaDTO.getLocalTimeFinPista());
-
+            vuelo.setAceptadoDestino(true);
             vuelo.setReservaLlegada(reservaLlegada);
             reservaRepository.save(reservaLlegada);
             vueloRepository.save(vuelo);
         }else{
-            vuelo.setAceptadoOrigen(true);
+            if(reservaDTO.getLocalTimeFinPuerta().isAfter(vuelo.getHoraEDT())||vuelo.getHoraEDT().isAfter(reservaDTO.getLocalTimeFinPista())){
+                throw new ErrorReservaVuelo();
+            }
             aeropuerto = aeropuertoRepository.findAeropuertoByCodigoIATAAeropuerto(vuelo.getAeropuertoOrigen());
             Puerta puerta = puertaRepository.findByIdPuerta(reservaDTO.getNumeroPuerta());
             Pista pista = aeropuerto.getPista();
@@ -233,15 +242,31 @@ public class VueloRestService {
             List<Vuelo> vuelosSalida = vueloRepository.findAllByFechaEDTAndAeropuertoOrigenAndAceptadoDestinoAndAceptadoOrigen(fechaSalida,aeropuerto,true,true);
             for (int i=0;i< vuelosSalida.size();i++){
                 Vuelo vue = vuelosSalida.get(i);
-                Reserva resSal = vue.getReservaSalida();
-                if(resSal.getPuerta().getIdPuerta()==reservaDTO.getNumeroPuerta()){
-                    if(true){
-
+                if(vue.getReservaSalida()!=null) {
+                    Reserva resSal = vue.getReservaSalida();
+                    if (resSal.getPuerta().getIdPuerta() == reservaDTO.getNumeroPuerta()) {
+                        if (vuelo.getHoraEDT().isAfter(resSal.getHoraFinalizacionPuerta()) && reservaDTO.getLocalTimeFinPuerta().isBefore(resSal.getHoraFinalizacionPuerta())) {
+                            throw new ErrorReservaVuelo();
+                        } else if (vuelo.getHoraEDT().isBefore(resSal.getHoraFinalizacionPuerta()) && reservaDTO.getLocalTimeFinPuerta().isAfter(resSal.getHoraInicioPuerta())) {
+                            throw new ErrorReservaVuelo();
+                        } else if (vuelo.getHoraEDT().isAfter(resSal.getHoraInicioPuerta()) && reservaDTO.getLocalTimeFinPuerta().isBefore(resSal.getHoraInicioPuerta())) {
+                            throw new ErrorReservaVuelo();
+                        } else if (vuelo.getHoraEDT().isAfter(resSal.getHoraFinalizacionPuerta()) && reservaDTO.getLocalTimeFinPuerta().isBefore(resSal.getHoraInicioPuerta())) {
+                            throw new ErrorReservaVuelo();
+                        }
+                    } else if (reservaDTO.getLocalTimeFinPista().isAfter(resSal.getHoraFinalizacionPista()) && vuelo.getHoraEDT().isBefore(resSal.getHoraFinalizacionPista())) {
+                        throw new ErrorReservaVuelo();
+                    } else if (reservaDTO.getLocalTimeFinPista().isBefore(resSal.getHoraFinalizacionPista()) && vuelo.getHoraEDT().isAfter(resSal.getHoraInicioPista())) {
+                        throw new ErrorReservaVuelo();
+                    } else if (reservaDTO.getLocalTimeFinPista().isAfter(resSal.getHoraInicioPista()) && vuelo.getHoraEDT().isBefore(resSal.getHoraInicioPista())) {
+                        throw new ErrorReservaVuelo();
+                    } else if (reservaDTO.getLocalTimeFinPista().isAfter(resSal.getHoraFinalizacionPista()) && vuelo.getHoraEDT().isBefore(resSal.getHoraInicioPista())) {
+                        throw new ErrorReservaVuelo();
                     }
                 }
             }
 
-
+            vuelo.setAceptadoOrigen(true);
 
             Reserva reservaSalida = new Reserva(pista,puerta,fechaSalida,reservaDTO.getLocalTimeFinPuerta(),vuelo.getHoraEDT(),vuelo.getHoraEDT(),reservaDTO.getLocalTimeFinPista());
 
@@ -298,9 +323,15 @@ public class VueloRestService {
     }
     @Transactional
     @PostMapping("/getVueloMaletero")
-    public List<MaletasDTO> getVueloMaletero(@RequestBody AgregarMaletasDTO agregarMaletasDTO) throws  ConflictoCodgoVuelo {
+    public List<MaletasDTO> getVueloMaletero(@RequestBody AgregarMaletasDTO agregarMaletasDTO) throws ConflictoCodgoVuelo, ErrorMaleteria {
         Vuelo vuelo = vueloRepository.findByCodigoVuelo(agregarMaletasDTO.getCodigoVueloMaletero());
+        if(vuelo==null){
+            throw new ErrorMaleteria();
+        }
         Aeropuerto aeropuerto = aeropuertoRepository.findAeropuertoByCodigoIATAAeropuerto(agregarMaletasDTO.getCodigoAeropuertoMaletero());
+
+
+
 
         List<Asiento> asientos = vuelo.getAsientos();
         List<MaletasDTO> maletasDTOs = new ArrayList<>();

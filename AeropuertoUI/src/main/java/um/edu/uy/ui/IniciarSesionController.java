@@ -1192,9 +1192,6 @@ public class IniciarSesionController {
     @FXML
     void registrarVuelo(ActionEvent event) {
         try {
-
-            //poner los controles de las fechas
-            //ETA>EDT cambiar en FXML
             String horaETA = HHETA.getText();
             String minutoETA = mmETA.getText();
             int horaIntETA = Integer.parseInt(horaETA);
@@ -1261,26 +1258,18 @@ public class IniciarSesionController {
 
     @FXML
     void buscarVuelo(ActionEvent event) throws IOException {
-
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
         String codigoAerolinea = (String) stage.getUserData();
-
-
         String codVuelo = codigoVuelo.getText();
-
 
         if (codVuelo.equals("") || codVuelo == null) {
 
             showAlert("Error", "Error en los datos ingresados");
 
         } else {
-
             CheckInDTO checkInDTO = new CheckInDTO();
             checkInDTO.setCodigoVuelo(codVuelo);
             checkInDTO.setCodigoAerolinea(codigoAerolinea);
-
-
             try {
                 ResponseEntity response = vueloRestService.getPasaportes(checkInDTO);
                 if (response.getStatusCode() == HttpStatus.OK) {
@@ -1453,8 +1442,6 @@ public class IniciarSesionController {
             public TableCell<Pasaporte, Void> call(final TableColumn<Pasaporte, Void> param) {
                 final TableCell<Pasaporte, Void> cell = new TableCell<>() {
                     private final Button btn = new Button("Boarding");
-
-                    //boton que use la funcion Boarding del vuelo rest service
                     {
                         btn.setOnAction((ActionEvent event) -> {
                             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -1553,13 +1540,9 @@ public class IniciarSesionController {
 
     @FXML
     void buscarVueloMaletero(ActionEvent event) throws IOException {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setControllerFactory(Main.getContext()::getBean);
-            Parent root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream("SubirBajarMaletas.fxml"));
-            Scene scene = new Scene(root);
+
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
+
 
             String codigoAeropuerto = (String) stage.getUserData();
             String codVuelo = codigoVueloMaletas.getText();
@@ -1567,39 +1550,57 @@ public class IniciarSesionController {
                 showAlert("Error", "Error en los datos ingresados");
             }
             else {
-                AgregarMaletasDTO agregarMaletasDTO = new AgregarMaletasDTO();
-                agregarMaletasDTO.setCodigoVueloMaletero(codVuelo);
-                agregarMaletasDTO.setCodigoAeropuertoMaletero(codigoAeropuerto);
 
-                ResponseEntity response = vueloRestService.getVueloMaletero(agregarMaletasDTO);
+                try{
+                        AgregarMaletasDTO agregarMaletasDTO = new AgregarMaletasDTO();
+                        agregarMaletasDTO.setCodigoVueloMaletero(codVuelo);
+                        agregarMaletasDTO.setCodigoAeropuertoMaletero(codigoAeropuerto);
 
-                List list = (List) response.getBody();
-                List<Maleta> listaMaletas = new ArrayList<>();
-                for (int i = 0; i < list.size(); i++) {
-                    Maleta maleta = new Maleta();
-                    LinkedHashMap hashMap = (LinkedHashMap) list.get(i);
-                    maleta.setIdMaleta(Long.parseLong(hashMap.get("idMaleta").toString()));
-                    listaMaletas.add(maleta);
+                        ResponseEntity response = vueloRestService.getVueloMaletero(agregarMaletasDTO);
+
+                        if(response.getStatusCode()==HttpStatus.OK) {
+                            FXMLLoader fxmlLoader = new FXMLLoader();
+                            fxmlLoader.setControllerFactory(Main.getContext()::getBean);
+                            Parent root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream("SubirBajarMaletas.fxml"));
+                            Scene scene = new Scene(root);
+                            stage.setScene(scene);
+
+
+                            List list = (List) response.getBody();
+                            List<Maleta> listaMaletas = new ArrayList<>();
+                            for (int i = 0; i < list.size(); i++) {
+                                Maleta maleta = new Maleta();
+                                LinkedHashMap hashMap = (LinkedHashMap) list.get(i);
+                                maleta.setIdMaleta(Long.parseLong(hashMap.get("idMaleta").toString()));
+                                listaMaletas.add(maleta);
+                            }
+                            ObservableList<Maleta> maletas = FXCollections.observableArrayList(listaMaletas);
+                            columnaPasaporteMaletas.setCellValueFactory(new PropertyValueFactory<>("idMaleta"));
+                            tablaMaletas.setItems(maletas);
+
+                            addButtonToTableMaletas(tablaMaletas);
+
+
+                            stage.show();
+                        }
+            }catch (HttpClientErrorException error) {
+                    if (error.getStatusCode() == HttpStatus.BAD_REQUEST) {
+                        showAlert("Error", "Error con el vuelo ingesado");
+                    } else if (error.getStatusCode() == HttpStatus.CONFLICT) {
+                        showAlert("Error", "No existe vuelo");
+
+                    }
                 }
-                ObservableList<Maleta> maletas = FXCollections.observableArrayList(listaMaletas);
-                columnaPasaporteMaletas.setCellValueFactory(new PropertyValueFactory<>("idMaleta"));
-                tablaMaletas.setItems(maletas);
 
-                addButtonToTableMaletas(tablaMaletas);
-
-
-                stage.show();
-            }
-        } catch (HttpClientErrorException error) {
-            if (error.getStatusCode() == HttpStatus.BAD_REQUEST) {
-                showAlert("Error", "El vuelo no sale del aeropuerto");
-            } else if (error.getStatusCode() == HttpStatus.CONFLICT) {
-                showAlert("Error", "No existe vuelo");
-
-            }
         }
     }
 
+    @FXML
+    private void backToMaletero(ActionEvent event) throws IOException {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        String codigoAeropuerto = (String) stage.getUserData();
+        redireccion(event, "Maletero.fxml",codigoAeropuerto );
+    }
     private void addButtonToTableMaletas(TableView<Maleta> t) {
         TableColumn<Maleta, Void> colBtn = new TableColumn("");
         colBtn.setMinWidth(127);

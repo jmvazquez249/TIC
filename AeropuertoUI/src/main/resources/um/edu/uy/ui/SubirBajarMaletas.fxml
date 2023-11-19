@@ -10,6 +10,6 @@
           <TableColumn fx:id="columnaPasaporteMaletas" prefWidth="75.0" text="Id Maleta" />
         </columns>
       </TableView>
-      <Button layoutX="474.0" layoutY="330.0" mnemonicParsing="false" text="Cancelar" />
+      <Button layoutX="474.0" layoutY="330.0" mnemonicParsing="false" text="Cancelar" onAction="#backToMaletero" />
    </children>
 </Pane>
