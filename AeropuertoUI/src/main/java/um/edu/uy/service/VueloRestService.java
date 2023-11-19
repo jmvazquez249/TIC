@@ -62,5 +62,9 @@ public class VueloRestService {
     public ResponseEntity subirBajarMaleta(AgregarMaletasDTO agregarMaletasDTO){
         return restTemplate.postForEntity("http://localhost:8080/vuelo/subirBajarMaletas",agregarMaletasDTO,null);
     }
+    public ResponseEntity getVuelosConfirmadoCliente(){
+        return restTemplate.getForEntity("http://localhost:8080/vuelo/getVuelosConfirmadoCliente",List.class);
+    }
+
 
 }

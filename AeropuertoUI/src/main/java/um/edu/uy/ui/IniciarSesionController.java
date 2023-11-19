@@ -110,7 +110,7 @@ public class IniciarSesionController {
             } else if (tipoUsuario.equals("ADMINAEROPUERTO")) {
                 cargarAdministradorAeropuerto(event, usu.getCodigoAeropuerto());
             } else if (tipoUsuario.equals("CLIENTE")) {
-                redireccion(event, "Cliente.fxml", null);
+                cargarVuelosConfirmadosCliente(event);
             } else if (tipoUsuario.equals("ADMINAEROLINEA")) {
                 redireccion(event, "AdminAerolinea.fxml", usu.getCodigoAerolinea());
             } else if (tipoUsuario.equals("CHECK IN")) {
@@ -1690,4 +1690,62 @@ public class IniciarSesionController {
         t.getColumns().add(colBtn);
 
     }
+
+    //crear una tableview con todos los vuelos confirmados
+    @FXML
+    private TableView<VueloDTO> tablaVuelosConfirmadosCliente;
+
+    @FXML
+    private TableColumn<VueloDTO, String> codigoVueloConfirmadoCliente;
+    @FXML
+    private TableColumn<VueloDTO, String> aeropuertoOrigenConfirmadoCliente;
+    @FXML
+    private TableColumn<VueloDTO, String> aeropuertoDestinoConfirmadoCliente;
+    @FXML
+    private TableColumn<VueloDTO, String> matriculaAvionConfirmadoCliente;
+    @FXML
+    private TableColumn<VueloDTO, String> fechaEDTConfirmadoCliente;
+    @FXML
+    private TableColumn<VueloDTO, String> fechaETAConfirmadoCliente;
+
+    //funcion que me devuelve todos los vuelos confirmados de todas las aerolineas usa la funcion getVuelosConfirmadoCliente de VueloRestService
+    @FXML
+    void cargarVuelosConfirmadosCliente(ActionEvent event) throws IOException {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setControllerFactory(Main.getContext()::getBean);
+        Parent root = fxmlLoader.load(IniciarSesionController.class.getResourceAsStream("Cliente.fxml"));
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+
+
+        ResponseEntity response = vueloRestService.getVuelosConfirmadoCliente();
+        List vueloDTOS = (List) response.getBody();
+        List<VueloDTO> vuelos = new ArrayList<>();
+        for (int i = 0; i < vueloDTOS.size(); i++) {
+            VueloDTO vueloDTO = new VueloDTO();
+            LinkedHashMap hashMap = (LinkedHashMap) vueloDTOS.get(i);
+            vueloDTO.setCodigoVuelo((String) hashMap.get("codigoVuelo"));
+            vueloDTO.setCodigoAeropuertoOrigen((String) hashMap.get("codigoAeropuertoOrigen"));
+            vueloDTO.setCodigoAeropuertoDestino((String) hashMap.get("codigoAeropuertoDestino"));
+            vueloDTO.setMatriculaAvion((String) hashMap.get("matriculaAvion"));
+            vueloDTO.setEDT(LocalDateTime.parse((String) hashMap.get("edt")));
+            vueloDTO.setETA(LocalDateTime.parse((String) hashMap.get("eta")));
+
+            vuelos.add(vueloDTO);
+        }
+        ObservableList<VueloDTO> vuelosConfirmados = FXCollections.observableArrayList(vuelos);
+        codigoVueloConfirmadoCliente.setCellValueFactory(new PropertyValueFactory<>("codigoVuelo"));
+        aeropuertoOrigenConfirmadoCliente.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoOrigen"));
+        aeropuertoDestinoConfirmadoCliente.setCellValueFactory(new PropertyValueFactory<>("codigoAeropuertoDestino"));
+        matriculaAvionConfirmadoCliente.setCellValueFactory(new PropertyValueFactory<>("matriculaAvion"));
+        fechaEDTConfirmadoCliente.setCellValueFactory(new PropertyValueFactory<>("EDT"));
+        fechaETAConfirmadoCliente.setCellValueFactory(new PropertyValueFactory<>("ETA"));
+        tablaVuelosConfirmadosCliente.setItems(vuelosConfirmados);
+
+        stage.show();
+
+    }
+
 }

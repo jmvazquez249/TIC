@@ -483,6 +483,19 @@ public class VueloRestService {
         return reservaDTOS;
     }
 
+    //funcion que me devuelva una lista con todos los vuelos confirmados de todas las aerolineas
+    @GetMapping("/getVuelosConfirmadoCliente")
+    public List<VueloDTO> getVuelosConfirmados(){
+    	List<Vuelo> vuelos = vueloRepository.findAllByAceptadoOrigenAndAceptadoDestinoAndRechadado(true, true, false);
+    	List<VueloDTO> vuelosDTO = new ArrayList<>();
+    	for(int i=0; i<vuelos.size();i++){
+            if(vuelos.get(i).getEDT().isAfter(LocalDateTime.now())){
+                vuelosDTO.add(vueloMapper.toVueloDTO(vuelos.get(i)));
+            }
+        }
+    	return vuelosDTO;
+    }
+
 
 
 
