@@ -6,11 +6,13 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="463.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="um.edu.uy.ui.IniciarSesionController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="525.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="um.edu.uy.ui.IniciarSesionController">
    <children>
       <ComboBox fx:id="puerta" layoutX="74.0" layoutY="296.0" prefWidth="150.0" />
       <Text layoutX="14.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Reserva Pista - Puerta Salida">
@@ -43,8 +45,8 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Text>
-      <Button layoutX="534.0" layoutY="424.0" mnemonicParsing="false" onAction="#backAdminVuelos" text="Back" />
-      <Button layoutX="379.0" layoutY="424.0" mnemonicParsing="false" onAction="#confirmarReservasLlegada" text="Aceptar" />
+      <Button layoutX="536.0" layoutY="485.0" mnemonicParsing="false" onAction="#backAdminVuelos" text="Back" />
+      <Button layoutX="381.0" layoutY="485.0" mnemonicParsing="false" onAction="#confirmarReservasLlegada" text="Aceptar" />
       <Text layoutX="310.0" layoutY="324.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Datos Vuelo">
          <font>
             <Font name="System Bold" size="15.0" />
@@ -60,7 +62,7 @@
             <Font size="15.0" />
          </font>
       </Text>
-      <Button layoutX="455.0" layoutY="424.0" mnemonicParsing="false" onAction="#rechazarVuelo" text="Rechazar" />
+      <Button layoutX="457.0" layoutY="485.0" mnemonicParsing="false" onAction="#rechazarVuelo" text="Rechazar" />
       <TableView fx:id="tablaVuelosReserva" layoutX="14.0" layoutY="66.0" prefHeight="218.0" prefWidth="572.0">
          <columns>
             <TableColumn fx:id="codVuelo" prefWidth="89.33331298828125" text="Codigo Vuelo" />
@@ -71,5 +73,10 @@
             <TableColumn fx:id="horaFinPista" prefWidth="94.0" text="Hora Fin Pista" />
          </columns>
       </TableView>
+      <ImageView fitHeight="71.0" fitWidth="110.0" layoutX="19.0" layoutY="440.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="um/edu/uy/ui/Picture1.png" />
+         </image>
+      </ImageView>
    </children>
 </Pane>
