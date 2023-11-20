@@ -2,20 +2,27 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="um.edu.uy.ui.IniciarSesionController">
    <children>
-      <Text layoutX="215.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Maletero">
+      <Text layoutX="196.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Maletero">
          <font>
-            <Font size="38.0" />
+            <Font size="42.0" />
          </font>
       </Text>
-      <Button layoutX="459.0" layoutY="328.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
+      <Button layoutX="529.0" layoutY="361.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
       <TextField fx:id="codigoVueloMaletas" layoutX="205.0" layoutY="157.0" />
-      <Button layoutX="385.0" layoutY="158.0" mnemonicParsing="false" text="Buscar" onAction="#buscarVueloMaletero" />
+      <Button layoutX="385.0" layoutY="158.0" mnemonicParsing="false" onAction="#buscarVueloMaletero" text="Buscar" />
       <Text layoutX="124.0" layoutY="176.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Codigo Avion" />
+      <ImageView fitHeight="78.0" fitWidth="83.0" layoutX="14.0" layoutY="308.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Picture1.png" />
+         </image>
+      </ImageView>
    </children>
 </Pane>
