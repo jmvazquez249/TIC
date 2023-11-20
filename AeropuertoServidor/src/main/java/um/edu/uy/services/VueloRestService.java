@@ -133,19 +133,6 @@ public class VueloRestService {
     public void agregarVuelo(@RequestBody VueloDTO vueloDTO) {
         Vuelo vuelo = vueloMapper.toVuelo(vueloDTO);
         Aerolinea aerol = aerolineaRepository.findAerolineaByCodigoIATAAerolinea(vueloDTO.getCodigoAerolinea());
-        String avionAsignado = vuelo.getAvion();
-
-        int capacidadAsientos = avionRepository.findByMatricula(avionAsignado).getCapacidad();
-        // Crea una lista de asientos con la misma longitud que la capacidad de asientos del avión.
-        List<Asiento> asientos = new ArrayList<>(capacidadAsientos);
-        for (int i = 1; i <= capacidadAsientos; i++) {
-            Asiento asiento = new Asiento(i);
-            asientoRepository.save(asiento);
-            asientos.add(asiento);
-
-        }
-        vuelo.setAsientos(asientos); // Asigna la lista de asientos al vuelo
-
         List<Vuelo> vuelosAero = aerol.getVuelos();
         vuelosAero.add(vuelo);
 
@@ -180,12 +167,9 @@ public class VueloRestService {
     @Transactional
     @PostMapping("/aceptarYReservar")
     public void aceptarYReservar(@RequestBody ReservaDTO reservaDTO) throws ErrorReservaVuelo {
-
-
         Vuelo vuelo = vueloRepository.findByCodigoVuelo(reservaDTO.getCodigoVuelo());
         Aeropuerto aeropuerto;
         if (reservaDTO.isLlegada()){
-
             if(reservaDTO.getLocalTimeFinPista().isAfter(reservaDTO.getLocalTimeFinPuerta())||vuelo.getHoraETA().isAfter(reservaDTO.getLocalTimeFinPista())){
                 throw new ErrorReservaVuelo();
             }
@@ -221,14 +205,29 @@ public class VueloRestService {
                         throw new ErrorReservaVuelo();
                     }
                 }
-
             }
 
             Reserva reservaLlegada = new Reserva(pista,puerta,fechaLlegada,reservaDTO.getLocalTimeFinPista(),reservaDTO.getLocalTimeFinPuerta(),vuelo.getHoraETA(),reservaDTO.getLocalTimeFinPista());
             vuelo.setAceptadoDestino(true);
+            if(vuelo.isAceptadoOrigen()){
+                String avionAsignado = vuelo.getAvion();
+
+                int capacidadAsientos = avionRepository.findByMatricula(avionAsignado).getCapacidad();
+                List<Asiento> asientos = new ArrayList<>(capacidadAsientos);
+                for (int i = 1; i <= capacidadAsientos; i++) {
+                    Asiento asiento = new Asiento(i);
+                    asientoRepository.save(asiento);
+                    asientos.add(asiento);
+
+                }
+                vuelo.setAsientos(asientos);
+            }
+
             vuelo.setReservaLlegada(reservaLlegada);
             reservaRepository.save(reservaLlegada);
             vueloRepository.save(vuelo);
+
+
         }else{
             if(reservaDTO.getLocalTimeFinPuerta().isAfter(vuelo.getHoraEDT())||vuelo.getHoraEDT().isAfter(reservaDTO.getLocalTimeFinPista())){
                 throw new ErrorReservaVuelo();
@@ -266,6 +265,19 @@ public class VueloRestService {
             }
 
             vuelo.setAceptadoOrigen(true);
+            if(vuelo.isAceptadoDestino()){
+                String avionAsignado = vuelo.getAvion();
+
+                int capacidadAsientos = avionRepository.findByMatricula(avionAsignado).getCapacidad();
+                List<Asiento> asientos = new ArrayList<>(capacidadAsientos);
+                for (int i = 1; i <= capacidadAsientos; i++) {
+                    Asiento asiento = new Asiento(i);
+                    asientoRepository.save(asiento);
+                    asientos.add(asiento);
+
+                }
+                vuelo.setAsientos(asientos);
+            }
 
             Reserva reservaSalida = new Reserva(pista,puerta,fechaSalida,reservaDTO.getLocalTimeFinPuerta(),vuelo.getHoraEDT(),vuelo.getHoraEDT(),reservaDTO.getLocalTimeFinPista());
 

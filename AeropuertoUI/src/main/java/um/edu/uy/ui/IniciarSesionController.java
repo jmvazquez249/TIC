@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,9 @@ public class IniciarSesionController {
 
     @Autowired
     private AerolineaRestService aerolineaRestService;
+
+    @FXML
+    private ImageView imageView;
     @FXML
     private TextField email;
     @FXML

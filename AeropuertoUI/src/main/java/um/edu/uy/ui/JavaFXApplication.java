@@ -1,14 +1,19 @@
 package um.edu.uy.ui;
 
 import javafx.application.Application;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import um.edu.uy.Main;
 
 public class JavaFXApplication extends Application  {
     private Parent root;
+
+    @FXML
+    private ImageView imageView;
 
     @Override
     public void init() throws Exception {
