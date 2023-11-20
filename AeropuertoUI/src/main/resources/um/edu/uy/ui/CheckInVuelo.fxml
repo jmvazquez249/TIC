@@ -24,7 +24,7 @@
       <Button layoutX="237.0" layoutY="561.0" mnemonicParsing="false" onAction="#backBuscarVuelo" text="Back" />
       <ImageView fitHeight="66.0" fitWidth="80.0" layoutX="34.0" layoutY="554.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="um/edu/uy/ui/Picture1.png" />
+            <Image url="@/um/edu/uy/ui/Picture1.png" />
          </image>
       </ImageView>
    </children>

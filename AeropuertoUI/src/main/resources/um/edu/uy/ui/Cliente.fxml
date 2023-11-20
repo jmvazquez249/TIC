@@ -29,7 +29,7 @@
       </TableView>
       <ImageView fitHeight="82.0" fitWidth="76.0" layoutX="38.0" layoutY="318.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="um/edu/uy/ui/Picture1.png" />
+            <Image url="/um/edu/uy/ui/Picture1.png" />
          </image>
       </ImageView>
    </children>

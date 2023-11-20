@@ -1418,6 +1418,9 @@ public class IniciarSesionController {
     }
 
     @FXML
+    private Label pasaporteCheckIn;
+
+    @FXML
     private TextField cantidadMaletas;
 
     private void addButtonToTablePasaportes(TableView t) {
@@ -1447,11 +1450,15 @@ public class IniciarSesionController {
                             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                             stage.setScene(scene);
 
+
+
+
                             Pasaporte pas = (Pasaporte) getTableView().getItems().get(getIndex());
 
 
                             MaletasDTO maletasDTO = (MaletasDTO) stage.getUserData();
                             maletasDTO.setPasaporte(pas.getValor());
+                            pasaporteCheckIn.setText(String.valueOf(maletasDTO.getPasaporte()));
                             stage.setUserData(maletasDTO);
 
                             stage.show();

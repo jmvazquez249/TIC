@@ -31,7 +31,7 @@
       </Text>
       <ImageView fitHeight="68.0" fitWidth="73.0" layoutX="24.0" layoutY="318.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="um/edu/uy/ui/Picture1.png" />
+            <Image url="@/um/edu/uy/ui/Picture1.png" />
          </image>
       </ImageView>
    </children>
