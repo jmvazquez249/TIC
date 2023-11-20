@@ -3,6 +3,8 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
@@ -27,5 +29,10 @@
       <Button layoutX="438.0" layoutY="342.0" mnemonicParsing="false" onAction="#registrarUsuarioAerolinea" text="Confirm" />
       <Button layoutX="515.0" layoutY="342.0" mnemonicParsing="false" onAction="#backToAdminAerolinea" text="Back" />
       <ComboBox fx:id="registroUsuarioBox" layoutX="160.0" layoutY="265.0" prefHeight="26.0" prefWidth="310.0" promptText="Tipo de Usuario" />
+      <ImageView fitHeight="85.0" fitWidth="90.0" layoutX="14.0" layoutY="297.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Picture1.png" />
+         </image>
+      </ImageView>
    </children>
 </Pane>
