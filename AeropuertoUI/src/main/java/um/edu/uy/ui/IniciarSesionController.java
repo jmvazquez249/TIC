@@ -880,43 +880,52 @@ public class IniciarSesionController {
 
     @FXML
     private void confirmarReservasLlegada(ActionEvent event) throws IOException {
-
-        Long numeroPuerta = puerta.getValue();
-
-        int horaFinPuerta = Integer.parseInt(horaFinalizacionPuerta.getText());
-        int minFinPuerta = Integer.parseInt(minutoFinalizacionPuerta.getText());
-        LocalTime timeFinPuerta = LocalTime.of(horaFinPuerta, minFinPuerta);
-
-        int horaFinPista = Integer.parseInt(horaFinalizacionPista.getText());
-        int minFinPista = Integer.parseInt(minutoFinalizacionPista.getText());
-        LocalTime timeFinPista = LocalTime.of(horaFinPista, minFinPista);
-
-
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        List list = (List) stage.getUserData();
-
-        ReservaDTO reservaDTO = new ReservaDTO();
-        reservaDTO.setNumeroPuerta(numeroPuerta);
-        reservaDTO.setLocalTimeFinPista(timeFinPista);
-        reservaDTO.setLocalTimeFinPuerta(timeFinPuerta);
-        reservaDTO.setLlegada((boolean) list.get(1));
-        reservaDTO.setCodigoVuelo((String) list.get(0));
-
         try {
-            ResponseEntity response = vueloRestService.aceptarYReservar(reservaDTO);
-            if (response.getStatusCode() == HttpStatus.OK) {
-                stage.setUserData(list.get(2));
-                cargarAdministradorVuelos(event, (String) list.get(2));
-                showAlert("Confirmacion Reserva", "La reserva fue exitosa");
+            if (puerta.getValue() == null ||
+                    horaFinalizacionPuerta.getText().equals("") || horaFinalizacionPuerta.getText() == null ||
+                    minutoFinalizacionPuerta.getText().equals("") || minutoFinalizacionPuerta.getText() == null ||
+                    horaFinalizacionPista.getText().equals("") || horaFinalizacionPista.getText() == null ||
+                    minutoFinalizacionPista.getText().equals("") || minutoFinalizacionPista.getText() == null) {
+                showAlert("Error", "Error en los datos ingresados");
+            } else {
+
+                Long numeroPuerta = puerta.getValue();
+
+                int horaFinPuerta = Integer.parseInt(horaFinalizacionPuerta.getText());
+                int minFinPuerta = Integer.parseInt(minutoFinalizacionPuerta.getText());
+                LocalTime timeFinPuerta = LocalTime.of(horaFinPuerta, minFinPuerta);
+
+                int horaFinPista = Integer.parseInt(horaFinalizacionPista.getText());
+                int minFinPista = Integer.parseInt(minutoFinalizacionPista.getText());
+                LocalTime timeFinPista = LocalTime.of(horaFinPista, minFinPista);
+
+
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                List list = (List) stage.getUserData();
+
+                ReservaDTO reservaDTO = new ReservaDTO();
+                reservaDTO.setNumeroPuerta(numeroPuerta);
+                reservaDTO.setLocalTimeFinPista(timeFinPista);
+                reservaDTO.setLocalTimeFinPuerta(timeFinPuerta);
+                reservaDTO.setLlegada((boolean) list.get(1));
+                reservaDTO.setCodigoVuelo((String) list.get(0));
+
+                try {
+                    ResponseEntity response = vueloRestService.aceptarYReservar(reservaDTO);
+                    if (response.getStatusCode() == HttpStatus.OK) {
+                        stage.setUserData(list.get(2));
+                        cargarAdministradorVuelos(event, (String) list.get(2));
+                        showAlert("Confirmacion Reserva", "La reserva fue exitosa");
+                    }
+                } catch (HttpClientErrorException error) {
+                    if (error.getStatusCode() == HttpStatus.CONFLICT) {
+                        showAlert("Error", "No es posible realizar reserva");
+                    }
+                }
             }
-        }catch (HttpClientErrorException error){
-            if(error.getStatusCode()==HttpStatus.CONFLICT){
-                showAlert("Error","No es posible realizar reserva");
-            }
+        }catch (Exception e){
+            showAlert("Error", "Error en los datos ingresados");
         }
-
-
-
 
     }
 
