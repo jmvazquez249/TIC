@@ -29,7 +29,7 @@ Ejecuta el siguiente script SQL en tu herramienta de gestión de bases de datos:
 
 ```sql
 INSERT INTO usuario_general(pasaporte, apellido, contrasena, email, nombre, tipo)
-VALUES ('1', 'dios', '1234', 'emailGeneral', 'dios', 'DIOS');
+VALUES ('1', 'apellido', 'contrasena', 'email', 'nombre', 'DIOS');
 ```
 
 ## Controles`
