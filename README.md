@@ -39,4 +39,8 @@ El código ICAO de una aerolínea son 3 letras.
 El código IATA de una aerolínea son 2 letras.
 
 ## Inicio
-Se debe iniciar sesion con el administrador general con tipo "DIOS" y comenzar a crear aeropuertos y aerolineas con sus respecticos administradores
+Se debe iniciar sesion con el administrador general con tipo "DIOS" y comenzar a crear aeropuertos y aerolineas con sus respecticos administradores.
+El administrador de Aeropuerto crea Usuario de Maleteria, Usuario de Boarding y Administrador de Vuelos.
+El administrador de Aerolinea crea el Usuario de Check In y de Oficinista.
+El Oficinista crea los vuelos.
+Los administradores de vuelos aceptan o rechazan vuelos que salon o llegan de su aeropuerto.
