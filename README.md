@@ -31,5 +31,5 @@ Ejecuta el siguiente script SQL en tu herramienta de gestión de bases de datos:
 INSERT INTO usuario_general(pasaporte, apellido, contrasena, email, nombre, tipo)
 VALUES ('1', 'dios', '1234', 'emailGeneral', 'dios', 'DIOS');
 
-##Controles
+## Controles
 EL codigo IATA de aeropuerto son 3 letras. EL codigo ICAO de aerolinea son 3 letras y eL codigo IATA aeroinea son 2 letras
