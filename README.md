@@ -37,3 +37,6 @@ VALUES ('1', 'dios', '1234', 'emailGeneral', 'dios', 'DIOS');
 El código IATA de un aeropuerto son 2 letras.
 El código ICAO de una aerolínea son 3 letras.
 El código IATA de una aerolínea son 2 letras.
+
+## Inicio
+Se debe iniciar sesion con el administrador general con tipo "DIOS" y comenzar a crear aeropuertos y aerolineas con sus respecticos administradores
